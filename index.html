@@ -127,10 +127,16 @@ index.cgi   Makefile   sclib.c   index.c
       xhr.open('GET', 'idea.cgi?' +
           'name=' + document.getElementById('name').value +
           '&amp;msg=' + document.getElementById('msg').value, true);
+      xhr.onreadystatechange = function (e) {
+        if (xhr.readyState == 4 {
+          if (xhr.status == 200) {
+            console.log(xhr.responseText);
+          } else {
+            console.log('xhr error');
+          }
+        }
+      };
       xhr.send(null);
-      if (xhr.status == 200) {
-        xhr.responseText;
-      }
     }
   </script>
 </form>
