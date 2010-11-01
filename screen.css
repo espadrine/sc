@@ -1,0 +1,34 @@
+html {
+  color: #222;
+  background-color: linen;
+  font-family: Molengo, sans-serif;
+}
+
+h1 {
+  text-align: right;
+  font-family: Inconsolata, monospace;
+  text-decoration: underline;
+  border-bottom: solid 1px #222;
+}
+h1 span.purple {
+  color: purple;
+}
+
+h2, h3, p, pre, ol, ul, dl, table {
+  margin-left: 20px;
+  margin-right: 20px;
+}
+
+h2 {
+  color: purple;
+  font-family: 'IM Fell DW Pica', serif;
+  font-style: italic;
+}
+
+p {
+  text-indent: 7px;
+}
+
+pre, code {
+  font-family: Inconsolata, monospace;
+}
