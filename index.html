@@ -113,7 +113,7 @@ index.cgi   Makefile   sclib.c   index.c
 
 <p>Feel free to tell me!
 
-<form id=form action="mailto:thaddee.tyl@gmail.com?subject=Scout%20Camp">
+<form id=form action="">
   <!-- I can't use javascript:send() -->
   <label>Your name: <input name=name oninput="up({name:this.value})">
   </label>
@@ -122,7 +122,8 @@ index.cgi   Makefile   sclib.c   index.c
     <textarea name=msg oninput="up({msg:this.value})">Message...</textarea>
   </label>
   <br>
-  <button>Send idea</button>
+  <button id=send onclick="mailto:thaddee.tyl@gmail.com?subject=Scout%20Camp">
+    Send idea</button>
   <script>
     var form = {};
     form.o = { name: '', msg: '' };
@@ -132,7 +133,7 @@ index.cgi   Makefile   sclib.c   index.c
       } else if (o.msg) {
         form.o.msg = o.msg;
       }
-      document.getElementById('form').action = 'mailto:thaddee.tyl@gmail.com?' +
+      document.getElementById('send').action = 'mailto:thaddee.tyl@gmail.com?' +
           'subject=Scout Camp&body=' + form.o.name + ' speaking.%A0' +
           form.o.msg + '%A0';
     }
