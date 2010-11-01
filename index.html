@@ -113,12 +113,21 @@ index.cgi   Makefile   sclib.c   index.c
 
 <p>Feel free to tell me!
 
-<form action="idea.cgi" method="post">
-  <label>Your name: <input name=name></label>
+<form action="javascript:send()">
+  <label>Your name: <input name=name id=name></label>
   <br>
   <label>Your suggestion:<br>
-    <textarea name=msg>Message...</textarea>
+    <textarea name=msg id=msg>Message...</textarea>
   </label>
   <br>
   <button>Send idea</button>
+  <script>
+    function send () {
+      var xhr = new XMLHttpRequest();
+      xhr.open('GET', 'idea.cgi?' +
+          'name=' + document.getElementById('name').value +
+          '&amp;msg=' + document.getElementById('msg').value, true);
+      xhr.send(NULL);
+    }
+  </script>
 </form>
