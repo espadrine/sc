@@ -127,7 +127,10 @@ index.cgi   Makefile   sclib.c   index.c
       xhr.open('GET', 'idea.cgi?' +
           'name=' + document.getElementById('name').value +
           '&amp;msg=' + document.getElementById('msg').value, true);
-      xhr.send(NULL);
+      xhr.send(null);
+      if (xhr.status == 200) {
+        xhr.responseText;
+      }
     }
   </script>
 </form>
