@@ -113,20 +113,34 @@ index.cgi   Makefile   sclib.c   index.c
 
 <p>Feel free to tell me!
 
-<form action="javascript:send()">
-  <label>Your name: <input name=name id=name></label>
+<form id=form action="mailto:thaddee.tyl@gmail.com?subject=Scout%20Camp">
+  <!-- I can't use javascript:send() -->
+  <label>Your name: <input name=name oninput="up({name:this.value})">
+  </label>
   <br>
   <label>Your suggestion:<br>
-    <textarea name=msg id=msg>Message...</textarea>
+    <textarea name=msg oninput="up({msg:this.value})">Message...</textarea>
   </label>
   <br>
   <button>Send idea</button>
   <script>
+    var form = {};
+    form.o = { name: '', msg: '' };
+    function up(o) {
+      if (o.name) {
+        form.o.name = o.name;
+      } else if (o.msg) {
+        form.o.msg = o.msg;
+      }
+      document.getElementById('form').action = 'mailto:thaddee.tyl@gmail.com?' +
+          'subject=Scout Camp&body=' + form.o.name + ' speaking.%A0' +
+          form.o.msg + '%A0';
+    }
     function send () {
       var xhr = new XMLHttpRequest();
       xhr.open('GET', 'idea.cgi?' +
-          'name=' + document.getElementById('name').value +
-          '&amp;msg=' + document.getElementById('msg').value, true);
+          'name=' + document.getElementById('form').name.value +
+          '&amp;msg=' + document.getElementById('form').msg.value, true);
       xhr.onreadystatechange = function (e) {
         if (xhr.readyState == 4) {
           if (xhr.status == 200) {
