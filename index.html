@@ -113,7 +113,7 @@ index.cgi   Makefile   sclib.c   index.c
 
 <p>Feel free to tell me!
 
-<form id=form action="">
+<form id=form action="javascript:send()">
   <!-- I can't use javascript:send() -->
   <label>Your name: <input name=name oninput="up({name:this.value})">
   </label>
@@ -122,8 +122,7 @@ index.cgi   Makefile   sclib.c   index.c
     <textarea name=msg oninput="up({msg:this.value})">Message...</textarea>
   </label>
   <br>
-  <button id=send onclick="mailto:thaddee.tyl@gmail.com?subject=Scout%20Camp">
-    Send idea</button>
+  <button>Send idea</button>
   <script>
     var form = {};
     form.o = { name: '', msg: '' };
@@ -139,15 +138,13 @@ index.cgi   Makefile   sclib.c   index.c
     }
     function send () {
       var xhr = new XMLHttpRequest();
-      xhr.open('GET', 'idea.cgi?' +
+      xhr.open('GET', 'idea.php?' +
           'name=' + document.getElementById('form').name.value +
           '&amp;msg=' + document.getElementById('form').msg.value, true);
       xhr.onreadystatechange = function (e) {
         if (xhr.readyState == 4) {
           if (xhr.status == 200) {
-            console.log(xhr.responseText);
           } else {
-            console.log('xhr error');
           }
         }
       };
