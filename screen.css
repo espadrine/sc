@@ -14,7 +14,7 @@ h1 span.purple {
   color: purple;
 }
 
-h2, h3, p, pre, ol, ul, dl, table {
+h2, h3, p, pre, ol, ul, dl, table, form {
   margin-left: 20px;
   margin-right: 20px;
 }
