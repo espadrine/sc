@@ -15,3 +15,10 @@ p.write(form['name'] + " speaking.\n")
 p.write(form['msg'] + "\n")
 
 p.close()
+
+print 'Content-Type: text/html'
+print
+index = open('index.html')
+print index.read()
+close(index)
+
