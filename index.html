@@ -128,7 +128,7 @@ index.cgi   Makefile   sclib.c   index.c
           'name=' + document.getElementById('name').value +
           '&amp;msg=' + document.getElementById('msg').value, true);
       xhr.onreadystatechange = function (e) {
-        if (xhr.readyState == 4 {
+        if (xhr.readyState == 4) {
           if (xhr.status == 200) {
             console.log(xhr.responseText);
           } else {
