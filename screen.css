@@ -1,7 +1,10 @@
+@import url(http://fonts.googleapis.com/css?family=Droid+Sans&subset=latin);
+@import url(http://fonts.googleapis.com/css?family=IM+Fell+DW+Pica:italic&subset=latin);
+@import url(http://fonts.googleapis.com/css?family=Inconsolata&subset=latin);
 html {
   color: #222;
-  background-color: linen;
-  font-family: Molengo, sans-serif;
+  background-color: linen;  /* linen = #faf0e6. */
+  font-family: "Droid Sans", sans-serif;
 }
 
 h1 {
@@ -19,20 +22,50 @@ h2, h3, p, pre, ol, ul, dl, table, form {
   margin-right: 20px;
 }
 
-h2 {
+h2, h3 {
   color: purple;
   font-family: 'IM Fell DW Pica', serif;
   font-style: italic;
+  margin-top: 40px;
 }
 
 p {
   text-indent: 7px;
 }
 
-pre, code {
+pre, code, kbd {
   font-family: Inconsolata, monospace;
+  background-color: #eff;
+}
+pre {
+  padding: 10px;
+  border: 1px dashed purple;
+}
+
+a, a:visited {
+  color: purple;
+  text-shadow: rgba(0,0,0,0) 1px 1px 0px;
+  -webkit-transition: text-shadow 0.5s ease-out;
+}
+a:hover {
+  text-shadow: teal 1px 1px 0px;
 }
 
 textarea {
   width: 500px;
-  height: 200px;
+  height: 150px;
+}
+
+/* Comments */
+div.idea {
+  border: 1px solid #503;
+  -webkit-box-shadow: 0.7pt 0.7pt 4px #503 inset;
+  -moz-box-shadow: 0.7pt 0.7pt 4px #503 inset;
+  border-radius: 3px;
+}
+
+table.comment tr {
+  border-radius: 5px 7px;
+}
+table.comment tr:nth-child(2n+1) { background-color: rgba(200,0,200, 0.2); }
+table.comment tr:nth-child(2n) { background-color: rgba(200,0,200, 0.1); }

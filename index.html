@@ -1,16 +1,23 @@
 <!DOCTYPE html>
 <meta charset=utf-8>
 <link rel="stylesheet" type="text/css" href="./screen.css">
-<link href="http://fonts.googleapis.com/css?family=IM+Fell+DW+Pica:italic&subset=latin" rel="stylesheet" type="text/css">
-<link href="http://fonts.googleapis.com/css?family=Inconsolata&subset=latin" rel="stylesheet" type="text/css">
-<link href="http://fonts.googleapis.com/css?family=Molengo&subset=latin" rel="stylesheet" type="text/css">
 <title>Scout Camp</title>
 
 <h1>Scout <span class="purple">Camp</span></h1>
 
+<p>The idea behind Scout Camp is twofold:
+<ul>
+  <li>to benefit form a software that builds the initial tree for you.
+  <li>to have a modular structure that separates the engines, run on the
+  server, and the interface, conveying information and giving the
+  possibility of interaction with the engine.
+</ul>
+
 <h2>Sample Main Structure</h2>
 
-<p>The idea behind Scout Camp is to benefit form a software that builds the initial tree for you. All you have to do is to go to the folder that contains the data in your server, and, from the command line, type the following (having scout installed):
+<p>If you want to start a scout camp, all you have to do is to go to the folder
+that contains the data in your server, and, from the command line,
+type the following (having scout installed):
 
 <pre>$ scout init .</pre>
 
@@ -18,95 +25,255 @@
 
 <pre>
 www/
-  /index.cgi    # bash script that calls index.c
-  /index.c      # main C program that prints out the html page
-  /index        # executable file
+  /index.html   # root of the website.
+  /index.js     # configuration file in javascript (node.js)
   /.htaccess    # standard server config file
   /.robots.txt  # standard crawler page
-  Makefile      #  standard make file
   /res/         # directory containing global resources.
-    /sclib.c    # Scout Camp library of useful functions.</pre>
+    /sclib.c    # Scout Camp library of useful functions.
+    /sclib.js   # Scout Camp javascript library.</pre>
+
+<p>You may then start the server with this simple command:
+
+<pre>
+$ # The --log parameter is where all logs will be written to.
+$ scout start index.js --log='./log'</pre>
 
 <p>You may add, of course, any other directory that you want.
 
-<p>One of the fundamental principles of Scout Camp is to consider each web page as a single folder. Hence...
+<p>One of the fundamental principles of Scout Camp is to consider each web page
+as a single folder. Hence...
 
 <h2>Sample Page Structure</h2>
 
-<p>What's in a page? A page in Scout Camp is a way to view some data in a specific way. Each time you want a new way to view data, a way that has a different purpose, you may create a new page.
+<p>What's in a page? A page in Scout Camp is a way to view some data in a
+specific way, and have certain interaction with this data.
+Each time you want a new way to view data, a way that has a different purpose,
+you may create a new page.
 
 <p>Creating a new page is easy:
 
 <pre>
 $ scout page hello
 $ ls
-index.cgi  Makefile  ...  hello/
+index.js  index.html  ...  hello/
 $ cd hello &amp;&amp; ls -a
-index.cgi  Makefile  index.c</pre>
+index.html</pre>
 
-<p>The advised workflow is to create one C function for each division of your page. What I mean by "division" is, for instance, a block of the page dedicated to the logo of the website, or a block that represents a collection of blog entries, ...
+<p>The advised workflow is to create one program for each action the user can
+have over the data.
 
-<p>In this case, the <code>main</code> function may contain:
+<p>The user submits a form from a webpage, and the action is asynchronously
+managed by Scout Camp's javascript functions.
+
+<h3>Standalone server-side program</h3>
+
+<pre>
+&lt;!doctype html>
+&lt;script src="/res/sclib.js">&lt;/script>
+...
+&lt;p>Post a message:
+&lt;form id=form>
+  &lt;input name="message"/>
+  &lt;button>Post message&lt;/button>
+  &lt;script>
+  Scout('#form').on('submit', function(xhr, e, params) {
+    xhr.but = Scout('#form>button');
+    xhr.but.disabled = true;
+    xhr.but.set = function (label) {
+      if (this.textContent) this.textContent = label;
+      else this.innerText = label;
+    }
+    xhr.but.set('Submitting...');
+    
+    params.open = {url:'./prog', method:'POST'};
+    params.data = {message: this.firstElementChild.value};
+    params.resp = function (xhr, resp) {
+      xhr.but.disabled = false;
+      if (resp.got) {
+        Scout('output#msg').textContent = resp.message;
+        xhr.but.set('Re-post');
+      } else xhr.but.set('Try again');
+    };
+  });
+  &lt;/script>
+&lt;/form>
+&lt;br/>
+&lt;p>Last message: &lt;output id=msg form=form>nothing&lt;/output>.
+</pre>
+
+<p>The server will then receive a request that looks something like this:
+"http://example.com/hello/prog?messagetodo=[input]".
+It will then run the c program located at www/hello/prog, whose
+source code may look like that, using scout camp's apis:
 
 <pre>
 int main (int argc, char** argv) {
   json_object *query = scQueryString();
-  heading();  /* Shows the heading. */
   /* Tells the user its name. */
-  json_object *name = json_object_object_get(query, "name");
-  if (name) {
-    block1( json_object_get_string(name) );
+  json_object *msg = json_object_object_get(query, "message");
+  if (msg) {
+    scReturn(msg);
   } else {
-    block1( "unknown visitor" );
+    scReturn(NULL);
   }
-  block2();  /* Copyright notice. */
 }</pre>
 
-<p>The <code>scQueryString()</code> function returns a json object whose keys and values are that of the query string. In this case, we ask for someone's name; we may have a query string like "name=yann" (corresponding to a GET request that looks like http://example.com/page.cgi?name=yann).
+<p>The <code>scQueryString()</code> function returns a json object whose keys
+and values are that of the query string. In this case, we ask for a message; we
+may have a query string like "message=something" (corresponding to a GET
+request that would looks like http://example.com/page.cgi?message=something).
 
-<h2>Program</h2>
+<p>Then, the program returns another (preferably different, unlike the example
+given) JSON object, which the webpage can manipulate in the second javascript
+function given, through the <code>resp</code> parameter.
 
-<p>Should you happen to enter the following commands:
+<h3>Registered server actions</h3>
+
+<p>Another reasonable choice is to use the javascript configuration file
+to register a specific action. This may be faster if this action does not
+access the hard drive, since the javascript file is running the whole
+server and hence, is already loaded in memory, whereas the C program
+would have to be loaded from the hard drive to be executed.
+
+<p>You can register a site-wide action in the configuration file
+by writing, in index.js, something like:
+
 <pre>
-$ pwd
-/.../www/
-$ scout init .
-$ ls -a
-index.cgi   Makefile   sclib.c   index.c
-.htaccess   robots.txt</pre>
+/* The following line starts the web server. */
+Camp.start();
 
-<p>Then you would be able to see the following.
-<p>
-<svg xmlns="http://www.w3.org/2000/svg"
-     xmlns:xlink="http://www.w3.org/1999/xlink" width="300" height="200">
-<style>
-  rect, circle { stroke: #888; fill: rgba(0,0,0,0); }
-  text { font-size: 9px; }
-  path { stroke: #888; fill: rgba(0,0,0,0); }
-</style>
-<g>
-  <rect x="0" y="0" width="300" height="200"/>
-  <text font-family="monospace" x="120.5" y="7.5">New Website</text>
-  <g>
-    <rect x="37.5" y="10.5" width="257" height="10" rx="2"/>
-    <circle cx="46.5" cy="15.5" r="3"/>
-    <text font-family="sans-serif" x="53.5" y="17.5">http://localhost/</text>
-  </g>
-  <path d="M4.5,10.5 m10,5 l-10,0 5,3 0,-6 -5,3"/>
-  <path d="M20.5,10.5 m0,5 l10,0 -5,3 0,-6 5,3"/>
-</g>
-<rect x="0" y="24.5" width="300" height="180"/>
-<text x="20.5" y="40.5">What is your page's name?</text>
-<rect x="20.5" y="48.5" width="100" height="10"/>
-<rect x="20.5" y="65.5" width="30" height="10" rx="5" ry="5"/>
-<text x="30.5" y="72.5">Set</text>
-<path d="M300,200 m-4,0 l4,-4 m0,-3 l-7,7"/>
-</svg>
+var notes = [];
+Camp('note', function(jsonQuery) {
+  /* Remember the note. */
+  notes.push(jsonQuery.message);
+  return {};  // This will be returned to the html page.
+});</pre>
 
-<h2>Library</h2>
+<p>And the html form may be similar to the one before, the difference being
+inside the script:
 
+<pre>
+&lt;script>
+Scout('#form').on('submit', function(xhr, e, params) {
+  xhr.but = Scout('#form>button');
+  xhr.but.disabled = true;
+  xhr.but.set = function (label) {
+    if (this.textContent) this.textContent = label;
+    else this.innerText = label;
+  }
+  xhr.but.set('Submitting...');
+  
+  params.open = {<strong>url:'/_/note'</strong>, method:'POST'};
+  params.data = {message: this.firstElementChild.value};
+  params.resp = function (xhr, resp) {
+    xhr.but.disabled = false;
+    if (resp.got) {
+      Scout('output#msg').textContent = resp.message;
+      xhr.but.set('Re-post');
+    } else xhr.but.set('Try again');
+  };
+});
+&lt;/script></pre>
+
+
+<h2>Libraries</h2>
+
+<p><a href=http://www.json.org>JSON</a> library. This is actually the
+<a href=http://oss.metaparadigm.com/json-c/>json-c library</a>.
+<ul>
+  <li>json_object *   json_object_get (struct json_object *this)
+  <li>void  json_object_put (struct json_object *this)
+  <li>int   json_object_is_type (struct json_object *this, enum json_type type)
+  <li>enum json_type  json_object_get_type (struct json_object *this)
+  <li>char *  json_object_to_json_string (struct json_object *this)
+  <li>json_object *   json_object_new_object ()
+  <li>lh_table *  json_object_get_object (struct json_object *this)
+  <li>void  json_object_object_add (struct json_object *this, char *key, struct json_object *val)
+  <li>json_object *   json_object_object_get (struct json_object *this, char *key)
+  <li>void  json_object_object_del (struct json_object *this, char *key)
+  <li>json_object *   json_object_new_array ()
+  <li>array_list *  json_object_get_array (struct json_object *this)
+  <li>int   json_object_array_length (struct json_object *this)
+  <li>int   json_object_array_add (struct json_object *this, struct json_object *val)
+  <li>int   json_object_array_put_idx (struct json_object *this, int idx, struct json_object *val)
+  <li>json_object *   json_object_array_get_idx (struct json_object *this, int idx)
+  <li>json_object *   json_object_new_boolean (boolean b)
+  <li>boolean   json_object_get_boolean (struct json_object *this)
+  <li>json_object *   json_object_new_int (int i)
+  <li>int   json_object_get_int (struct json_object *this)
+  <li>json_object *   json_object_new_double (double d)
+  <li>double  json_object_get_double (struct json_object *this)
+  <li>json_object *   json_object_new_string (char *s)
+  <li>json_object *   json_object_new_string_len (char *s, int len)
+  <li>char *  json_object_get_string (struct json_object *this)
+  <li>json_object_object_foreach(obj, key, val) { ... }
+  <li>FALSE
+  <li>TRUE
+  <li>enum json_type { json_type_null, json_type_boolean, json_type_double, json_type_int, json_type_object, json_type_array, json_type_string }
+</ul>
+
+<p>Scout Camp library. Useful for stand-alone C programs.
 <ul>
   <li>json_object* scQueryString() : returns the query string.
+  <li>char* scInput() : returns the standard input received (it might have been
+  processed by Scout Camp, in the case of a MIME type of
+  application/x-www-form-urlencoded).
+  <li>char* scVar(char* req) : returns the string associated with the request.
+  The parameter req must be one of SERVER_PROTOCOL, SERVER_PORT, REQUEST_METHOD,
+  PATH_INFO, PATH_TRANSLATED, SCRIPT_NAME, QUERY_STRING, REMOTE_HOST,
+  REMOTE_ADDR, AUTH_TYPE, REMOTE_USER, REMOTE_IDENT,
+  CONTENT_TYPE, CONTENT_LENGTH.
+  <li>void scReturn(json_object) : sends back JSON to the client.
+</ul>
+
+<p>Client-side Scout Camp javascript library.
+<ul>
+  <li><code>function Scout(id) {return domEltWrapped;}</code> :
+  the id is a string that identifies a list of html elements using a
+  <a href="http://www.w3.org/TR/selectors-api/#selector-string">selector
+    string</a> (see www.w3.org/TR/selectors-api). It returns a
+  modified version of the DOM element corresponding to the first match, or
+  <code>null</code>, if there is no match.
+  The modification of this element
+  is the addition of a <code>on</code> function, decribed furthermore here.
+  <li><code>domEltWrapped.on = function(eventName,
+  function(xhr, event, params){})</code> :
+  the eventName parameter is the name of the event we are listening to,
+  and the second parameter is a function triggered immediately before the ajax
+  call. The first and second parameters of this function are, respectively,
+  the xmlHttpRequest object and the event object;
+  its third parameter is an object with the following overridable properties:
+  <ul>
+    <li><code>open</code>: it contains a <code>method</code> property that is
+    either 'POST' (default) or 'GET'; and a <code>url</code> that locates
+    the server-side program to run (default: './prog'),
+    an optional user and password properties for identification
+    purposes where it is necessary (default: none).
+    <li><code>data</code>: this JSON-serializable object will be sent as a query
+    string to the server-side program.
+    <li><code>redirect</code>: it indicates the new webpage which will be loaded
+    instead of the current one (default: we stay on the same webpage).
+    <li><code>resp = function(xhr, resp){}</code>:
+    This function is run whenever we receive the response from
+    the ajax call. Its resp parameter is a javascript object.
+    <li><code>error = function(xhr, status){}</code>:
+    If the request results in an error, this function is run, the
+    status parameter being the HTTP status returned.
+  </ul>
+  Inside the callback function, the <code>this</code> parameter is bound to
+  the DOM element that was called.<br/>
+  <small>Please note that the Content-Type header of a POST ajax call will be
+  "application/x-www-form-urlencoded".</small>
+</ul>
+
+<p>Server-side Scout Camp javascript library.
+<ul>
+  <li><code>function Camp(action, function(jsonQuery) {return jsonResp;})</code>
+  : the Camp function registers an action located at '/_/[action]',
+  which runs the function given as the second argument.
+  <li><code>Camp.start = function(port='80'){}</code> :
+  the start function starts the web server, listening on port 80 by default.
 </ul>
 
 <h2>Any ideas?</h2>
@@ -114,41 +281,52 @@ index.cgi   Makefile   sclib.c   index.c
 <p>Feel free to tell me!
 
 <form id=form action="javascript:send()">
-  <!-- I can't use javascript:send() -->
-  <label>Your name: <input name=name>
-  </label>
+  <label>Your name: <input name=name></label>
   <br>
   <label>Your suggestion:<br>
-    <textarea name=msg>Message...</textarea>
+    <textarea name=msg></textarea>
   </label>
   <br>
-  <button>Send idea</button>
+  <button id=send>Send idea</button>
   <script>
-    var form = {};
-    form.o = { name: '', msg: '' };
-    function up(o) {
-      if (o.name) {
-        form.o.name = o.name;
-      } else if (o.msg) {
-        form.o.msg = o.msg;
-      }
-      document.getElementById('send').action = 'mailto:thaddee.tyl@gmail.com?' +
-          'subject=Scout Camp&body=' + form.o.name + ' speaking.%A0' +
-          form.o.msg + '%A0';
-    }
     function send () {
+      document.getElementById('send').disabled = true;
       var xhr = new XMLHttpRequest();
-      xhr.open('GET', 'idea.php?' +
-          'name=' + document.getElementById('form').name.value +
-          '&amp;msg=' + document.getElementById('form').msg.value, true);
+      xhr.open('POST', 'req.cgi', true);
       xhr.onreadystatechange = function (e) {
         if (xhr.readyState == 4) {
           if (xhr.status == 200) {
-          } else {
+            var but = document.getElementById('send');
+            but.disabled = false;
+            var rec = document.createTextNode('Received!');
+            but.parentNode.appendChild(rec);
+            var remTxt = function() {
+              var form = document.getElementById('form');
+              form.removeChild(form.lastChild);
+            };
+            setTimeout(remTxt,5000);
           }
         }
       };
-      xhr.send(null);
+      xhr.setRequestHeader("Content-Type","application/x-www-form-urlencoded");
+      xhr.send('name=' + document.getElementById('form').name.value +
+          '&msg=' + document.getElementById('form').msg.value);
     }
   </script>
 </form>
+
+<p>You may read all ideas and comment them <a href="req">here</a>.
+
+<p>If you wish to be part of this project,
+<a href=mailto:thaddee.tyl@gmail.com>send me a mail</a>.
+
+<p>Current members:
+<pre>
+Thäddëë Tÿl (thaddee.tyl, gmail.com)
+Jän Kërömnës (jan.keromnes, gmail.com)
+Räphäël Cätölïnö (raphael.catolino, gmail.com)
+Gäëtän Trïvïnö (gaetan, trivino.fr)
+Jönäs Lënwë (jonas.lenwe, gmail.com)
+Hïchäm Ël-Fäthï (hicham.el-fathi, insa-lyon.fr)
+Ëcätërïnä Grïsäëvä (ecaterina.grisaeva, insa-lyon.fr)
+Mïchäël Fägnö (michael.fagno, free.fr)</pre>

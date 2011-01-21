@@ -6,16 +6,11 @@
  * Copyright 2010, The Dojo Foundation
  * Released under the MIT, BSD, and GPL licenses.
  *
- * Includes Json2.js by Douglas Crockford. <http://www.json.org/> */
+ * Includes Json2.js by Douglas Crockford. <http://www.json.org/>
+ */
 
-/* We need a proper addEventListener. */
-if (!document.addEventListener) {
-  document.addEventListener = function (evt, callback, bubble) {
-    window.attachEvent('on' + evt, callback);
-  }
-}
 
-/* We also need a proper document.querySelector. */
+/* We need a proper document.querySelector. */
 if (!document.querySelector) {
 
   /*!
@@ -1685,12 +1680,7 @@ if (!this.JSON) {
 
 
 /* The main fun starts here. */
-var Scout = function (id) {
-  /* Get the corresponding html element. */
-  var domelt = document.queryString(id);
-  if (domelt === undefined) {
-    return { on: function () {} };
-  }
+var Scout = (function () {
   
   /* xhr is a closure. */
   var xhr;
@@ -1699,67 +1689,120 @@ var Scout = function (id) {
     if (xhr.overrideMimeType) {
       xhr.overrideMimeType('text/xml'); /* Old Mozilla browsers. */
     }
-  } else {
-    xhr = new ActiveXObject("Microsoft.XMLHTTP");
+  } else {  /* Betting on IE, I know no other implementation. */
+    try {
+      xhr = new ActiveXObject("Msxml2.XMLHTTP");
+    } catch (e) {
+      xhr = new ActiveXObject("Microsoft.XMLHTTP");
+    }
   }
   
-  /* "On" property. */
-  var onprop = function (eventName, before, params) {
-    /* Defaults. */
-    before = before || function (xhr, e) {};
-    params.data = params.data || {};
-    params.open = params.open || {
+  
+  /* "On" property (beginning with the default parameters). */
+  
+  var params = {
+    data: {},
+    open: {
       method: 'POST',
-      url: '',
-      user: undefined,
-      password: undefined
+      url: './prog'
+    },
+    resp: function (xhr, resp) {},
+    error: function (xhr, status) {}
+  };
+
+  /* Convert object literal to xhr-sendable. */
+  var toxhrsend = function (data) {
+    var str = '', start = true;
+    for (var key in data) {
+      if (typeof data[key] === 'string') {
+        str += (start? '': '&amp;');
+        str += escape(key) + '=' + escape(JSON.stringify(data[key]));
+        if (start) { start = false; }
+      }
+    }
+    return str;
+  };
+    
+  var sendxhr = function (params) {
+    /* XHR stuff now. */
+    xhr.onreadystatechange = function () {
+      if (xhr.readyState === 4) {
+        if (xhr.status === 200) {
+          var resp = JSON.parse(xhr.responseText);
+          params.resp.apply(target, [xhr, resp]);
+        } else {
+          params.error.apply(target, [xhr, xhr.status]);
+        }
+      }
     };
-    params.resp = params.resp || function (xhr, resp) {};
-    params.error = params. error || function (xhr, status) {};
+    xhr.open(params.open.method,
+             params.open.url + (params.open.method === 'POST'? '':
+                                '?' + toxhrsend(params.data)),
+             true,
+             params.open.user,
+             params.open.password);
+    
+    if (params.open.method === 'POST') {
+      xhr.setRequestHeader('Content-Type',
+                           'application/x-www-form-urlencoded');
+      xhr.send(toxhrsend(params.data));
+    } else {
+      xhr.send(null);
+    }
+  };
+
+  Scout.send = function (before) {
+    before = before || function (xhr, e, params) {};
+
+    return function () {
+      before.apply(undefined, [xhr, params]);
+      sendxhr(params);
+    };
+  };
+  
+  var onprop = function (eventName, before) {
+    /* Defaults. */
+    before = before || function (xhr, e, params) {};
     
     /* Event Listener callback. */
     var listenerfunc = function (e) {
-      /* Convert object literal to xhr-sendable. */
-      var toxhrsend = function (data) {
-        var str = '', start = true;
-        for (var key in data) {
-          if (start) {
-            start = false;
-          }
-          str += (start? '': ';');
-          str += key + '=' + data[key];
-        }
-        return str;
-      };
+      /* IE wrapper. */
+      if (!e && window.event) { e = event; }
+      var target = e.target || e.srcElement || undefined;
       
-      /* XHR stuff now. */
-      xhr.onreadystatechange = function () {
-        if (xhr.readyState === 4) {
-          if (xhr.status === 200) {
-            var resp = JSON.parse(xhr.responseText);
-            /* TODO */
-          } else {
-            params.error(xhr, xhr.status);
-          }
-        }
-      };
-      xhr.open(params.open.method,
-               params.open.url + (params.open.method === 'GET'?
-                                  toxhrsend(params.data): ''),
-               true,
-               params.open.user,
-               params.open.password);
-      if (params.open.method === 'POST') {
-        xhr.setRequestHeader('Content-Type',
-                             'application/x-www-form-urlencoded');
-        xhr.send(toxhrsend(params.data));
-      } else {
-        xhr.send(null);
+      /* We must not change page unless otherwise stated. */
+      if (eventName === 'submit') {
+        if (e.preventDefault) { e.preventDefault(); }
+        else { e.returnValue = false; }
       }
+      /*window.event.cancelBubble = true;
+      if (e.stopPropagation) e.stopPropagation();*/
+      
+      /* User action before xhr send. */
+      before.apply(target, [xhr, e, params]);
+      
+      sendxhr(params);
     };
-		document.addEventListener(eventName, listenerfunc, false);
-  }
+    
+    if (document.addEventListener) {
+      this.addEventListener(eventName, listenerfunc, false);
+    } else {  /* Hoping only IE lacks addEventListener. */
+      this.attachEvent('on' + eventName, listenerfunc);
+    }
+  };
   
-  domelt['on'] = onprop;
-  return domelt;
-};
+  /* End of "on" property. */
+  
+  
+  return function (id) {
+    /* Get the corresponding html element. */
+    var domelt = document.querySelector(id);
+    if (!domelt) {
+      return { on: function () {} };
+    }
+    
+    /* Now that we have the elt and onprop, assign it. */
+    domelt.on = onprop;
+    return domelt;
+  };
+})();
