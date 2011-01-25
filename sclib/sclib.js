@@ -1680,7 +1680,8 @@ if (!this.JSON) {
 
 
 /* The main fun starts here. */
-var Scout = (function () {
+var Scout = function(){};
+Scout = (function () {
   
   /* xhr is a closure. */
   var xhr;
@@ -1713,17 +1714,18 @@ var Scout = (function () {
   /* Convert object literal to xhr-sendable. */
   var toxhrsend = function (data) {
     var str = '', start = true;
+    var jsondata = '';
     for (var key in data) {
-      if (typeof data[key] === 'string') {
-        str += (start? '': '&amp;');
-        str += escape(key) + '=' + escape(JSON.stringify(data[key]));
+      if (typeof (jsondata = JSON.stringify(data[key])) === 'string') {
+        str += (start? '': '&');
+        str += escape(key) + '=' + escape(jsondata);
         if (start) { start = false; }
       }
     }
     return str;
   };
     
-  var sendxhr = function (params) {
+  var sendxhr = function (target, params) {
     /* XHR stuff now. */
     xhr.onreadystatechange = function () {
       if (xhr.readyState === 4) {
@@ -1752,11 +1754,11 @@ var Scout = (function () {
   };
 
   Scout.send = function (before) {
-    before = before || function (xhr, e, params) {};
+    before = before || function (xhr, params) {};
 
     return function () {
       before.apply(undefined, [xhr, params]);
-      sendxhr(params);
+      sendxhr(undefined, params);
     };
   };
   
@@ -1781,7 +1783,7 @@ var Scout = (function () {
       /* User action before xhr send. */
       before.apply(target, [xhr, e, params]);
       
-      sendxhr(params);
+      sendxhr(target, params);
     };
     
     if (document.addEventListener) {

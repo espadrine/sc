@@ -22,6 +22,10 @@ h2, h3, p, pre, ol, ul, dl, table, form {
   margin-right: 20px;
 }
 
+ol>li, ul>li, dl>dt {
+  margin-top: 4pt;
+}
+
 h2, h3 {
   color: purple;
   font-family: 'IM Fell DW Pica', serif;
@@ -35,7 +39,7 @@ p {
 
 pre, code, kbd {
   font-family: Inconsolata, monospace;
-  background-color: #eff;
+  background-color: #faffe6;
 }
 pre {
   padding: 10px;
@@ -45,15 +49,56 @@ pre {
 a, a:visited {
   color: purple;
   text-shadow: rgba(0,0,0,0) 1px 1px 0px;
-  -webkit-transition: text-shadow 0.5s ease-out;
+  text-decoration: none;
 }
 a:hover {
-  text-shadow: teal 1px 1px 0px;
+  color: rgba(1,1,1,0.1);
+  text-shadow: purple 0px 0px 1px;
 }
 
 textarea {
   width: 500px;
   height: 150px;
+}
+
+/* Downloads */
+.downloads {
+  margin: auto;
+  border-spacing: 7pt;
+}
+.downloads a {
+  display: block;
+  padding: 12pt;
+  border-radius:      3px;
+  -moz-border-radius: 3px;
+
+  color: #b70;
+  text-shadow: #755 1px 1px 0px, #664646 -1px -1px 0px,
+      #c90 2px 2px 0px, #c90 3px 3px 0px;
+  box-shadow:  #94b -1px -1px 0px inset, #c95 -2px -2px 1px inset,
+      #94b 1px 1px 0px inset, #950 2px 2px 1px inset,
+      #606 0px 0px 50px inset;
+  -webkit-transition: 0.3s ease-out box-shadow;
+  -moz-transition: 0.3s ease-out box-shadow;
+  transition: 0.3s ease-out box-shadow;
+
+  letter-spacing: 1pt;
+  font-family: "Inconsolata", monospace;
+  font-size: 14pt;
+  font-style: italic;
+  font-weight: bold;
+  text-decoration: none;
+}
+.downloads a:hover {
+  box-shadow:  #94b -1px -1px 0px inset, #c99 -2px -2px 1px inset,
+      #94b 1px 1px 0px inset, #953 2px 2px 1px inset,
+      #606 0px 0px 10px inset;
+}
+.sclib {
+  background-color: #9020d0;
+}
+.sclibmin {
+  background-color: #9440d4;
 }
 
 /* Comments */
