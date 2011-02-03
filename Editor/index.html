@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+  <head>
+	<meta charset="utf-8"/>
+    <script src="js/codemirror.js" type="text/javascript"></script>
+    <script src="js/sclib.js" type="text/javascript"></script>
+    <script src="js/diff_match_patch_uncompressed.js" type="text/javascript"></script>
+    <title>Our Awesome Code Editor</title>
+    <link rel="stylesheet" type="text/css" href="css/docs.css"/>
+  </head>
+  <body style="padding: 20px;">
+
+	<div style="border: 1px solid black; padding: 3px;">
+		<textarea id="code" cols="50" rows="20">
+		</textarea>
+		<br/>
+		<input type="button" value="delta" onclick="delta();"/>
+	</div>
+	
+
+	<script type="text/javascript">
+		var timeout = 5000;
+		var textcopy = "<html></html>";
+		document.getElementById('code').value = textcopy;
+		var dmp = new diff_match_patch();
+		var one_way_diff = function() { var d = arguments[0]; var r = []; var cursor = 0; for(var i = 0, modif = d[i] ; modif = d[i++] ; ) { switch(modif[0]) { case 0: cursor += modif[1].length; break; case 1: r.push([1,modif[1],cursor]); cursor += modif[1].length; break; case -1: r.push([0,modif[1].length,cursor]); break; }; }; return r; }
+		var delta = function() { alert(JSON.stringify(one_way_diff(dmp.diff_main(textcopy, document.getElementById('code').value)))); };
+		
+
+		
+		/*var editor = CodeMirror.fromTextArea('code', {
+			height: "350px",
+			parserfile: ["parsexml.js", "parsecss.js", "tokenizejavascript.js", "parsejavascript.js", "parsehtmlmixed.js"],
+			stylesheet: ["css/xmlcolors.css", "css/jscolors.css", "css/csscolors.css"],
+			path: "js/"
+		});*/
+		
+		
+		setInterval(Scout.send(function(xhr, params){
+			params.data = {
+				file: 'foo.js',
+				diff: [[0,0,'a'], [0,1,'b'], [1,1], [0,1,'c']],
+				revn: 1,
+				user: 'foo',
+				pass: 'blah'
+			};
+			params.open.url = 'http://scoutcamp.sourceforge.net/Editor/XHRtest/getmodif.py';
+			params.resp = function(xhr, resp) {
+				alert(JSON.stringify(resp));
+			};
+		}), timeout);
+	</script>
+	
+  </body>
+  
+</html>
