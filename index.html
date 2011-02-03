@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+  <meta charset=utf-8>
+  <title>Our Awesome Code Tool</title>
+  <script src=../../sclib/sclib.js></script>
+  
+  <style>pre#ed{width:100%;height:100%}</style>
+  
+  <textarea id=ed>trololo</textarea>
+
+  <script>
+
+
+/* Server interaction. */
+Scout('#ed').on('keyup', function (xhr, e, params) {
+
+/* Params modification. */
+params.open.url = './getmodif.py';
+params.data = {
+  user: 'jan333',
+  password: 'SFed6542""ç',
+  file: './file.txt',
+  rev: 0,
+  diff: [[0,0,'a'],[0,1,'b'],[1,1],[0,1,'c']]
+};
+params.resp = function (xhr, resp) {
+  alert(JSON.stringify(resp));
+};
+
+});
+  </script>

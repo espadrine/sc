@@ -1,0 +1,20 @@
+<IfModule mod_setenvif.c>
+  <IfModule mod_headers.c>
+    BrowserMatch MSIE ie
+    Header set X-UA-Compatible "IE=Edge,chrome=1" env=ie
+  </IfModule>
+</IfModule>
+
+<IfModule mod_headers.c>
+  Header append Vary User-Agent
+</IfModule>
+
+AddDefaultCharset utf-8
+AddCharset utf-8 .html .css .js .xml .json
+
+ServerSignature Off
+
+Options +ExecCGI
+AddHandler cgi-script cgi py
+
+DirectoryIndex index.cgi index.html
