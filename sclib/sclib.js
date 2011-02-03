@@ -1753,15 +1753,6 @@ Scout = (function () {
     }
   };
 
-  Scout.send = function (before) {
-    before = before || function (xhr, params) {};
-
-    return function () {
-      before.apply(undefined, [xhr, params]);
-      sendxhr(undefined, params);
-    };
-  };
-  
   var onprop = function (eventName, before) {
     /* Defaults. */
     before = before || function (xhr, e, params) {};
@@ -1796,7 +1787,7 @@ Scout = (function () {
   /* End of "on" property. */
   
   
-  return function (id) {
+  var ret = function (id) {
     /* Get the corresponding html element. */
     var domelt = document.querySelector(id);
     if (!domelt) {
@@ -1807,4 +1798,14 @@ Scout = (function () {
     domelt.on = onprop;
     return domelt;
   };
+  ret.send = function (before) {
+    before = before || function (xhr, params) {};
+
+    return function () {
+      before.apply(undefined, [xhr, params]);
+      sendxhr(undefined, params);
+    };
+  };
+  
+  return ret;
 })();
