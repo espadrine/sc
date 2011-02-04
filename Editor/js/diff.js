@@ -6,9 +6,6 @@
 (function () {
 
 
-/* Register the current diff between current copy and last successful xhr. */
-var diff = new Array();
-
 /* delta (d = [ [0, "Hi ! "], [-1, "hello, here!"], [1, "hello"] ])
  * returns the delta corresponding to the given diff.
  * Here, [ [0, 12, 5], [1, "hello", 5] ]. */
@@ -108,5 +105,11 @@ var solvetest = [[0,12,5], [1,"hello",5]];
 alert (JSON.stringify(solve (solvetest, [[1,"ps",0],[1,".",2]])));
 */
 
+
+window.Diff = {
+  diff: diff,
+  applydiff: applydiff,
+  solve: solve
+};
 
 })();
