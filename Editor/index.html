@@ -24,19 +24,19 @@
 		document.getElementById('code').value = textcopy;
 		var dmp = new diff_match_patch();
 		var one_way_diff = function() { var d = arguments[0]; var r = []; var cursor = 0; for(var i = 0, modif = d[i] ; modif = d[i++] ; ) { switch(modif[0]) { case 0: cursor += modif[1].length; break; case 1: r.push([1,modif[1],cursor]); cursor += modif[1].length; break; case -1: r.push([0,modif[1].length,cursor]); break; }; }; return r; }
-		var delta = function() { alert(JSON.stringify(one_way_diff(dmp.diff_main(textcopy, document.getElementById('code').value)))); };
+		//var delta = function() { alert(JSON.stringify(one_way_diff(dmp.diff_main(textcopy, editor.editor.getCode())))); };
 		
 
 		
-		/*var editor = CodeMirror.fromTextArea('code', {
+		var editor = CodeMirror.fromTextArea('code', {
 			height: "350px",
 			parserfile: ["parsexml.js", "parsecss.js", "tokenizejavascript.js", "parsejavascript.js", "parsehtmlmixed.js"],
 			stylesheet: ["css/xmlcolors.css", "css/jscolors.css", "css/csscolors.css"],
 			path: "js/"
-		});*/
+		});
 		
 		
-		setInterval(Scout.send(function(xhr, params){
+		/*setInterval(Scout.send(function(xhr, params){
 			params.data = {
 				file: 'foo.js',
 				diff: [[0,0,'a'], [0,1,'b'], [1,1], [0,1,'c']],
@@ -48,7 +48,7 @@
 			params.resp = function(xhr, resp) {
 				alert(JSON.stringify(resp));
 			};
-		}), timeout);
+		}), timeout);*/
 	</script>
 	
   </body>
