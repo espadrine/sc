@@ -1,0 +1,48 @@
+<!doctype html>
+<title>Our Awesome Code Editor</title>
+<meta charset=utf-8/>
+
+<style>
+  html body { margin: 0px; padding: 0px; }
+  iframe body { margin: 0px; padding: 0px; }
+  iframe { height: 49%; width: 100%; border: none; }
+  .right { float: right; }
+</style>
+
+<body>
+
+  <iframe id=preview class=right></iframe>
+  
+  <script src=js/sclib.js></script>
+  <script src=js/codemirror.js></script>
+  <script src=js/diff_match_patch.js></script>
+  <script>
+  
+    var editor = new CodeMirror(document.body, {
+      content: "<!doctype html>\n<title></title>",
+      height: "100%",
+      width: "50%",
+      parserfile: ["parsexml.js", "parsecss.js", "tokenizejavascript.js", "parsejavascript.js", "parsehtmlmixed.js"],
+      stylesheet: ["css/xmlcolors.css", "css/jscolors.css", "css/csscolors.css"],
+      path: "js/"
+    });
+	
+	setInterval(function() { preview.document.open(); preview.document.write(editor.editor.getCode()); preview.document.close(); },500);
+  
+    /*setInterval(Scout.send(function(xhr, params){
+      params.data = {
+        file: 'foo.js',
+        diff: [[0,0,'a'], [0,1,'b'], [1,1], [0,1,'c']],
+        revn: 1,
+        user: 'foo',
+        pass: 'blah'
+      };
+      params.open.url = 'http://scoutcamp.sourceforge.net/Editor/XHRtest/getmodif.py';
+      params.resp = function(xhr, resp) {
+        alert(JSON.stringify(resp));
+      };
+    }), timeout);*/
+	
+  </script>
+  
+</body>
