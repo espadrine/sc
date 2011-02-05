@@ -1,4 +1,4 @@
-/* diff.js: get the file diff from the Google diff.
+/* diff.js: handles translation of the Google diff to the modification delta.
  * Copyright (c) 2011 Thaddée Tyl. All rights reserved.
  * Copyright (c) 2011 Jan Keromnes. All rights reserved.
  * */
