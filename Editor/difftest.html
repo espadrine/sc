@@ -21,14 +21,53 @@
 
 window.INITREV = 0;
 window.COPY = '';
-window.id = 0;
+window.ID = 0;
 
 window.server = (function () {
 
   var rev = INITREV;
   var copy = COPY;
+  var deltas = [];
+
+  /* Dom. */
+
+  var para = document.getElementById('main');
 
   return function (theirrev, delta, callback) {
+    /* Change in the copy. */
+
+    var senddelta = [];
+    for (var i=theirrev; i<rev; i++) {
+      for (var j=0; j<deltas[i].length; j++) {
+        senddelta.push(deltas[i][j]);
+      }
+    }
+
+    if (delta.length !== 0) {
+      /* He brings a change. */
+
+      if (theirrev <= rev) {
+        /* There were other changes since. */
+
+        /* Solve conflicts with previous revisions. */
+        Diff.solve(senddelta, delta);
+
+        callback(rev+1, senddelta);
+
+      } else {
+        /* There were no changes since. */
+        callback(rev+1, []);
+      }
+
+      deltas[rev++] = delta;
+      copy = Diff.applydelta(delta, copy);
+      para.textContent = copy;
+
+    } else {
+      /* He did not change his copy. */
+      callback(rev, senddelta);
+    }
+
   };
 
 })();
@@ -37,30 +76,30 @@ window.server = (function () {
 /* Send the data to the server. Hold the state. */
 window.client = (function () {
 
-  var id = id++;
-
   var rev = INITREV;
   var lastcopy = COPY;
   var delta = [];
 
   /* Dom. */
-  var text = document.getElementById('t'+id);
+  var text = document.getElementById('t'+ID++);
 
   return function (e) {
     /* Send the delta to the server. */
 
     var dmp = new diff_match_patch();
-    var diff = dmp.diff_main(lastcopy, text.textContent);
+    var diff = dmp.diff_main(lastcopy, text.value);
     delta = Diff.delta(diff);
-    var buffercopy = text.textContent;
+    var bufcopy = text.value;
 
-    server(rev, delta, function (res) {
+    server(rev, delta, function (newrev, res) {
+      rev = newrev;
+
       delta = [];
-      lastcopy = buffercopy;
       var dmp = new diff_match_patch();
-      delta = Diff.solve(Diff.diff(dmp.diff_main(lastcopy, text.textContent)),
-          res);
-      text.innerHTML = Diff.applydelta(delta, text.textContent);
+      Diff.solve(Diff.delta(dmp.diff_main(bufcopy, text.value)), res);
+      text.value = Diff.applydelta(res, text.value);
+      lastcopy = text.value;
+      text.value = Diff.applydelta(delta, text.value);
     });
   };
 
