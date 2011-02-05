@@ -78,7 +78,9 @@ Array.prototype.insert = function (idx, el) {
 
 /* solve (delta = [[0,12,5], [1,"hello",5]], newdelta = [[1,"ps",0],[1,".",2]])
  * returns an updated version of delta with solved conflicts.
- * Here, [[0,12,8], [1,"hello",8]]. */
+ * Here, [[0,12,8], [1,"hello",8]].
+ * Note: this code is non-trivial. Please tread carefully when browsing through.
+ */
 var solve = function (delta, newdelta) {
 
   for (var i = 0; i < newdelta.length; i++) {
