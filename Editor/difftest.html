@@ -48,12 +48,11 @@ window.server = (function () {
 
       if (theirrev <= rev) {
         /* There were other changes since. */
-        callback(rev+1, senddelta);
 
         /* Solve conflicts with previous revisions. */
-        for (var i=theirrev; i<rev; i++) {
-          delta = Diff.solve(delta, deltas[i]);
-        }
+        Diff.solve(senddelta, delta);
+
+        callback(rev+1, senddelta);
 
       } else {
         /* There were no changes since. */
@@ -97,7 +96,7 @@ window.client = (function () {
 
       delta = [];
       var dmp = new diff_match_patch();
-      delta = Diff.solve(Diff.delta(dmp.diff_main(bufcopy, text.value)), res);
+      Diff.solve(Diff.delta(dmp.diff_main(bufcopy, text.value)), res);
       text.value = Diff.applydelta(res, text.value);
       lastcopy = text.value;
       text.value = Diff.applydelta(delta, text.value);
