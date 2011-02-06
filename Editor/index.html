@@ -5,7 +5,7 @@
 <style>
   html body { margin: 0px; padding: 0px; }
   iframe body { margin: 0px; padding: 0px; }
-  iframe { height: 100%; width: 49%; border: none; }
+  iframe { height: 50%; width: 100%; border: none; }
   .right { float: right; }
 </style>
 
@@ -20,8 +20,8 @@
   
     var editor = new CodeMirror(document.body, {
       content: "<!doctype html>\n<title><\/title>\n\n<canvas id=tutorial width=150 height=150><\/canvas>\n\n<script>\n  var canvas = document.getElementById('tutorial');\n  var context = canvas.getContext('2d');\n\n  context.fillStyle = 'rgb(250,0,0)';\n  context.fillRect(10, 10, 55, 50);\n\n  context.fillStyle = 'rgba(0, 0, 250, 0.5)';\n  context.fillRect(30, 30, 55, 50);\n<\/script>",
-      height: "100%",
-      width: "50%",
+      height: "50%",
+      width: "100%",
       parserfile: ["parsexml.js", "parsecss.js", "tokenizejavascript.js", "parsejavascript.js", "parsehtmlmixed.js"],
       stylesheet: ["css/xmlcolors.css", "css/jscolors.css", "css/csscolors.css"],
       path: "js/"
