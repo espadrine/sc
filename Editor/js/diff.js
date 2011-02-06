@@ -133,7 +133,7 @@ var solve = function (delta, newdelta) {
                     i--;
 
                   } else {
-                    delta[j][1] -= nd[2] = delta[j][2];
+                    delta[j][1] -= nd[2] - delta[j][2];
                     nd[2] = delta[j][2];
                     nd[1] = toend;
                   }
