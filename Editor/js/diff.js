@@ -90,26 +90,29 @@ var solve = function (delta, newdelta) {
       switch (nd[0]) {
 
         case 0:  /* Deletion. */
-          if (nd[2] < delta[j][2]) {
-            if (nd[2] + nd[1] < delta[j][2]) {
+          var fromStartDelToStart = delta[j][2] - nd[2];
+          if (fromStartDelToStart > 0) {
+            if (nd[2] + nd[1] <= delta[j][2]) {
               delta[j][2] -= nd[1];
             } else {
+              
               if (delta[j][0] === 1) {
                 /* We inserted something on a spot that was deleted. */
                 nd[1] += delta[j][1].length;  /* Delete it all first. */
                 delta[j][2] = nd[2];  /* Then insert at first position. */
                 i++;
                 newdelta.splice (i, 0, delta[j]);
+
               } else {
                 /* We deleted something on a spot that was deleted. */
                 var toend = delta[j][2] + delta[j][1] - (nd[2] + nd[1]);
-                if (toend <= 0) {
+                if (toend < 0) {
                   /* All that we deleted was already deleted. */
                   nd[1] -= delta[j][1];
                   delta.splice (j, 1);
                   j--;
                 } else {
-                  nd[1] -= delta[j][2] - nd[2];
+                  nd[1] -= fromStartDelToStart;
                   delta[j][2] = nd[2];
                   delta[j][1] = toend;
                 }
@@ -120,20 +123,20 @@ var solve = function (delta, newdelta) {
             switch (delta[j][0]) {
 
               case 0:  /* We deleted on the left of the deletion. */
-                if (delta[j][2] + delta[j][1] < nd[2]) {
+                if (delta[j][2] + delta[j][1] <= nd[2]) {
                   nd[2] -= delta[j][1];
                 } else {
                   /* We deleted past the start of their deletion. */
 
                   var toend = nd[2] + nd[1] - (delta[j][2] + delta[j][1])
-                  if (toend <= 0) {
+                  if (toend < 0) {
                     /* All that they deleted, we already deleted. */
                     delta[j][1] -= nd[1];
                     newdelta.splice (i, 1);
                     i--;
 
                   } else {
-                    delta[j][1] -= nd[2] - delta[j][2];
+                    delta[j][1] -= -fromStartDelToStart;
                     nd[2] = delta[j][2];
                     nd[1] = toend;
                   }
