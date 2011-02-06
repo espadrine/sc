@@ -33,11 +33,6 @@ var delta = function (diff) {
 
 };
 
-/*
-var deltatest = [ [0, "Hi ! "], [-1, "hello, here!"], [1, "hello"] ];
-alert (JSON.stringify(delta (deltatest)));
-*/
-
 
 /* applydelta (delta = [[0,12,5], [1,"hello",5]], copy = "Hi ! hello, here!")
  * returns an updated copy where the modifications in the delta are applied.
@@ -61,11 +56,6 @@ var applydelta = function (delta, copy) {
   return r;
 
 };
-
-/*
-var applydeltatest = [[0,12,5], [1,"hello",5]];
-alert (JSON.stringify(applydelta (applydeltatest, "Hi ! hello, here!")));
-*/
 
 
 /* solve (delta = [[0,12,5], [1,"hello",5]], newdelta = [[1,"ps",0],[1,".",2]])
@@ -172,11 +162,6 @@ var solve = function (delta, newdelta) {
   return delta;
 
 };
-
-/*
-var solvetest = [[0,12,5], [1,"hello",5]];
-alert (JSON.stringify(solve (solvetest, [[1,"ps",0],[1,".",2]])));
-*/
 
 
 window.Diff = {
