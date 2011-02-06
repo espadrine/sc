@@ -68,14 +68,6 @@ alert (JSON.stringify(applydelta (applydeltatest, "Hi ! hello, here!")));
 */
 
 
-/* Helper function. */
-Array.prototype.insert = function (idx, el) {
-  var toend = this.slice (idx);
-  for (var i = idx; i < this.length; i++) { this.pop (); }
-  this.push (el);
-  for (var i = 0; i < toend.length; i++) { this.push (toend[i]); }
-};
-
 /* solve (delta = [[0,12,5], [1,"hello",5]], newdelta = [[1,"ps",0],[1,".",2]])
  * returns an updated version of delta with solved conflicts.
  * Here, [[0,12,8], [1,"hello",8]].
