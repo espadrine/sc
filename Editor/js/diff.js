@@ -91,7 +91,7 @@ var solve = function (delta, newdelta) {
 
         case 0:  /* Deletion. */
           if (nd[2] < delta[j][2]) {
-            if (nd[1] < delta[j][2] - nd[2]) {
+            if (nd[2] + nd[1] < delta[j][2]) {
               delta[j][2] -= nd[1];
             } else {
               if (delta[j][0] === 1) {
@@ -99,15 +99,19 @@ var solve = function (delta, newdelta) {
                 nd[1] += delta[j][1].length;  /* Delete it all first. */
                 delta[j][2] = nd[2];  /* Then insert at first position. */
                 i++;
-                newdelta.insert (i, delta[j]);
+                newdelta.splice (i, 0, delta[j]);
               } else {
                 /* We deleted something on a spot that was deleted. */
-                if (delta[j][2] + delta[j][1] < nd[2] + nd[1]) {
+                var toend = delta[j][2] + delta[j][1] - (nd[2] + nd[1]);
+                if (toend <= 0) {
                   /* All that we deleted was already deleted. */
-                  delete delta[j];
+                  nd[1] -= delta[j][1];
+                  delta.splice (j, 1);
+                  j--;
                 } else {
-                  nd[1] += (delta[j][2] + delta[j][1]) - (nd[2] + nd[1]);
-                  delete delta[j];
+                  nd[1] -= delta[j][2] - nd[2];
+                  delta[j][2] = nd[2];
+                  delta[j][1] = toend;
                 }
               }
             }
@@ -120,8 +124,19 @@ var solve = function (delta, newdelta) {
                   nd[2] -= delta[j][1];
                 } else {
                   /* We deleted past the start of their deletion. */
-                  delta[j][1] -= (delta[j][2] + delta[j][1]) - nd[2];
-                  nd[2] -= delta[j][1];
+
+                  var toend = nd[2] + nd[1] - (delta[j][2] + delta[j][1])
+                  if (toend <= 0) {
+                    /* All that they deleted, we already deleted. */
+                    delta[j][1] -= nd[1];
+                    newdelta.splice (i, 1);
+                    i--;
+
+                  } else {
+                    delta[j][1] -= nd[2] = delta[j][2];
+                    nd[2] = delta[j][2];
+                    nd[1] = toend;
+                  }
                 }
                 break;
 
@@ -146,7 +161,7 @@ var solve = function (delta, newdelta) {
                   delta[j][1] += nd[1].length;  /* We delete it all first. */
                   nd[2] = delta[j][2];/* Then we insert at the first position.*/
                   j++;
-                  delta.insert (j, nd);
+                  delta.splice (j, 0, nd);
               }
             } else {
               /* They inserted something on a spot that was an insertion. */
