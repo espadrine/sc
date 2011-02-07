@@ -74,61 +74,9 @@ var solve = function (delta, newdelta) {
         case 0:  /* Deletion. */
           var fromStartDelToStart = delta[j][2] - nd[2];
           if (fromStartDelToStart > 0) {
-            if (nd[2] + nd[1] <= delta[j][2]) {
-              delta[j][2] -= nd[1];
-            } else {
-              
-              if (delta[j][0] === 1) {
-                /* We inserted something on a spot that was deleted. */
-                nd[1] += delta[j][1].length;  /* Delete it all first. */
-                delta[j][2] = nd[2];  /* Then insert at first position. */
-                i++;
-                newdelta.splice (i, 0, delta[j]);
-
-              } else {
-                /* We deleted something on a spot that was deleted. */
-                var toend = delta[j][2] + delta[j][1] - (nd[2] + nd[1]);
-                if (toend < 0) {
-                  /* All that we deleted was already deleted. */
-                  nd[1] -= delta[j][1];
-                  delta.splice (j, 1);
-                  j--;
-                } else {
-                  nd[1] -= fromStartDelToStart;
-                  delta[j][2] = nd[2];
-                  delta[j][1] = toend;
-                }
-              }
-            }
-
+            solveRightOfDel (delta, newdelta, i, j);
           } else {
-            switch (delta[j][0]) {
-
-              case 0:  /* We deleted on the left of the deletion. */
-                if (delta[j][2] + delta[j][1] <= nd[2]) {
-                  nd[2] -= delta[j][1];
-                } else {
-                  /* We deleted past the start of their deletion. */
-
-                  var toend = nd[2] + nd[1] - (delta[j][2] + delta[j][1])
-                  if (toend < 0) {
-                    /* All that they deleted, we already deleted. */
-                    delta[j][1] -= nd[1];
-                    newdelta.splice (i, 1);
-                    i--;
-
-                  } else {
-                    delta[j][1] -= -fromStartDelToStart;
-                    nd[2] = delta[j][2];
-                    nd[1] = toend;
-                  }
-                }
-                break;
-
-              case 1:  /* We inserted on the left. */
-                nd[2] += delta[j][1].length;
-                break;
-            }
+            solveLeftOfDel (delta, newdelta, i, j);
           }
 
           break;
@@ -163,6 +111,80 @@ var solve = function (delta, newdelta) {
 
 };
 
+/* solveRightOfDel (delta, newdelta, i, j):
+ * newdelta is a deletion; delta is an operation that happens on the right
+ * of the beginning of that deletion, without any promise about overlapping. */
+var solveRightOfDel = function (delta, newdelta, i, j) {
+  var nd = newdelta[i];
+  var fromStartDelToStart = delta[j][2] - nd[2];
+
+  if (nd[2] + nd[1] <= delta[j][2]) {
+    delta[j][2] -= nd[1];
+  } else {
+    
+    if (delta[j][0] === 1) {
+      /* We inserted something on a spot that was deleted. */
+      nd[1] += delta[j][1].length;  /* Delete it all first. */
+      delta[j][2] = nd[2];  /* Then insert at first position. */
+      i++;
+      newdelta.splice (i, 0, delta[j]);
+
+    } else {
+      /* We deleted something on a spot that was deleted. */
+      var toend = delta[j][2] + delta[j][1] - (nd[2] + nd[1]);
+      if (toend < 0) {
+        /* All that we deleted was already deleted. */
+        nd[1] -= delta[j][1];
+        delta.splice (j, 1);
+        j--;
+      } else {
+        nd[1] -= fromStartDelToStart;
+        delta[j][2] = nd[2];
+        delta[j][1] = toend;
+      }
+    }
+  }
+};
+
+
+/* solveLeftOfDel (delta, newdelta):
+ * newdelta is a deletion, and delta is an operation that begins
+ * before newdelta's beginning point, without certainty about overlapping. */
+var solveLeftOfDel = function (delta, newdelta, i, j) {
+  var nd = newdelta[i];
+  var fromStartDelToStart = delta[j][2] - nd[2];
+
+  switch (delta[j][0]) {
+
+    case 0:  /* We deleted on the left of the deletion. */
+      if (delta[j][2] + delta[j][1] <= nd[2]) {
+        nd[2] -= delta[j][1];
+      } else {
+        /* We deleted past the start of their deletion. */
+
+        var toend = nd[2] + nd[1] - (delta[j][2] + delta[j][1])
+        if (toend < 0) {
+          /* All that they deleted, we already deleted. */
+          delta[j][1] -= nd[1];
+          newdelta.splice (i, 1);
+          i--;
+
+        } else {
+          delta[j][1] -= -fromStartDelToStart;
+          nd[2] = delta[j][2];
+          nd[1] = toend;
+        }
+      }
+      break;
+
+    case 1:  /* We inserted on the left. */
+      nd[2] += delta[j][1].length;
+      break;
+  }
+};
+
+
+/* Export. */
 
 window.Diff = {
   delta: delta,
