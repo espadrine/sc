@@ -96,7 +96,7 @@ window.client = (function () {
 
       delta = [];
       var dmp = new diff_match_patch();
-      Diff.solve(Diff.delta(dmp.diff_main(bufcopy, text.value)), res);
+      delta = Diff.solve(Diff.delta(dmp.diff_main(bufcopy, text.value)), res);
       text.value = Diff.applydelta(res, text.value);
       lastcopy = text.value;
       text.value = Diff.applydelta(delta, text.value);
