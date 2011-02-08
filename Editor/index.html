@@ -21,30 +21,40 @@
   
   <script>
   
+    client = {
+      user: "dom",
+      rev: 0,
+	  copy: "<!doctype html>\n<title><\/title>\n\n<canvas id=tutorial width=150 height=150><\/canvas>\n\n<script>\n  var canvas = document.getElementById('tutorial');\n  var context = canvas.getContext('2d');\n\n  context.fillStyle = 'rgb(250,0,0)';\n  context.fillRect(10, 10, 55, 50);\n\n  context.fillStyle = 'rgba(0, 0, 250, 0.5)';\n  context.fillRect(30, 30, 55, 50);\n<\/script>",
+	  timeout: 30
+    }
+	
     var editor = new CodeMirror(document.body, {
-      content: "<!doctype html>\n<title><\/title>\n\n<canvas id=tutorial width=150 height=150><\/canvas>\n\n<script>\n  var canvas = document.getElementById('tutorial');\n  var context = canvas.getContext('2d');\n\n  context.fillStyle = 'rgb(250,0,0)';\n  context.fillRect(10, 10, 55, 50);\n\n  context.fillStyle = 'rgba(0, 0, 250, 0.5)';\n  context.fillRect(30, 30, 55, 50);\n<\/script>",
+      content: window.client.copy,
       height: "50%",
       width: "100%",
       parserfile: ["parsexml.js", "parsecss.js", "tokenizejavascript.js", "parsejavascript.js", "parsehtmlmixed.js"],
       stylesheet: ["css/xmlcolors.css", "css/jscolors.css", "css/csscolors.css"],
       path: "js/"
     });
-	
-	setInterval(function() { preview.document.open(); preview.document.write(editor.editor.getCode()); preview.document.close(); },500);
-  
+
     setInterval(Scout.send(function(xhr, params){
+	
+	  var dmp = new ;
+      var diff = ;
+      delta = ;
+	
       params.data = {
-        file: 'foo.js',
-        diff: [[0,0,'a'], [0,1,'b'], [1,1], [0,1,'c']],
-        revn: 1,
-        user: 'foo',
-        pass: 'blah'
+        usr: client.usr,
+        rev: client.rev,
+        delta: Diff.delta(diff_match_patch().diff_main(client.copy, editor.editor.getCode()))
       };
-      params.open.url = 'http://scoutcamp.sourceforge.net/Editor/XHRtest/getmodif.py';
+      params.open.url = '';
       params.resp = function(xhr, resp) {
         alert(JSON.stringify(resp));
       };
-    }), timeout);
+    }), client.timeout);
+  
+    setInterval(function() { preview.document.open(); preview.document.write(editor.editor.getCode()); preview.document.close(); }, 500);
 	
   </script>
   
