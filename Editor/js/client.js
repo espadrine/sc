@@ -2,4 +2,6 @@
  * Copyright (c) 2011 Jan Keromnes. All rights reserved.
  * */
 
- 
+(function (){
+  
+})()
