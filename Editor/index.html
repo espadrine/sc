@@ -39,19 +39,34 @@
 
     setInterval(Scout.send(function(xhr, params){
 	
-	  var dmp = new ;
-      var diff = ;
-      delta = ;
+	  
+      var dmp = new diff_match_patch();
+      var bufcopy = editor.editor.getCode();
 	
       params.data = {
         usr: client.usr,
         rev: client.rev,
-        delta: Diff.delta(diff_match_patch().diff_main(client.copy, editor.editor.getCode()))
+        delta: Diff.delta(dmp.diff_main(client.copy, editor.editor.getCode()))
       };
+	  
+	  
       params.open.url = '';
+	  
       params.resp = function(xhr, resp) {
-        alert(JSON.stringify(resp));
+		client.rev = resp.rev;
+		client.delta = [];
+		var pos = editor.editor.cursorPosition(true);
+		var text = editor.editor.getCode();
+		
+		var dmp = new diff_match_patch();
+        client.delta = Diff.solve(Diff.delta(dmp.diff_main(bufcopy, text)), resp.delta);
+        text = Diff.applydelta(resp.delta, text);
+        client.copy = text;
+        editor.editor.setCode(Diff.applydelta(delta, text));
+		
+		editor.editor.selectLines(pos.line, pos.character);
       };
+	  
     }), client.timeout);
   
     setInterval(function() { preview.document.open(); preview.document.write(editor.editor.getCode()); preview.document.close(); }, 500);
