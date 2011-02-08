@@ -151,6 +151,7 @@ var solveRightOfDel = function (delta, newdelta, i, j) {
  * before newdelta's beginning point, without certainty about overlapping. */
 var solveLeftOfDel = function (delta, newdelta, i, j) {
   var nd = newdelta[i];
+  var fromStartToEndDel = (nd[2] + nd[1]) - delta[j][2];
 
   switch (delta[j][0]) {
 
