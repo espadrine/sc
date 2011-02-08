@@ -39,7 +39,6 @@
 
     setInterval(Scout.send(function(xhr, params){
 	
-	  
       var dmp = new diff_match_patch();
       var bufcopy = editor.editor.getCode();
 	
@@ -49,8 +48,11 @@
         delta: Diff.delta(dmp.diff_main(client.copy, editor.editor.getCode()))
       };
 	  
+	  params.error = function(xhr, status) {
+	    // TODO
+	  };
 	  
-      params.open.url = '';
+      params.open.url = '/_/change';
 	  
       params.resp = function(xhr, resp) {
 		client.rev = resp.rev;
@@ -64,6 +66,7 @@
         client.copy = text;
         editor.editor.setCode(Diff.applydelta(delta, text));
 		
+		// this doesn't actually select lines, it places the cursor to the old position
 		editor.editor.selectLines(pos.line, pos.character);
       };
 	  
