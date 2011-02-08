@@ -132,7 +132,7 @@ var solveRightOfDel = function (delta, newdelta, i, j) {
     } else {
       /* We deleted something on a spot that was deleted. */
       var toend = delta[j][2] + delta[j][1] - (nd[2] + nd[1]);
-      if (toend < 0) {
+      if (toend <= 0) {
         /* All that we deleted was already deleted. */
         nd[1] -= delta[j][1];
         delta.splice (j, 1);
