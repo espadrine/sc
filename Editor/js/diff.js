@@ -72,8 +72,7 @@ var solve = function (delta, newdelta) {
       switch (nd[0]) {
 
         case 0:  /* Deletion. */
-          var fromStartDelToStart = delta[j][2] - nd[2];
-          if (fromStartDelToStart > 0) {
+          if (delta[j][2] > nd[2]) {
             solveRightOfDel (delta, newdelta, i, j);
           } else {
             solveLeftOfDel (delta, newdelta, i, j);
@@ -116,7 +115,7 @@ var solve = function (delta, newdelta) {
  * of the beginning of that deletion, without any promise about overlapping. */
 var solveRightOfDel = function (delta, newdelta, i, j) {
   var nd = newdelta[i];
-  var fromStartDelToStart = delta[j][2] - nd[2];
+  var fromStartToEndDel = (nd[2] + nd[1]) - delta[j][2];
 
   if (nd[2] + nd[1] <= delta[j][2]) {
     delta[j][2] -= nd[1];
@@ -138,7 +137,7 @@ var solveRightOfDel = function (delta, newdelta, i, j) {
         delta.splice (j, 1);
         j--;
       } else {
-        nd[1] -= fromStartDelToStart;
+        nd[1] -= fromStartToEndDel;
         delta[j][2] = nd[2];
         delta[j][1] = toend;
       }
@@ -152,7 +151,6 @@ var solveRightOfDel = function (delta, newdelta, i, j) {
  * before newdelta's beginning point, without certainty about overlapping. */
 var solveLeftOfDel = function (delta, newdelta, i, j) {
   var nd = newdelta[i];
-  var fromStartDelToStart = delta[j][2] - nd[2];
 
   switch (delta[j][0]) {
 
@@ -170,7 +168,7 @@ var solveLeftOfDel = function (delta, newdelta, i, j) {
           i--;
 
         } else {
-          delta[j][1] -= -fromStartDelToStart;
+          nd[1] -= -fromStartToEndDel;
           nd[2] = delta[j][2];
           nd[1] = toend;
         }
