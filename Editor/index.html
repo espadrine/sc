@@ -37,7 +37,7 @@
       path: "js/"
     });
 
-    setInterval(Scout.send(function(xhr, params){
+    /*setInterval(Scout.send(function(xhr, params){
 	
       var dmp = new diff_match_patch();
       var bufcopy = editor.editor.getCode();
@@ -70,11 +70,11 @@
 		editor.editor.selectLines(pos.line, pos.character);
       };
 	  
-    }), client.timeout);
+    }), client.timeout);*/
   
     setInterval((function() {
-	  var preview = document.getElementById('preview');
-	  return function() { preview.document.open(); preview.document.write(editor.editor.getCode()); preview.document.close(); }
+	  preview = document.getElementById('preview');
+	  return function() { preview.contentDocument.open(); preview.contentDocument.write(editor.editor.getCode()); preview.contentDocument.close(); }
 	})(), 500);
 	
   </script>
