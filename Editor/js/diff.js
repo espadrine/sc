@@ -162,7 +162,7 @@ var solveLeftOfDel = function (delta, newdelta, i, j) {
         /* We deleted past the start of their deletion. */
 
         var toend = nd[2] + nd[1] - (delta[j][2] + delta[j][1])
-        if (toend < 0) {
+        if (toend <= 0) {
           /* All that they deleted, we already deleted. */
           delta[j][1] -= nd[1];
           newdelta.splice (i, 1);
