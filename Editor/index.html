@@ -72,7 +72,10 @@
 	  
     }), client.timeout);
   
-    setInterval(function() { preview.document.open(); preview.document.write(editor.editor.getCode()); preview.document.close(); }, 500);
+    setInterval((function() {
+	  var preview = document.getElementById('preview');
+	  return function() { preview.document.open(); preview.document.write(editor.editor.getCode()); preview.document.close(); }
+	})(), 500);
 	
   </script>
   
