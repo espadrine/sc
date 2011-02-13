@@ -2,6 +2,10 @@
 <title>Diff</title>
 <meta charset=utf-8>
 
+<style>
+  table tr { text-align: center; }
+  button.big { height: 2em; }
+</style>
 <p id=main>
 <table>
   <tr>
@@ -11,7 +15,9 @@
   <tr>
     <td><button id=t0but>Push</button>
     <td><button id=t1but>Push</button>
-	<td><button onclick=auto()>AutoPush! &reg;</button>
+  </tr>
+  <tr>
+    <td colspan=2><button class=big onclick=auto()>AutoPush! &reg;</button>
   </tr>
 </table>
 
@@ -51,7 +57,11 @@ window.server = (function () {
         /* There were other changes since. */
 
         /* Solve conflicts with previous revisions. */
+        console.log("before: delta " + JSON.stringify(delta) +
+                    " senddelta " + JSON.stringify(senddelta));
         Diff.solve(senddelta, delta);
+        console.log("after: delta " + JSON.stringify(delta) +
+                    " senddelta " + JSON.stringify(senddelta));
 
         callback(rev+1, senddelta);
 
@@ -112,9 +122,14 @@ document.getElementById('t1but').addEventListener('click', client(), false);
 area = [document.getElementById('t0'), document.getElementById('t1')];
 
 var auto = function () {
-  var lastcopy = document.getElementById('main');
+  /* Reset everything. */
+  document.getElementById('main').textContent = '';
+  document.getElementById('t0').value = '';
+  document.getElementById('t1').value = '';
   area[0].style.backgroundColor = '#FFFFFF';
   area[1].style.backgroundColor = '#FFFFFF';
+
+  var lastcopy = document.getElementById('main');
   var bug = false;
   while(!bug) {
     var num = Math.floor(Math.random()*2);
