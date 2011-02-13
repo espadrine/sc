@@ -109,35 +109,36 @@ window.client = (function () {
 document.getElementById('t0but').addEventListener('click', client(), false);
 document.getElementById('t1but').addEventListener('click', client(), false);
 
-area = [document.getElementById('t0'),document.getElementById('t1')];
+area = [document.getElementById('t0'), document.getElementById('t1')];
 
-var auto = function() {
+var auto = function () {
   var lastcopy = document.getElementById('main');
   area[0].style.backgroundColor = '#FFFFFF';
   area[1].style.backgroundColor = '#FFFFFF';
   var bug = false;
   while(!bug) {
-	var num = Math.floor(Math.random()*2);
-	switch(Math.floor(Math.random()*3)) {
-	  case 0: //push
-	  document.getElementById('t'+num+'but').click();
-	  if(lastcopy.textContent != area[num].value) { // found a bug
-	    bug = true;
-		area[num].style.backgroundColor = '#FF0000';
-	  }
-	  break;
-	  
-	  case 1: //add
-	  var pos = Math.floor(Math.random()*area[num].value.length);
-	  area[num].value = Diff.applydelta([[1,Math.floor(Math.random()*10),pos]], area[num].value);
-	  break;
-	  
-	  case 2: //delete
-	  var pos = Math.floor(Math.random()*area[num].value.length);
-	  var count = Math.floor(Math.random()*(area[num].value.length-pos-1));
-	  area[num].value = Diff.applydelta([[0,count,pos]], area[num].value);
-	  break;
-	}
+    var num = Math.floor(Math.random()*2);
+    switch(Math.floor(Math.random()*3)) {
+    case 0: //push
+      document.getElementById('t'+num+'but').click();
+      if(lastcopy.textContent != area[num].value) { // found a bug
+        bug = true;
+        area[num].style.backgroundColor = '#FF0000';
+      }
+      break;
+      
+    case 1: //add
+      var pos = Math.floor(Math.random()*area[num].value.length);
+      area[num].value = Diff.applydelta([[1,Math.floor(Math.random()*10),pos]],
+                                        area[num].value);
+      break;
+      
+    case 2: //delete
+      var pos = Math.floor(Math.random()*area[num].value.length);
+      var count = Math.floor(Math.random()*(area[num].value.length-pos-1));
+      area[num].value = Diff.applydelta([[0,count,pos]], area[num].value);
+      break;
+    }
   }
 }
 </script>
