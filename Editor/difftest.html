@@ -57,6 +57,7 @@ window.server = (function () {
         /* There were other changes since. */
 
         /* Solve conflicts with previous revisions. */
+        console.log(copy);
         console.log("before: delta " + JSON.stringify(delta) +
                     " senddelta " + JSON.stringify(senddelta));
         Diff.solve(senddelta, delta);
@@ -124,8 +125,8 @@ area = [document.getElementById('t0'), document.getElementById('t1')];
 var auto = function () {
   /* Reset everything. */
   document.getElementById('main').textContent = '';
-  document.getElementById('t0').value = '';
-  document.getElementById('t1').value = '';
+  area[0].value = '';
+  area[1].value = '';
   area[0].style.backgroundColor = '#FFFFFF';
   area[1].style.backgroundColor = '#FFFFFF';
 
