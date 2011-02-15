@@ -73,9 +73,9 @@ var solve = function (delta, newdelta) {
 
         case 0:  /* Deletion. */
           if (delta[j][2] > nd[2]) {
-            solveRightOfDel (delta, newdelta, i, j);
+            solveRightOfDel (delta, newdelta, [i, j]);
           } else {
-            solveLeftOfDel (delta, newdelta, i, j);
+            solveLeftOfDel (delta, newdelta, [i, j]);
           }
 
           break;
@@ -113,7 +113,8 @@ var solve = function (delta, newdelta) {
 /* solveRightOfDel (delta, newdelta, i, j):
  * newdelta is a deletion; delta is an operation that happens on the right
  * of the beginning of that deletion, without any promise about overlapping. */
-var solveRightOfDel = function (delta, newdelta, i, j) {
+var solveRightOfDel = function (delta, newdelta, indexes) {
+  var i = indexes[0], j = indexes[1];
   var nd = newdelta[i];
   var fromStartToEndDel = (nd[2] + nd[1]) - delta[j][2];
 
@@ -125,7 +126,7 @@ var solveRightOfDel = function (delta, newdelta, i, j) {
       /* We inserted something on a spot that was deleted. */
       nd[1] += delta[j][1].length;  /* Delete it all first. */
       delta[j][2] = nd[2];  /* Then insert at first position. */
-      i++;
+      indexes[0]++;
       newdelta.splice (i, 0, delta[j]);
 
     } else {
@@ -135,7 +136,7 @@ var solveRightOfDel = function (delta, newdelta, i, j) {
         /* All that we deleted was already deleted. */
         nd[1] -= delta[j][1];
         delta.splice (j, 1);
-        j--;
+        indexes[1]--;
       } else {
         nd[1] -= fromStartToEndDel;
         delta[j][2] = nd[2];
@@ -149,7 +150,8 @@ var solveRightOfDel = function (delta, newdelta, i, j) {
 /* solveLeftOfDel (delta, newdelta):
  * newdelta is a deletion, and delta is an operation that begins
  * before newdelta's beginning point, without certainty about overlapping. */
-var solveLeftOfDel = function (delta, newdelta, i, j) {
+var solveLeftOfDel = function (delta, newdelta, indexes) {
+  var i = indexes[0], j = indexes[1];
   var nd = newdelta[i];
   var fromStartToEndDel = (nd[2] + nd[1]) - delta[j][2];
 
@@ -166,7 +168,7 @@ var solveLeftOfDel = function (delta, newdelta, i, j) {
           /* All that they deleted, we already deleted. */
           delta[j][1] -= nd[1];
           newdelta.splice (i, 1);
-          i--;
+          indexes[0]--;
 
         } else {
           nd[1] -= -fromStartToEndDel;

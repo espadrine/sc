@@ -57,7 +57,7 @@ window.server = (function () {
         /* There were other changes since. */
 
         /* Solve conflicts with previous revisions. */
-        console.log(copy);
+        console.log('rev ' + rev + ': ' + copy);
         console.log("before: delta " + JSON.stringify(delta) +
                     " senddelta " + JSON.stringify(senddelta));
         Diff.solve(senddelta, delta);
