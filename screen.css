@@ -1,25 +1,30 @@
-@import url(http://fonts.googleapis.com/css?family=Droid+Sans&subset=latin);
-@import url(http://fonts.googleapis.com/css?family=IM+Fell+DW+Pica:italic&subset=latin);
-@import url(http://fonts.googleapis.com/css?family=Inconsolata&subset=latin);
 html {
-  color: #222;
+  color: #444;
+  text-shadow: #777 0px 1px 4px;
   background-color: linen;  /* linen = #faf0e6. */
   font-family: "Droid Sans", sans-serif;
+  overflow-y: scroll;
 }
+
+::-moz-selection { background: #ff5e99; color: #fff; text-shadow: none; }
+::selection { background: #ff5e99; color: #fff; text-shadow: none; }
 
 h1 {
   text-align: right;
   font-family: Inconsolata, monospace;
   text-decoration: underline;
   border-bottom: solid 1px #222;
+  text-shadow: hsl(260, 70%, 70%) 0px 0px 42px;
 }
 h1 span.purple {
   color: purple;
 }
 
-h2, h3, p, pre, ol, ul, dl, table, form {
-  margin-left: 20px;
-  margin-right: 20px;
+h2, h3, table, form {
+  margin: auto 20px;
+}
+p, pre, ol, ul, dl {
+  margin: 12pt 70px;
 }
 
 ol>li, ul>li, dl>dt {
@@ -44,22 +49,36 @@ pre, code, kbd {
 pre {
   padding: 10px;
   border: 1px dashed purple;
+  letter-spacing: 1px;
 }
 
 a, a:visited {
   color: purple;
-  text-shadow: rgba(0,0,0,0) 1px 1px 0px;
+  text-shadow: 777 0px 1px 4px;
   text-decoration: none;
 }
 a:hover {
-  color: rgba(1,1,1,0.1);
-  text-shadow: purple 0px 0px 1px;
+  color: rgba(1,1,1,0.4);
+  text-shadow: purple  0px 0px 1px;
 }
 
 textarea {
   width: 500px;
   height: 150px;
 }
+
+
+/* Heads */
+
+span.ipa { font-style: auto; font-family: sans-serif; margin-right: 7px; }
+.awesome { font-size: 1.2em; width: 50%; margin: 1cm auto; }
+.speech { font-style: italic; font-family: serif; }
+.speech code.entry {
+  font-size: x-large;
+  font-weight: bold;
+  margin-right: 13px;
+}
+
 
 /* Downloads */
 .downloads {
@@ -73,7 +92,7 @@ textarea {
   -moz-border-radius: 3px;
 
   color: #b70;
-  text-shadow: #755 1px 1px 0px, #664646 -1px -1px 0px,
+  text-shadow: #a44 1px 1px 0px, #644 -1px -1px 1px,
       #c90 2px 2px 0px, #c90 3px 3px 0px;
   box-shadow:  #94b -1px -1px 0px inset, #c95 -2px -2px 1px inset,
       #94b 1px 1px 0px inset, #950 2px 2px 1px inset,
@@ -92,13 +111,19 @@ textarea {
 .downloads a:hover {
   box-shadow:  #94b -1px -1px 0px inset, #c99 -2px -2px 1px inset,
       #94b 1px 1px 0px inset, #953 2px 2px 1px inset,
-      #606 0px 0px 10px inset;
+      #606 0px 0px 20px inset; /* Main one */
 }
-.sclib {
-  background-color: #9020d0;
+.scout {
+  background-color: hsl(280, 50%, 45%); /* #9020d0; */
 }
-.sclibmin {
-  background-color: #9440d4;
+.scoutmin {
+  background-color: hsl(280, 70%, 50%); /* #9020d0; */
+}
+.camp {
+  background-color: hsl(260, 70%, 60%);
+}
+.nodejs {
+  background-color: hsl(245, 70%, 60%);
 }
 
 /* Comments */
