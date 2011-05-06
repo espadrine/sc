@@ -131,7 +131,7 @@ js/  index.html  page.html ...</pre>
     xhr.but.disabled = true;
     xhr.but.textContent = 'Submitting...';
     
-    params.open = {url:'/_/note'};
+    params.open = {url:'/$note'};
     params.data = {message: this.firstElementChild.value};
     params.resp = function (xhr, resp) {
       xhr.but.disabled = false;
@@ -177,8 +177,8 @@ This may be faster if the associated action already uses the hard drive.
 </p>
 
 <p>The server will then receive a request that looks something like this:
-"http://example.com/_/prog?message=[input]".
-It will then run the c program located at /_/prog, whose
+"http://example.com/$prog?message=[input]".
+It will then run the c program located at /$prog, whose
 source code may look like that, using ScoutCamp's apis:
 </p>
 
@@ -259,12 +259,18 @@ function given, through the <code>resp</code> parameter.
 </p>
 
 <h3>Camp.js</h3>
+<p><code>var camp = require ( './camp.js' );</code></p>
 <dl>
-  <dt><code>function Camp ( action, function ( jsonQuery ) { return jsonResp; }
-    )</code>
-  <dd>The Camp function registers an action located at '/_/[action]',
-  which runs the function given as the second argument.
-  <dt><code>Camp.start = function ( port='80', debug=false ) { }</code>
+  <dt><code>camp.add = function ( action, function ( jsonQuery, ... ) { return
+    jsonResp; }, eventname = undefined )</code>
+  <dd>The Camp function registers an action located at '/$[action]',
+  which runs the function given as the second argument.<br>
+  If the "eventname" parameter is given, the answer will be hold until
+  the <code>camp.Server.emit ( eventname, argument )</code> event is emitted
+  from your app. Then, the function will be launched, with possible additional
+  parameters (here, "argument"), and the result of
+  evaluating it will be sent back to the client if not undefined.
+  <dt><code>camp.Server.start = function ( port='80', debug=false ) { }</code>
   <dd>The start function starts the web server, listening on port 80 by default.
 </dl>
 
@@ -317,50 +323,6 @@ function given, through the <code>resp</code> parameter.
   CONTENT_TYPE, CONTENT_LENGTH.
   <li>void scReturn(json_object) : sends back JSON to the client.
 </ul>
-
-
-<h2>Any ideas?</h2>
-
-<p>Feel free to tell me!
-</p>
-
-<form id=form action="javascript:send()">
-  <label>Your name: <input name=name></label>
-  <br>
-  <label>Your suggestion:<br>
-    <textarea name=msg></textarea>
-  </label>
-  <br>
-  <button id=send>Send idea</button>
-  <script>
-    function send () {
-      document.getElementById('send').disabled = true;
-      var xhr = new XMLHttpRequest();
-      xhr.open('POST', 'req.cgi', true);
-      xhr.onreadystatechange = function (e) {
-        if (xhr.readyState == 4) {
-          if (xhr.status == 200) {
-            var but = document.getElementById('send');
-            but.disabled = false;
-            var rec = document.createTextNode('Received!');
-            but.parentNode.appendChild(rec);
-            var remTxt = function() {
-              var form = document.getElementById('form');
-              form.removeChild(form.lastChild);
-            };
-            setTimeout(remTxt,5000);
-          }
-        }
-      };
-      xhr.setRequestHeader("Content-Type","application/x-www-form-urlencoded");
-      xhr.send('name=' + document.getElementById('form').name.value +
-          '&amp;msg=' + document.getElementById('form').msg.value);
-    }
-  </script>
-</form>
-
-<p>You may read all ideas and comment them <a href="req">here</a>.
-</p>
 
 <p>If you wish to be part of this project,
 <a href=mailto:thaddee.tyl@gmail.com>send me a mail</a>.

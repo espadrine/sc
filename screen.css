@@ -1,7 +1,7 @@
 html {
   color: #444;
-  text-shadow: #777 0px 1px 4px;
-  background-color: linen;  /* linen = #faf0e6. */
+  text-shadow: #999 0px 1px 4px;
+  background:  url('img/bg1.png'), url('img/bg3.png'),url('img/bg2.png'), linen;  /* linen = #faf0e6. */
   font-family: "Droid Sans", sans-serif;
   overflow-y: scroll;
 }
@@ -72,7 +72,7 @@ textarea {
 
 span.ipa { font-style: auto; font-family: sans-serif; margin-right: 7px; }
 .awesome { font-size: 1.2em; width: 50%; margin: 1cm auto; }
-.speech { font-style: italic; font-family: serif; }
+.speech { font-style: italic; font-family: "Linux Libertine O",serif; }
 .speech code.entry {
   font-size: x-large;
   font-weight: bold;
