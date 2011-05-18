@@ -1,6 +1,6 @@
 html {
   color: #444;
-  text-shadow: #999 0px 1px 4px;
+  text-shadow: #EC7979 0px 1px 4px;
   background:  url('img/bg1.png'), url('img/bg3.png'),url('img/bg2.png'), linen;  /* linen = #faf0e6. */
   font-family: "Droid Sans", sans-serif;
   overflow-y: scroll;
