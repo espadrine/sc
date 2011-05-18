@@ -253,6 +253,11 @@ function given, through the <code>resp</code> parameter.
   domEltWrapped.on function parameter.<br>
   It can be handy when using timeouts, <code>setTimeout(Scout.send(...),
     1000);</code>.
+  <dt><code>function Scout.maker ( )</code>
+  <dd>There is a very small browser-imposed limit on the number of XHR objects
+  one is allowed to create. If you have simultaneous XHR calls however, you will
+  need to create two xhr instances. You can do so by creating yet another Scout
+  object, which this function will return.
 </dl>
 <p><small>Please note that the Content-Type header of a POST ajax call will be
   "application/x-www-form-urlencoded".</small>
@@ -262,14 +267,21 @@ function given, through the <code>resp</code> parameter.
 <p><code>var camp = require ( './camp.js' );</code></p>
 <dl>
   <dt><code>camp.add = function ( action, function ( jsonQuery, ... ) { return
-    jsonResp; }, eventname = undefined )</code>
+    jsonRespOrNamedFunction; } )</code>
   <dd>The Camp function registers an action located at '/$[action]',
   which runs the function given as the second argument.<br>
-  If the "eventname" parameter is given, the answer will be hold until
-  the <code>camp.Server.emit ( eventname, argument )</code> event is emitted
-  from your app. Then, the function will be launched, with possible additional
-  parameters (here, "argument"), and the result of
-  evaluating it will be sent back to the client if not undefined.
+  Either the function returns an object literal, which will immediately be sent
+  back to the client in JSON if not undefined, or it returns yet another
+  function that takes arbitrary parameters (eg, <code>function ( foo, bar ) {
+    return { result: foo + bar }; }</code>), in which case that latter function,
+  which must return the JSON to send back to the client, will only be run when
+  the <code>camp.Server.emit ( nameOfTheFunction, foo, bar)</code> event is
+  emitted from your app. Then, the function will be launched with the parameters
+  foo and bar, and the result will be sent back to the client if not undefined.
+  <br>
+  The second case will usually be uncommon. It is there to cover very specific,
+  strongly app-oriented websites.
+
   <dt><code>camp.Server.start = function ( port='80', debug=false ) { }</code>
   <dd>The start function starts the web server, listening on port 80 by default.
 </dl>

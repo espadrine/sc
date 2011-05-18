@@ -1681,7 +1681,7 @@ if (!this.JSON) {
 
 /* The main fun starts here. */
 var Scout = function(){};
-Scout = (function () {
+Scout = (function Scoutmaker () {
   
   /* xhr is a closure. */
   var xhr;
@@ -1806,6 +1806,7 @@ Scout = (function () {
       sendxhr(undefined, params);
     };
   };
+  ret.maker = Scoutmaker;
   
   return ret;
 })();
