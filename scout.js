@@ -1705,7 +1705,8 @@ Scout = (function Scoutmaker () {
     data: {},
     open: { method: 'POST' },
     resp: function (xhr, resp) {},
-    error: function (xhr, status) {}
+    error: function (xhr, status) {},
+    partial: function (xhr, raw, resp) {}
   };
 
   /* Convert object literal to xhr-sendable. */
@@ -1727,13 +1728,25 @@ Scout = (function Scoutmaker () {
     if (params.open.url) {
       /* We have somewhere to go to. */
       xhr.onreadystatechange = function () {
-        if (xhr.readyState === 4) {
-          if (xhr.status === 200) {
-            var resp = JSON.parse(xhr.responseText);
-            params.resp.apply(target, [xhr, resp]);
-          } else {
-            params.error.apply(target, [xhr, xhr.status]);
-          }
+        switch (xhr.readyState) {
+          case 3:
+            if (params.partial === undefined) {
+              var raw = xhr.responseText;
+              var resp;
+              try {
+                resp = JSON.parse(raw);
+              } catch (e) {}
+              params.partial.apply(target, [xhr, raw, resp]);
+            }
+            break;
+          case 4:
+            if (xhr.status === 200) {
+              var resp = JSON.parse(xhr.responseText);
+              params.resp.apply(target, [xhr, resp]);
+            } else {
+              params.error.apply(target, [xhr, xhr.status]);
+            }
+            break;
         }
       };
       xhr.open(params.open.method,
