@@ -4,6 +4,10 @@
 // import the Camp server module for easy web & ajax
 var Camp = require ('./lib/camp.js');
 
+Camp.format ('/index.html', function (arg) {
+  return arg;
+});
+
 // let's rock'n'roll!
 Camp.Server.start (80, true);
 
