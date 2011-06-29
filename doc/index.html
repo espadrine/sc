@@ -276,15 +276,95 @@ function given, through the <code>resp</code> parameter.
     return { result: foo + bar }; }</code>), in which case that latter function,
   which must return the JSON to send back to the client, will only be run when
   the <code>camp.Server.emit ( nameOfTheFunction, foo, bar)</code> event is
-  emitted from your app. Then, the function will be launched with the parameters
+  emitted from your app.
+  Then, the function will be launched with the parameters
   foo and bar, and the result will be sent back to the client if not undefined.
   <br>
   The second case will usually be uncommon. It is there to cover very specific,
   strongly app-oriented websites.
 
+  <dt><code>camp.format = function ( path, function literal ( jsonQuery ) {
+    return jsonFiller; } )</code>
+  <dd>You may wish to write template html files (or any other kind) that will be
+  preprocessed server-side. This function lets you tell the system that the
+  string `path` is preprocessed against the literal data returned by the
+  function `literal`. That function takes as a parameter the query string it
+  got.<br>
+  The templating language used is specified <a href=#plate.js>in the next
+    section</a>.
+
   <dt><code>camp.Server.start = function ( port='80', debug=false ) { }</code>
   <dd>The start function starts the web server, listening on port 80 by default.
 </dl>
+
+
+<h3 id=plate.js>Plate.js</h3>
+<p>The Plate is the template system in use by default in ScoutCamp. It looks
+very similar to projects such as Mustache, Ctemplates, and JSON templates.</p>
+
+<p>If you need to understand one thing about Plate.js, it is the separation
+between template, data, and parser.
+<ul>
+  <li>The template is a file, in your web/ folder, that contains all common html
+  and text.</li>
+  <li>The data, given as the result of the `literal` function, is a JSON object.
+  The template file contains slots which will be filled by the value of
+  corresponding keys.</li>
+  <li>The parsers are functions which take the values of the data literal, and
+  produce a reasonable string output. One such parser, for instance, is
+  <code>Plate.parsers.html = function ( text )</code>. It returns a copy of the
+  text, with all special characters escaped. All "&lt;" are converted to
+  "&amp;lt;", and so on!<br>
+  Parsers can be extended at will.
+</ul>
+
+<p>Let's see how a plate file looks like.</p>
+<pre>
+This is a simple {{=medium|html}}.
+What you just saw above, was the Value Macro. It inserts the value corresponding
+to the "medium" key, with the html parser.
+There are other macros, too:
+{{-macros|macro|i;
+{{=i|integer}}. {{=macro|html}} macro, }}
+Do we have a conditional macro? {{?cond macro|YES!; no, too bad...}}
+But how do we escape two curly braces? Like this: {{{.
+Are there comments? {{# Quite true indeed.}}
+</pre>
+<p>Against the following literal: <code>{ "medium": "file", "macros": ["Truth",
+  "Value", "Array", "Comment", "Macro definition"], "cond macro": true }</code>,
+we get this result.
+</p>
+<pre>
+This is a simple file.
+What you just saw above, was the Value Macro. It inserts the value corresponding
+to the "medium" key, with the html parser.
+There are other macros, too:
+0. Truth macro, 
+1. Value macro,
+2. Array macro,
+3. Comment macro,
+4. Macro definition macro,
+Do we have a conditional macro? YES!
+But how do we escape two curly braces? Like this: {{.
+Are there comments? 
+</pre>
+
+<p>Extensibility is achieved through the use of the plate object. This object
+contains twoo main extensibility entry points, <code>parsers</code> and
+<code>macros</code>.
+</p>
+<pre>
+var camp = require ('./camp');
+camp.Plate.parsers['new parser name'] = function ( text ) {
+  return text;
+};
+
+// Macro names must be one-character.
+camp.Plate.macros['n'] = function ( literal, params ) {
+  return literal[params[0]];
+};
+</pre>
+
 
 <h3>The rest of it</h3>
 <p><a href=http://www.json.org>JSON</a> library. This is actually the
