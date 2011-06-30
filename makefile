@@ -1,5 +1,6 @@
 # makefile: build and deploy from web/ to publish/, start/stop the server.
-# Copyright (c) 2011 Jan Keromnes & Yann Tyl. All rights reserved.
+# Copyright (c) 2011 Jan Keromnes, Yann Tyl. All rights reserved.
+# Code covered by the LGPL license.
 
 LOG = node.log
 SERVER = server.js

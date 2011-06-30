@@ -1,5 +1,6 @@
-// server.js: run this with Node.js in the web/ folder to start your server
-// Copyright (c) 2011 Jan Keromnes & Yann Tyl. No rights reserved.
+/* server.js: run this with Node.js in the web/ folder to start your server.
+ * Copyright (c) 2011 Jan Keromnes, Thaddee Tyl. All rights reserved.
+ * Code covered by the LGPL license. */
 
 // import the Camp server module for easy web & ajax
 var Camp = require ('./lib/camp.js');
@@ -15,6 +16,6 @@ Camp.format ('/index.html', function (arg) {
 });
 
 // let's rock'n'roll!
-Camp.Server.start (80, true);
+Camp.Server.start (80);
 
 

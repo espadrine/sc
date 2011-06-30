@@ -1,5 +1,5 @@
 /* sclib.js: Scout is an ajax object.
- * Copyright (c) 2010 Thaddee Tyl. All rights reserved.
+ * Copyright (c) 2010 Thaddee Tyl, Jan Keromnes. All rights reserved.
  * Produced under the MIT license.
  * 
  * Includes Sizzle.js <http://sizzlejs.com/>
