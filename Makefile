@@ -1,4 +1,4 @@
-# Makefile: build and deploy from web/ to publish/, start/stop the server.
+# Makefile: Publish your website and start/stop your server.
 # Copyright (c) 2011 Jan Keromnes, Yann Tyl. All rights reserved.
 # Code covered by the LGPL license.
 
