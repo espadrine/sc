@@ -7,22 +7,18 @@ SERVER = server.js
 TARGET = publish
 JSMIN = jsmin
 MIN = min
-
 WEB = web
-DEMO = demo
 
-web: clean deployweb minify start
-demo: clean deploydemo minify start
+web: clean deploy minify start
+
 test: web
 	node test/main.js
 
 clean:
 	rm -rf $(TARGET)/* $(LOG)
 
-
 minify:
 	for file in `find $(TARGET) -name '*\.js'` ; do cat "$${file}" | $(JSMIN) > "$${file}$(MIN)" ; mv "$${file}$(MIN)" "$${file}" ; done
-
 
 start:
 	cd $(TARGET) ; sudo nohup node ../$(SERVER) > ../$(LOG)
@@ -30,14 +26,8 @@ start:
 stop:
 	for pid in `ps aux | grep node | grep $(SERVER) | awk '{print $$2}'` ; do sudo kill $$pid 2> /dev/null ; done
 
-
-# deployment-specific items.
-
-deployweb:
+deploy:
 	cp -r $(WEB)/* $(TARGET)
-
-deploydemo:
-	cp -r $(DEMO)/* $(TARGET)
 
 # time for a break
 coffee:
