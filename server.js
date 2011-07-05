@@ -8,9 +8,9 @@ var Camp = require ('./lib/camp.js');
 // templating information of the index page
 Camp.format ('/index.html', function (arg) {
   var data = {
-     title: arg.title || 'success',
-     h1: arg.h1 || 'success',
-     p: arg.p || 'you\'re on the web!'
+     title: arg.title || 'Success',
+     h1: arg.h1 || 'Success!',
+     p: arg.p || 'You\'re on the web!'
   };
   return data;
 });
