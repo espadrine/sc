@@ -1,30 +1,6 @@
-var Plate = require ('./plate');
+var Plate = require ('../lib/plate'), Test = require ('./test');
 
-
-
-// Test World!
-//
-
-var Tests = function () { this.tests = []; this.n = 0; this.errors = 0; };
-Tests.prototype.teq = function (a, b) {
-  this.n ++;
-  if (a !== b) {
-    console.log ('#' + this.n + ' failed: got ' + JSON.stringify (b) +
-                                ' instead of ' + JSON.stringify (a));
-    this.errors ++;
-  }
-};
-Tests.prototype.tldr = function () {
-  if (this.errors === 0) { console.log ('All ' + this.n + ' tests passed.');
-  } else if (this.errors === this.n) { console.log ('All tests failed.');
-  } else {
-    console.log ((this.n - this.errors) + ' tests passed out of ' +
-                 this.n + ' (' +
-                 (100 * (1 - this.errors/this.n)).toFixed (2) + '%).');
-  }
-};
-
-var t = new Tests ();
+var t = new Test ();
 
 // test 1 - 1 level of indentation, escaped {{.
 
