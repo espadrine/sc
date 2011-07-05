@@ -16,6 +16,4 @@ Camp.format ('/index.html', function (arg) {
 });
 
 // let's rock'n'roll!
-Camp.Server.start (80, true);
-
-
+Camp.Server.start (80);
