@@ -11,12 +11,12 @@ WEB = web
 
 web: clean deploy minify start
 
-test: web
-	node test/main.js
-
 clean:
 	rm -rf $(TARGET)/* $(LOG)
 
+deploy:
+	cp -r $(WEB)/* $(TARGET)
+	
 minify:
 	for file in `find $(TARGET) -name '*\.js'` ; do cat "$${file}" | $(JSMIN) > "$${file}$(MIN)" ; mv "$${file}$(MIN)" "$${file}" ; done
 
@@ -26,14 +26,9 @@ start:
 stop:
 	for pid in `ps aux | grep node | grep $(SERVER) | awk '{print $$2}'` ; do sudo kill $$pid 2> /dev/null ; done
 
-deploy:
-	cp -r $(WEB)/* $(TARGET)
-
-# time for a break
 coffee:
 	@echo "\n           )      (\n           (  )   )\n         _..,-(--,.._\n      .-;'-.,____,.-';\n     (( |            |\n      \`-;            ;\n         \\          /	\n      .-''\`-.____.-'''-.\n     (     '------'     )\n      \`--..________..--'\n";
 
-# http://xkcd.com/149/
 sandwich:
 	@if [ `id -u` = "0" ] ; then echo "\nOKAY." ; else echo "\nWhat? Make it yourself." ; fi
 
