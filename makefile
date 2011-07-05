@@ -1,33 +1,43 @@
-# makefile: build and deploy from web/ to publish/, start/stop the server.
+# Makefile: build and deploy from web/ to publish/, start/stop the server.
 # Copyright (c) 2011 Jan Keromnes, Yann Tyl. All rights reserved.
 # Code covered by the LGPL license.
 
 LOG = node.log
 SERVER = server.js
 TARGET = publish
-SOURCE = web
 JSMIN = jsmin
 MIN = min
 
-build: clean deploy minify
+WEB = web
+DEMO = demo
+
+web: clean deployweb minify start
+demo: clean deploydemo minify start
+test: web
+	node test/main.js
 
 clean:
 	rm -rf $(TARGET)/* $(LOG)
 
-deploy:
-	cp -r $(SOURCE)/* $(TARGET)
 
 minify:
 	for file in `find $(TARGET) -name '*\.js'` ; do cat "$${file}" | $(JSMIN) > "$${file}$(MIN)" ; mv "$${file}$(MIN)" "$${file}" ; done
 
-test:
-	cd $(SOURCE) ; sudo node ../$(SERVER)
 
 start:
-	cd $(TARGET) ; sudo nohup node ../$(SERVER) > ../$(LOG) &
+	cd $(TARGET) ; sudo nohup node ../$(SERVER) > ../$(LOG)
 
 stop:
 	for pid in `ps aux | grep node | grep $(SERVER) | awk '{print $$2}'` ; do sudo kill $$pid 2> /dev/null ; done
+
+
+# deployment-specific items.
+
+deployweb:
+	cp -r $(WEB)/* $(TARGET)
+
+deploydemo:
+	cp -r $(DEMO)/* $(TARGET)
 
 # time for a break
 coffee:
