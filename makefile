@@ -16,9 +16,11 @@ demo: clean deploydemo minify start
 test: web
 	node test/main.js
 
+
+# workflow
+
 clean:
 	rm -rf $(TARGET)/* $(LOG)
-
 
 minify:
 	for file in `find $(TARGET) -name '*\.js'` ; do cat "$${file}" | $(JSMIN) > "$${file}$(MIN)" ; mv "$${file}$(MIN)" "$${file}" ; done
@@ -38,6 +40,7 @@ deployweb:
 
 deploydemo:
 	cp -r $(DEMO)/* $(TARGET)
+
 
 # time for a break
 coffee:
