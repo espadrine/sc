@@ -129,11 +129,11 @@ span.ipa { font-style: auto; font-family: sans-serif; margin-right: 7px; }
 .release {
   background-color: #e46787;
 }
-.nodejs {
-  background-color: #bea3f5;     /* or hsl(110, 75%, 60%) ? */
-}
 .sources {
-  background-color: #7dc4e8;
+  background-color: #7dc4e8;     /* or hsl(110, 75%, 60%) ? */
+}
+.nodejs {
+  background-color: #bea3f5;
 }
 
 /* Comments */
