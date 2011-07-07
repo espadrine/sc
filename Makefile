@@ -16,7 +16,7 @@ clean:
 
 deploy:
 	cp -r $(WEB)/* $(TARGET)
-	
+  
 minify:
 	for file in `find $(TARGET) -name '*\.js'` ; do cat "$${file}" | $(JSMIN) > "$${file}$(MIN)" ; mv "$${file}$(MIN)" "$${file}" ; done
 
