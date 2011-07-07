@@ -39,6 +39,10 @@ t.teq (Plate.format ('There should be{{# nothing!}}...', {}),
 t.teq (Plate.format ('First param{{!s; return params[0]}}: {{steh; yep...}}!', {}),
        'First param: teh!');
 
+// macro macro macro test.
+t.teq (Plate.format ('First param{{!first; return params[0]}}: {{~first|teh; yep...}}!', {}),
+       'First param: teh!');
+
 // parser tests.
 t.teq (Plate.format ('Plain {{=data|plain}}.',{data:'text'}), 'Plain text.');
 t.teq (Plate.format ('Html {{=data|html}}.',{data:'<text & stuff>'}),
