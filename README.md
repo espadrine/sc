@@ -1,6 +1,4 @@
 #ScoutCamp
-a Node.js framework for easy Web Apps
-
 1. put website in web/
 2. edit server.js
 3. run 'make'
