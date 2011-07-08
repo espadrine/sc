@@ -7,8 +7,8 @@ var Test = function () { this.test = []; this.n = 0; this.errors = 0; };
 Test.prototype.teq = function (a, b) {
   this.n ++;
   if (a !== b) {
-    console.log ('#' + this.n + ' failed: got ' + JSON.stringify (b) +
-                                ' instead of ' + JSON.stringify (a));
+    console.log ('#' + this.n + ' failed: got ' + JSON.stringify (a) +
+                                ' instead of ' + JSON.stringify (b));
     this.errors ++;
   }
 };

@@ -1,4 +1,4 @@
-# Makefile: build and deploy from web/ to publish/, start/stop the server.
+# Makefile: Publish your website and start/stop your server.
 # Copyright (c) 2011 Jan Keromnes, Yann Tyl. All rights reserved.
 # Code covered by the LGPL license.
 
@@ -16,7 +16,7 @@ clean:
 
 deploy:
 	cp -r $(WEB)/* $(TARGET)
-	
+  
 minify:
 	for file in `find $(TARGET) -name '*\.js'` ; do cat "$${file}" | $(JSMIN) > "$${file}$(MIN)" ; mv "$${file}$(MIN)" "$${file}" ; done
 
