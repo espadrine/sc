@@ -3,7 +3,7 @@ a Node.js framework for easy Web Apps
 
 ##Get it
 - fork [espadrine/ScoutCamp](https://github.com/espadrine/ScoutCamp)
-- or [download](https://github.com/espadrine/ScoutCamp/zipball/master)
+- or [download it all](https://github.com/espadrine/ScoutCamp/zipball/master)
 
 ##Use it
 1. put website in web/
