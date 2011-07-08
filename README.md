@@ -1,11 +1,11 @@
 #ScoutCamp
 a Node.js framework for easy Web Apps
 
-##Get
-- fork [github.com/espadrine/ScoutCamp]
-- or download [github.com/espadrine/ScoutCamp/zipball/master]
+##Get it
+- fork github.com/espadrine/ScoutCamp
+- or download github.com/espadrine/ScoutCamp/zipball/master
 
-##Use
+##Use it
 1. put website in web/
 2. edit server.js
 3. run 'make'
