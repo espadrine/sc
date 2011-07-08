@@ -1,4 +1,4 @@
-## ScoutCamp
+#ScoutCamp
 a Node.js framework for easy Web Apps
 
 1. put website in web/
