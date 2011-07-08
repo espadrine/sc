@@ -14,5 +14,5 @@ a Node.js framework for easy Web Apps
 
 ##Contribute
 - watch the [hot issues](https://github.com/espadrine/ScoutCamp/issues)
-- use [pull requests](http://help.github.com/send-pull-requests/)
-- please do [get in touch](https://github.com/inbox/new/espadrine)
+- do some [pull requests](http://help.github.com/send-pull-requests/)
+- please [get in touch](https://github.com/inbox/new/jankeromnes)
