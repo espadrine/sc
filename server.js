@@ -1,4 +1,4 @@
-/* server.js: run this with Node.js in the web/ folder to start your server.
+/* server.js: run this with Node.js in the publish/ folder to start your server.
  * Copyright (c) 2011 Jan Keromnes, Thaddee Tyl. All rights reserved.
  * Code covered by the LGPL license. */
 
