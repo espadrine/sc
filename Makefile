@@ -9,25 +9,37 @@ JSMIN = jsmin
 MIN = min
 WEB = web
 
-web: clean deploy minify start
+all: clean deploy minify stop start
 
 clean:
-	rm -rf $(TARGET)/* $(LOG)
+	@echo "clean"
+	@rm -rf $(TARGET)/* $(LOG)
 
 deploy:
-	cp -r $(WEB)/* $(TARGET)
+	@echo "deploy"
+	@cp -r $(WEB)/* $(TARGET)
   
 minify:
-	for file in `find $(TARGET) -name '*\.js'` ; do cat "$${file}" | $(JSMIN) > "$${file}$(MIN)" ; mv "$${file}$(MIN)" "$${file}" ; done
+	@echo "minify"
+	@for file in `find $(TARGET) -name '*\.js'` ; do cat "$${file}" | $(JSMIN) > "$${file}$(MIN)" ; mv "$${file}$(MIN)" "$${file}" ; done
 
 start:
-	cd $(TARGET) ; sudo node ../$(SERVER) > $(LOG).log
+	@echo "start"
+	@cd $(TARGET) ; sudo node ../$(SERVER) > ../$(LOG)
 
 stop:
-	for pid in `ps aux | grep node | grep $(SERVER) | awk '{print $$2}'` ; do sudo kill -9 $$pid 2> /dev/null ; done
+	@echo "stop"
+	@for pid in `ps aux | grep -v make | grep node | grep $(SERVER) | awk '{print $$2}'` ; do sudo kill -9 $$pid 2> /dev/null ; done;
 	
 test:
 	node test/test-plate.js
+
+help:
+	@cat Makefile
+	
+?: help
+
+wtf: help
 
 coffee:
 	@echo "\n           )      (\n           (  )   )\n         _..,-(--,.._\n      .-;'-.,____,.-';\n     (( |            |\n      \`-;            ;\n         \\          /	\n      .-''\`-.____.-'''-.\n     (     '------'     )\n      \`--..________..--'\n";
@@ -35,5 +47,4 @@ coffee:
 sandwich:
 	@if [ `id -u` = "0" ] ; then echo "\nOKAY." ; else echo "\nWhat? Make it yourself." ; fi
 
-.PHONY: test
-
+.PHONY: all clean deploy minify start stop test help wtf ? coffee sandwich
