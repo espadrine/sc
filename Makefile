@@ -34,6 +34,11 @@ stop:
 test:
 	node test/test-plate.js
 
+update:
+	@git clone git://github.com/espadrine/ScoutCamp.git
+	@mv ScoutCamp/lib/* ./lib/
+	@rm -rf ScoutCamp/
+
 help:
 	@cat Makefile
 	
