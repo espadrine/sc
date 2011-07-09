@@ -2,8 +2,8 @@
 a Node.js framework for easy Web Apps
 
 ##Get it
-- fork [espadrine/ScoutCamp](https://github.com/espadrine/ScoutCamp)
-- or [download it all](https://github.com/espadrine/ScoutCamp/zipball/master)
+1. install [Node.js](http://nodejs.org) and [JSMin](http://www.crockford.com/javascript/jsmin.html)
+2. fork or download [ScoutCamp](https://github.com/espadrine/ScoutCamp)
 
 ##Use it
 1. put website in web/
