@@ -2,7 +2,7 @@
 a Node.js framework for easy Web Apps
 
 ##Get it
-1. install [node](http://nodejs.org) and [jsmin](http://www.crockford.com/javascript/jsmin.html)
+1. install [Node.js](http://nodejs.org) and [JSMin](http://www.crockford.com/javascript/jsmin.html)
 2. fork or download [ScoutCamp](https://github.com/espadrine/ScoutCamp)
 
 ##Use it
