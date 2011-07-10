@@ -87,4 +87,112 @@ graphical interface, in html and css, and then, you let the user interact with
 the server's data seemlessly through ajax calls.
 
 
+Plate.js
+--------
+
+An associated possibility, very much linked to the normal use of Camp.js, is to
+handle templates. Those are server-side preprocessed files.
+
+### Basic Usage
+
+Mostly, you first decide where to put your template file. Let's say we have such
+a file at `/first/post.html` (from the root of the web/ or publish/ directory).
+
+    var posts = ['This is the f1rst p0st!'];
+
+    camp.format ( /\/first\/post.html/, function ( query, path ) {
+      return {
+        text: posts[0],
+        comments: ['first comment!', 'second comment...']
+      };
+    });
+
+In this `camp.format` function, `query` is the object literal associated to the
+query string sent in the URL. For instance, `/first/post.html?key=value` has an
+associated query of `{"key": "value"}`.  
+The path, on the other side, corresponds to the match object that comes from
+evaluating the regular expression against the path.
+
+On the other side of the fence, the file `/web/first/post.html` might look like
+this:
+
+    <!doctype html>
+    <meta charset=utf-8>
+    <title></title>
+    <p>{{=text|html}}</p>
+    <ul>
+    {{-comments|comment;
+      <li>{{=comment|html}}</li>
+    }}
+    </ul>
+
+Because it will be preprocessed server-side, the browser will actually receive
+the following file:
+
+    <!doctype html>
+    <meta charset=utf-8>
+    <title></title>
+    <p>This is the f1rst p0st!</p>
+    <ul>
+      <li>first comment!</li>
+      <li>second comment...</li>
+    </ul>
+
+### Diving In
+
+There are two main elements of interest here. The easiest is the camp.js binding
+to the template system, the more documentation-heavy one is the actual grammar
+of the templating language.
+
+The camp.js binding is a very straightforward function; namely:
+
+    camp.format ( paths = /pattern/, call = function ( query = {}, path = [] ) {
+      return {};
+    });
+
+This function registers `paths` as being redirected to a template file. The
+template file is either `paths`, literally, or the path you affect `path[0]` to
+(indeed, `path[0]` is the match object). The return value of the `call` function
+is an object literal that will be fed to the template file. This object literal
+can very well be dynamically generated.
+
+The template syntax follows those basic rules:
+
+* Nothing is treated specially, but chunks of text surrounded by {{ and }}.
+* Those special chunks are a series of distinct parameters:
+  1. The first character is the macro that is used,
+  2. The next blocks of data separated by bars `|` are arguments to that macro,
+  3. What comes after a semi-colon `;` is the rest of the chunk.
+  For instance, `{{-hellos|hello; I say {{=hello|plain}}! }}` is separated as
+  follows: first the macro `-`, then the first argument `hellos`, then the
+  second `hello`, then the rest ` I say {{=hello|plain}}! `. You can probably
+  guess that, in this case, the rest has nested syntax too.
+* The special chunks are substituted by some *real text* that the macro returns.
+
+Default macros are the following:
+
+* `{{=key|parser}}` will print `key` as a string, escaping characters along what
+  `parser` returns. `parser` is one of Plate.parsers (which is a real array,
+  which you can extend if need be). Default parsers (self-explanatory):
+  * plain (text)
+  * html (text)
+  * uri (text)
+  * !uri (text)
+  * integer (text)
+  * intradix (text, radix)
+  * float (text, fractionDigits)
+  * exp (text, fractionDigits)
+  For instance, `{{=expNumber|exp|2}}` will only print the variable `expNumber`
+  with 2 fractional digits.
+* `{{?bool; rest }}` will print the rest if the variable `bool` is truthy.
+* `{{-object|value|key; rest }}` will parse the rest once for each key in
+  `object`, adding the new variables `value` and `key` to the scope.
+* `{{# rest }}` will not print anything at all.
+* `{{!m| func }}` will add a new macro `m` to the system, giving it the function
+  whose body is `func`, which receives the arguments `literal` (the literal
+  given to the template file) and `params` (parameters given to the macro).
+* `{{~macro; rest }}` will run the macro named `macro` (please note that this
+  macro has more than one character in it, this is legit).
+
+
 Thaddee Tyl, author of Scout Camp.

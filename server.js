@@ -6,11 +6,11 @@
 var Camp = require ('./lib/camp.js');
 
 // templating information of the index page
-Camp.format ('/index.html', function (arg) {
+Camp.format ('/index.html', function (query, path) {
   var data = {
-     title: arg.title || 'Success',
-     h1: arg.h1 || 'Success!',
-     p: arg.p || 'You\'re on the web!'
+     title: query.title || 'Success',
+     h1: query.h1 || 'Success!',
+     p: query.p || 'You\'re on the web!'
   };
   return data;
 });
