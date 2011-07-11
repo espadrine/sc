@@ -156,9 +156,9 @@ The template syntax follows those basic rules:
 
 * Nothing is treated specially, but chunks of text surrounded by {{ and }}.
 * Those special chunks are a series of distinct parameters:
-  1. The first character is the macro that is used,
-  2. The next blocks of data separated by bars `|` are arguments to that macro,
-  3. What comes after a semi-colon `;` is the rest of the chunk.
+   1. The first character is the macro that is used,
+   2. The next blocks of data separated by bars `|` are arguments to that macro,
+   3. What comes after a semi-colon `;` is the rest of the chunk.  
   For instance, `{{-hellos|hello; I say {{=hello|plain}}! }}` is separated as
   follows: first the macro `-`, then the first argument `hellos`, then the
   second `hello`, then the rest ` I say {{=hello|plain}}! `. You can probably
@@ -170,14 +170,14 @@ Default macros are the following:
 * `{{=key|parser}}` will print `key` as a string, escaping characters along what
   `parser` returns. `parser` is one of Plate.parsers (which is a real array,
   which you can extend if need be). Default parsers (self-explanatory):
-  * plain (text)
-  * html (text)
-  * uri (text)
-  * !uri (text)
-  * integer (text)
-  * intradix (text, radix)
-  * float (text, fractionDigits)
-  * exp (text, fractionDigits)
+   * plain (text)
+   * html (text)
+   * uri (text)
+   * !uri (text)
+   * integer (text)
+   * intradix (text, radix)
+   * float (text, fractionDigits)
+   * exp (text, fractionDigits)  
   For instance, `{{=expNumber|exp|2}}` will only print the variable `expNumber`
   with 2 fractional digits.
 * `{{?bool; rest }}` will print the rest if the variable `bool` is truthy.
