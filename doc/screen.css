@@ -1,0 +1,151 @@
+html {
+  color: #444;
+  text-shadow: #EC7979 0px 1px 4px;
+  background:  url('img/bg1.png'), url('img/bg3.png'),url('img/bg2.png'), linen;  /* linen = #faf0e6. */
+  font-family: "Droid Sans", sans-serif;
+  overflow-y: scroll;
+}
+
+::-moz-selection { background: #ff5e99; color: #fff; text-shadow: none; }
+::selection { background: #ff5e99; color: #fff; text-shadow: none; }
+
+h1 {
+  text-align: right;
+  font-family: Inconsolata, monospace;
+  text-decoration: underline;
+  border-bottom: solid 1px #222;
+  text-shadow: hsl(260, 70%, 70%) 0px 0px 42px;
+}
+h1 span.purple {
+  color: purple;
+}
+
+#subtitle {
+  text-align: center;
+}
+
+h2, h3, table, form {
+  margin: auto 20px;
+}
+p, pre, ol, ul, dl {
+  margin: 12pt 70px;
+}
+
+ol>li, ul>li, dl>dt {
+  margin-top: 4pt;
+}
+
+h2, h3 {
+  color: purple;
+  font-family: 'IM Fell DW Pica', serif;
+  font-style: italic;
+  margin-top: 40px;
+}
+
+p {
+  text-indent: 7px;
+}
+
+pre, code, kbd {
+  font-family: Inconsolata, monospace;
+  background-color: #faffe6;
+}
+pre {
+  padding: 10px;
+  border: 1px dashed purple;
+  letter-spacing: 1px;
+}
+
+a, a:visited {
+  color: purple;
+  text-shadow: 777 0px 1px 4px;
+  text-decoration: none;
+}
+a:hover {
+  color: rgba(1,1,1,0.4);
+  text-shadow: purple  0px 0px 1px;
+}
+
+textarea {
+  width: 500px;
+  height: 150px;
+}
+
+
+/* Heads */
+
+span.ipa { font-style: auto; font-family: sans-serif; margin-right: 7px; }
+.awesome { font-size: 1.2em; width: 50%; margin: 1cm auto; }
+.speech { font-style: italic; font-family: "Linux Libertine O",serif; }
+.entry {
+  font-size: x-large;
+  font-weight: bold;
+  margin-right: 13px;
+}
+
+
+/* Downloads */
+.downloads {
+  margin: auto;
+  border-spacing: 7pt;
+}
+.downloads a {
+  display: block;
+  padding: 12pt;
+  border-radius:      3px;
+  -moz-border-radius: 3px;
+
+  color: #c80;
+  text-shadow: #b34d4d 1px 1px 0px, #644 -1px -1px 1px,
+      #c90 2px 2px 0px, #c90 3px 3px 0px;
+  box-shadow:  #94b -1px -1px 0px inset, #c95 -2px -2px 1px inset,
+      #94b 1px 1px 0px inset, #950 2px 2px 1px inset,
+      #606 0px 0px 50px inset;
+  -webkit-transition: 0.3s ease-out box-shadow;
+  -moz-transition: 0.3s ease-out box-shadow;
+  transition: 0.3s ease-out box-shadow;
+
+  letter-spacing: 1pt;
+  font-family: "Inconsolata", monospace;
+  font-size: 14pt;
+  font-style: italic;
+  font-weight: bold;
+  text-decoration: none;
+}
+.downloads a:hover {
+  box-shadow:  #94b -1px -1px 0px inset, #c99 -2px -2px 1px inset,
+      #94b 1px 1px 0px inset, #953 2px 2px 1px inset,
+      #606 0px 0px 20px inset; /* Main one */
+}
+.scout {
+  background-color: hsl(280, 50%, 45%); /* #9020d0; */
+}
+.scoutmin {
+  background-color: hsl(280, 70%, 50%); /* #9020d0; */
+}
+.camp {
+  background-color: hsl(260, 70%, 60%);
+}
+.release {
+  background-color: #e46787;
+}
+.sources {
+  background-color: #7dc4e8;     /* or hsl(110, 75%, 60%) ? */
+}
+.nodejs {
+  background-color: #bea3f5;
+}
+
+/* Comments */
+div.idea {
+  border: 1px solid #503;
+  -webkit-box-shadow: 0.7pt 0.7pt 4px #503 inset;
+  -moz-box-shadow: 0.7pt 0.7pt 4px #503 inset;
+  border-radius: 3px;
+}
+
+table.comment tr {
+  border-radius: 5px 7px;
+}
+table.comment tr:nth-child(2n+1) { background-color: rgba(200,0,200, 0.2); }
+table.comment tr:nth-child(2n) { background-color: rgba(200,0,200, 0.1); }

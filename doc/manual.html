@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+<meta charset=utf-8>
+<link rel=stylesheet type=text/css href=screen.css>
+<title>Manual</title>
+
+<h1>The <span class=purple>Manual</span></h1>
+
+
+<p class="awesome speech">
+  You want to <strong>write a website</strong>, but don't want any hassle.<br>
+  You want it to be cool, with <strong>Ajax</strong>, Server-side
+  <strong>scripts</strong>, <strong>Unicode</strong> and all.<br>
+  You don't want ugly php polluting your <strong>html files</strong>.<br>
+  Look no further. We have what you need. For free.
+</p>
+
+<p>We let you separate <strong>the Ajax engines</strong>, run on the
+server, and <strong>the web interface</strong>, conveying information and
+giving the possibility of interaction with the engines.</p>
+</ul>
+
+<p>We give you:</p>
+<ul class=speech>
+  <li><code class=entry>Scout.js</code>
+  <span class=ipa>/skout/</span> Ajax library that lets you asynchronously get
+  data computed from the optimized Camp server.
+  <li><code class=entry>Camp.js</code>
+  <span class=ipa>/kamp/</span> Outstanding Node.js web server that lets
+  you focus on your content, and make seamless Ajax calls.
+  <li><code class=entry>Node.js</code>
+  <span class=ipa>/nōd/</span> Optimized, performance-centric, and scalable
+  web server that fits the need of all web apps, especially yours, and easy to
+  use thanks to its javascript configuration file.
+</ul>
+
+<table class=downloads>
+  <tr>
+    <td><a href=./web/js/scout.js class="download scout">
+    Download Scout.js!
+    </a></td>
+    <td><a href="./publish/js/scout.js" class="download scoutmin">
+    Download Scout.js Minified!
+    </a></td>
+  </tr>
+  <tr>
+    <td><a href="./lib/camp.js" class="download camp">
+        Download Camp.js!
+    </a></td>
+    <td><a href="http://nodejs.org" class="download nodejs">
+        Go look at Node.js!
+    </a></td>
+  </tr>
+</table>
+
+
+<h2>Where should I start?</h2>
+
+<p>First, download Node.js, scout.js minified, camp.js. Don't know where to
+find them? Please, look up! There, with the odd flashy colors!
+</p>
+<p>Then, you will want to set up your working environment like this.
+</p>
+<pre>
+camp.js   # it should be next to your main server.
+server.js # your main server is there!
+web/      # all things html are here...
+  /index.html   # root of the website.
+  /.robots.txt  # file for spiders, always handy.
+  /js/
+    /scout.js   # scout.js, always within reach.
+  ...
+
+# Worth noting: you can find amazing default stuff
+# at <a href=http://html5boilerplate.com/>html5boilerplate.com</a>.</pre>
+
+<p>The <code>run.js</code> file is something like this:
+</p>
+
+<pre>
+// run.js: starts the web server. Run "cd web &amp;&amp; sudo node ../run.js"
+
+var server = require ('camp').Camp;
+server.start ();</pre>
+
+<p>From the command line, you want to navigate to the <code>web</code> folder.
+Then, if you have node.js installed, this should set fire to the dynamite!
+</p>
+<pre>
+$ pwd
+/.../web
+$ sudo node ../run.js &amp;      # Yay!</pre>
+
+
+<h2>Pages and Ajax</h2>
+
+<p>What's in a page? A page in Scout Camp is a way to view some data in a
+specific fashion, and have certain interaction with this data.
+Each time you want a new way to view data, a way that has a different purpose,
+you should create a new page.
+</p>
+
+<p>Creating a new page is easy:
+</p>
+
+<pre>
+$ pwd
+/.../web
+$ edit page.html     # with an alias edit='vi' or something...
+$ ls
+js/  index.html  page.html ...</pre>
+
+<p>But what if you want Ajax interaction?
+
+<h3>Core Ajax scripts</h3>
+
+<p>Your new Ajax page might look like this...
+</p>
+
+<pre>
+&lt;!doctype html>
+&lt;script src="/js/scout.js">&lt;/script>
+
+&lt;p>Post a message:
+&lt;form id=form>
+  &lt;input name="message"/>
+  &lt;button>Post message&lt;/button>
+
+  &lt;script><em>
+  Scout('#form').on('submit', function(xhr, e, params) {
+    xhr.but = Scout('#form>button');
+    xhr.but.disabled = true;
+    xhr.but.textContent = 'Submitting...';
+    
+    params.open = {url:'/$note'};
+    params.data = {message: this.firstElementChild.value};
+    params.resp = function (xhr, resp) {
+      xhr.but.disabled = false;
+      Scout('output#msg').textContent = resp.message;
+      xhr.but.textContent = 'New post';
+    };
+  });
+  </em>&lt;/script>
+
+&lt;/form>
+&lt;br/>
+
+&lt;p>Last message:
+  &lt;output id=msg form=form>nothing&lt;/output>.
+</pre>
+
+<p>You can register the site-wide action "note" that answers to this Ajax call
+by writing, in run.js, something like:
+</p>
+
+<pre>
+// run.js: starts the web server. Run "cd web &amp;&amp; sudo node ../run.js"
+
+var server = require ('./camp').Camp;
+
+var notes = [];
+server('note', function(json) {
+  /* Remember the note. */
+  notes.push(json.message);
+  return {message:json.message};  // This will be sent back the html page.
+});
+
+/* The following line starts the web server. */
+server.start();</pre>
+
+
+<h3>Hard drive programs</h3>
+
+<p>Another reasonable choice is to use a binary program
+to register a specific action. It means that the Ajax call will cause
+the server to access the hard drive to fetch and run the program.
+This may be faster if the associated action already uses the hard drive.
+</p>
+
+<p>The server will then receive a request that looks something like this:
+"http://example.com/$prog?message=[input]".
+It will then run the c program located at /$prog, whose
+source code may look like that, using ScoutCamp's apis:
+</p>
+
+<pre>
+int main (int argc, char** argv) {
+  json_object *query = scQueryString();
+  /* Tells the user its name. */
+  json_object *msg = json_object_object_get(query, "message");
+  if (msg) {
+    scReturn(msg);
+  } else {
+    scReturn(NULL);
+  }
+  return 0;
+}</pre>
+
+<p>The <code>scQueryString()</code> function returns a json object whose keys
+and values are that of the query string. In this case, we ask for a message; we
+may have a query string like "message=something" (corresponding to a GET
+request that would look like http://example.com/page.html?message=something).
+</p>
+
+<p>Then, the program returns another (preferably different, unlike the example
+given) JSON object, which the webpage can manipulate in the second javascript
+function given, through the <code>resp</code> parameter.
+</p>
+
+
+<h2>Libraries</h2>
+
+<h3>Scout.js</h3>
+<dl>
+  <dt><code>function Scout ( id ) { return domEltWrapped; }</code>
+  <dd>The id is a string that identifies a list of html elements using a
+  <a href="http://www.w3.org/TR/selectors-api/#selector-string">selector
+    string</a> (see www.w3.org/TR/selectors-api). It returns a
+  modified version of the DOM element corresponding to the first match, or
+  <code>null</code>, if there is no match.
+  The modification of this element
+  is the addition of a <code>on</code> function, decribed furthermore here.
+  <dt><code>domEltWrapped.on = function ( eventName,
+  function ( xhr, event, params ) { } )</code>
+  <dd>The eventName parameter is the name of the event we are listening to,
+  and the second parameter is a function triggered immediately before the ajax
+  call. The first and second parameters of this function are, respectively,
+  the xmlHttpRequest object and the event object;
+  its third parameter is an object with the following overridable properties:
+  <ul>
+    <li><code>open</code>: it contains a <code>method</code> property that is
+    either 'POST' (default) or 'GET'; and a <code>url</code> that locates
+    the server-side program to run (no default, you must set it or there will
+    be no xhr sent),
+    an optional user and password properties for identification
+    purposes where it is necessary (default: none).
+    <li><code>data</code>: this JSON-serializable object will be sent as a query
+    string to the server-side program.
+    <li><code>redirect</code>: it indicates the new webpage which will be loaded
+    instead of the current one (default: we stay on the same webpage).
+    <li><code>resp = function(xhr, resp){}</code>:
+    This function is run whenever we receive the response from
+    the ajax call. Its resp parameter is a javascript object containing the
+    data that the server-side program sends back.
+    <li><code>error = function(xhr, status){}</code>:
+    If the request results in an error, this function is run, the
+    status parameter being the HTTP status returned.
+  </ul>
+  Inside the callback function, the <code>this</code> parameter is bound to
+  the DOM element that was called.<br/>
+  <dt><code>function Scout.send ( function ( xhr, params ) { } )</code>
+  <dd>A call to this function returns a function that, when run, triggers
+  an xmlHttpRequest. The params parameter to the function is the same as in the
+  domEltWrapped.on function parameter.<br>
+  It can be handy when using timeouts, <code>setTimeout(Scout.send(...),
+    1000);</code>.
+  <dt><code>function Scout.maker ( )</code>
+  <dd>There is a very small browser-imposed limit on the number of XHR objects
+  one is allowed to create. If you have simultaneous XHR calls however, you will
+  need to create two xhr instances. You can do so by creating yet another Scout
+  object, which this function will return.
+</dl>
+<p><small>Please note that the Content-Type header of a POST ajax call will be
+  "application/x-www-form-urlencoded".</small>
+</p>
+
+<h3>Camp.js</h3>
+<p><code>var camp = require ( './camp.js' );</code></p>
+<dl>
+  <dt><code>camp.add = function ( action, function ( jsonQuery, ... ) { return
+    jsonRespOrNamedFunction; } )</code>
+  <dd>The Camp function registers an action located at '/$[action]',
+  which runs the function given as the second argument.<br>
+  Either the function returns an object literal, which will immediately be sent
+  back to the client in JSON if not undefined, or it returns yet another
+  function that takes arbitrary parameters (eg, <code>function ( foo, bar ) {
+    return { result: foo + bar }; }</code>), in which case that latter function,
+  which must return the JSON to send back to the client, will only be run when
+  the <code>camp.Server.emit ( nameOfTheFunction, foo, bar)</code> event is
+  emitted from your app.
+  Then, the function will be launched with the parameters
+  foo and bar, and the result will be sent back to the client if not undefined.
+  <br>
+  The second case will usually be uncommon. It is there to cover very specific,
+  strongly app-oriented websites.
+
+  <dt><code>camp.format = function ( path, function literal ( jsonQuery ) {
+    return jsonFiller; } )</code>
+  <dd>You may wish to write template html files (or any other kind) that will be
+  preprocessed server-side. This function lets you tell the system that the
+  string `path` is preprocessed against the literal data returned by the
+  function `literal`. That function takes as a parameter the query string it
+  got.<br>
+  The templating language used is specified <a href=#plate.js>in the next
+    section</a>.
+
+  <dt><code>camp.Server.start = function ( port='80', debug=false ) { }</code>
+  <dd>The start function starts the web server, listening on port 80 by default.
+</dl>
+
+
+<h3 id=plate.js>Plate.js</h3>
+<p>The Plate is the template system in use by default in ScoutCamp. It looks
+very similar to projects such as Mustache, Ctemplates, and JSON templates.</p>
+
+<p>If you need to understand one thing about Plate.js, it is the separation
+between template, data, and parser.
+<ul>
+  <li>The template is a file, in your web/ folder, that contains all common html
+  and text.</li>
+  <li>The data, given as the result of the `literal` function, is a JSON object.
+  The template file contains slots which will be filled by the value of
+  corresponding keys.</li>
+  <li>The parsers are functions which take the values of the data literal, and
+  produce a reasonable string output. One such parser, for instance, is
+  <code>Plate.parsers.html = function ( text )</code>. It returns a copy of the
+  text, with all special characters escaped. All "&lt;" are converted to
+  "&amp;lt;", and so on!<br>
+  Parsers can be extended at will.
+</ul>
+
+<p>Let's see how a plate file looks like.</p>
+<pre>
+This is a simple {{=medium|html}}.
+What you just saw above, was the Value Macro. It inserts the value corresponding
+to the "medium" key, with the html parser.
+There are other macros, too:
+{{-macros|macro|i;
+{{=i|integer}}. {{=macro|html}} macro, }}
+Do we have a conditional macro? {{?cond macro|YES!; no, too bad...}}
+But how do we escape two curly braces? Like this: {{{.
+Are there comments? {{# Quite true indeed.}}
+</pre>
+<p>Against the following literal: <code>{ "medium": "file", "macros": ["Truth",
+  "Value", "Array", "Comment", "Macro definition"], "cond macro": true }</code>,
+we get this result.
+</p>
+<pre>
+This is a simple file.
+What you just saw above, was the Value Macro. It inserts the value corresponding
+to the "medium" key, with the html parser.
+There are other macros, too:
+0. Truth macro, 
+1. Value macro,
+2. Array macro,
+3. Comment macro,
+4. Macro definition macro,
+Do we have a conditional macro? YES!
+But how do we escape two curly braces? Like this: {{.
+Are there comments? 
+</pre>
+
+<p>Extensibility is achieved through the use of the plate object. This object
+contains twoo main extensibility entry points, <code>parsers</code> and
+<code>macros</code>.
+</p>
+<pre>
+var camp = require ('./camp');
+camp.Plate.parsers['new parser name'] = function ( text ) {
+  return text;
+};
+
+// Macro names must be one-character.
+camp.Plate.macros['n'] = function ( literal, params ) {
+  return literal[params[0]];
+};
+</pre>
+
+
+<h3>The rest of it</h3>
+<p><a href=http://www.json.org>JSON</a> library. This is actually the
+<a href=http://oss.metaparadigm.com/json-c/>json-c library</a>.
+<ul>
+  <li>json_object *   json_object_get (struct json_object *this)
+  <li>void  json_object_put (struct json_object *this)
+  <li>int   json_object_is_type (struct json_object *this, enum json_type type)
+  <li>enum json_type  json_object_get_type (struct json_object *this)
+  <li>char *  json_object_to_json_string (struct json_object *this)
+  <li>json_object *   json_object_new_object ()
+  <li>lh_table *  json_object_get_object (struct json_object *this)
+  <li>void  json_object_object_add (struct json_object *this, char *key, struct json_object *val)
+  <li>json_object *   json_object_object_get (struct json_object *this, char *key)
+  <li>void  json_object_object_del (struct json_object *this, char *key)
+  <li>json_object *   json_object_new_array ()
+  <li>array_list *  json_object_get_array (struct json_object *this)
+  <li>int   json_object_array_length (struct json_object *this)
+  <li>int   json_object_array_add (struct json_object *this, struct json_object *val)
+  <li>int   json_object_array_put_idx (struct json_object *this, int idx, struct json_object *val)
+  <li>json_object *   json_object_array_get_idx (struct json_object *this, int idx)
+  <li>json_object *   json_object_new_boolean (boolean b)
+  <li>boolean   json_object_get_boolean (struct json_object *this)
+  <li>json_object *   json_object_new_int (int i)
+  <li>int   json_object_get_int (struct json_object *this)
+  <li>json_object *   json_object_new_double (double d)
+  <li>double  json_object_get_double (struct json_object *this)
+  <li>json_object *   json_object_new_string (char *s)
+  <li>json_object *   json_object_new_string_len (char *s, int len)
+  <li>char *  json_object_get_string (struct json_object *this)
+  <li>json_object_object_foreach(obj, key, val) { ... }
+  <li>FALSE
+  <li>TRUE
+  <li>enum json_type { json_type_null, json_type_boolean, json_type_double, json_type_int, json_type_object, json_type_array, json_type_string }
+</ul>
+
+<p>Scout Camp C library. Useful for stand-alone C programs.
+</p>
+<ul>
+  <li>json_object* scQueryString() : returns the query string.
+  <li>char* scInput() : returns the standard input received (it might have been
+  processed by Scout Camp, in the case of a MIME type of
+  application/x-www-form-urlencoded).
+  <li>char* scVar(char* req) : returns the string associated with the request.
+  The parameter req must be one of SERVER_PROTOCOL, SERVER_PORT, REQUEST_METHOD,
+  PATH_INFO, PATH_TRANSLATED, SCRIPT_NAME, QUERY_STRING, REMOTE_HOST,
+  REMOTE_ADDR, AUTH_TYPE, REMOTE_USER, REMOTE_IDENT,
+  CONTENT_TYPE, CONTENT_LENGTH.
+  <li>void scReturn(json_object) : sends back JSON to the client.
+</ul>
+
+<p>If you wish to be part of this project,
+<a href=mailto:thaddee.tyl@gmail.com>send me a mail</a>.
+</p>
+
+<p>Current members:</p>
+<pre>
+Thäddëë Tÿl (thaddee.tyl, gmail.com)
+Jän Kërömnës (jan.keromnes, gmail.com)
+Räphäël Cätölïnö (raphael.catolino, gmail.com)
+Gäëtän Trïvïnö (gaetan, trivino.fr)
+Jönäs Lënwë (jonas.lenwe, gmail.com)
+Hïchäm Ël-Fäthï (hicham.el-fathi, insa-lyon.fr)
+Mïchäël Fägnö (michael.fagno, free.fr)</pre>
+
+
+<script>
+
+/* WEB FONTS */
+
+WebFontConfig = {
+  google: { families: [ 'Inconsolata', 'Droid Sans', 'IM Fell DW Pica' ] }
+};
+(function () {
+  var wf = document.createElement ('script');
+  wf.src = '//ajax.googleapis.com/ajax/libs/webfont/1/webfont.js';
+  wf.type = 'text/javascript';
+  wf.async = 'true';
+  var s = document.getElementsByTagName ('script')[0];
+  s.parentNode.insertBefore (wf, s);
+})();
+
+
+</script>
