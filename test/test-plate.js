@@ -25,8 +25,8 @@ t.teq (Plate.format ('Your base belongs to {{-us|me|i;\n' +
 
 // compound expressions
 t.teq (Plate.format ('Thaddee {{?apostles.indexOf(thaddee)!=-1|was|wasn\'t}} an apostle'
-      ,{thaddee:'Thaddaeous', apostles:['Simon','Andrew','James','John','Philip'
-        ,'Bartholomew','Matthew','Thomas','James','Simon','Judas']})
+      ,{thaddee:'Thaddaeus', apostles:['Simon','Andrew','James','John','Philip'
+        ,'Bartholomew','Matthew','Thomas','James','Simon','Judas','Judas']})
       ,'Thaddee wasn\'t an apostle');
 
 // conditional macro tests.
