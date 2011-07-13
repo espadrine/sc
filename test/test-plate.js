@@ -4,10 +4,10 @@ var t = new Test ();
 
 // test 1 - 1 level of indentation, escaped {{.
 
-t.teq ((Plate.format ('There is {{{\\nso much}}} {{=a man|plain}} can do.\n\n' +
+t.teq ((Plate.format ('There is {{{\\nso much}}} {{=a_man|plain}} can do.\n\n' +
         '{{=us|html}} we have many friends: \n' +
         '{{-friends|friend|i;there is {{=friend|plain}}, }}...', {
-  'a man': 'Jan',
+  'a_man': 'Jan',
   'us': 'My friend & I',
   'friends': ['Thaddee', 'Serge', 'Marie']
 })),
@@ -22,6 +22,12 @@ t.teq (Plate.format ('Your base belongs to {{-us|me|i;\n' +
       {us: [['John', 'Connor'], ['Paul', 'Irish'], ['Ash', 'William']]}),
     'Your base belongs to \n- John Connor ; \n- Paul Irish ; \n' +
     '- Ash William ; ');
+
+// compound expressions
+t.teq (Plate.format ('Thaddee {{?apostles.indexOf(thaddee)!=-1|was|wasn\'t}} an apostle'
+      ,{thaddee:'Thaddaeus', apostles:['Simon','Andrew','James','John','Philip'
+        ,'Bartholomew','Matthew','Thomas','James','Simon','Judas','Judas']})
+      ,'Thaddee wasn\'t an apostle');
 
 // conditional macro tests.
 t.teq (Plate.format ('I am{{?present| here. Hello!; out.}} Anyway, how do you do?',
