@@ -13,6 +13,6 @@ a Node.js framework for easy Web Apps
 5. enjoy
 
 ##Contribute
-- watch the [hot issues] (https://github.com/espadrine/ScoutCamp/issues)
-- do some [pull requests] (http://help.github.com/send-pull-requests/)
+- see [issues] (https://github.com/espadrine/ScoutCamp/issues)
+- send [pull requests] (http://help.github.com/send-pull-requests/)
 - contact [Thaddee Tyl] (https://github.com/inbox/new/espadrine) or [Jan Keromnes] (https://github.com/inbox/new/jankeromnes)
