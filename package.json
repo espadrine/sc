@@ -13,7 +13,7 @@
     "test": "make"
   },
   "engines": {
-    "node": "~v0.5.0-pre"
+    "node": ">=0.4.9"
   },
   "dependencies": {},
   "devDependencies": {}
