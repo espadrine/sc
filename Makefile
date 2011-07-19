@@ -11,6 +11,12 @@ WEB = web
 
 all: clean deploy minify stop start
 
+nodeploy: stop startweb
+
+startweb:
+	@echo "start web"
+	@cd $(WEB) ; sudo node ../$(SERVER) > ../$(LOG)
+
 clean:
 	@echo "clean"
 	@rm -rf $(TARGET)/* $(LOG)
@@ -52,4 +58,4 @@ coffee:
 sandwich:
 	@if [ `id -u` = "0" ] ; then echo "\nOKAY." ; else echo "\nWhat? Make it yourself." ; fi
 
-.PHONY: all clean deploy minify start stop test help wtf ? coffee sandwich
+.PHONY: all nodeploy startweb clean deploy minify start stop test help wtf ? coffee sandwich
