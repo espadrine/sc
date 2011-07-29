@@ -1,0 +1,20 @@
+{
+  "author": "Thaddee Tyl <thaddee.tyl@gmail.com>",
+  "name": "ScoutCamp",
+  "description": "Boilerplate for easy Web Apps",
+  "version": "0.0.1",
+  "homepage": "http://espadrine.github.com/ScoutCamp/",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/espadrine/ScoutCamp.git"
+  },
+  "main": "lib/camp",
+  "scripts": {
+    "test": "make"
+  },
+  "engines": {
+    "node": ">=0.4.9"
+  },
+  "dependencies": {},
+  "devDependencies": {}
+}
