@@ -27,7 +27,15 @@ deploy:
   
 minify:
 	@echo "minify"
-	@for file in `find $(TARGET) -name '*\.js'` ; do cat "$${file}" | $(JSMIN) > "$${file}$(MIN)" ; mv "$${file}$(MIN)" "$${file}" ; done
+	@if which jsmin > /dev/null;  \
+	then  \
+	  for file in `find $(TARGET) -name '*\.js'`;  \
+	  do  \
+	    cat "$${file}" | $(JSMIN) > "$${file}$(MIN)";  \
+	    mv "$${file}$(MIN)" "$${file}";  \
+	  done;  \
+	else echo "Please install jsmin [http://www.crockford.com/javascript/jsmin.c]\n  to get minification.";  \
+	fi
 
 start:
 	@echo "start"
