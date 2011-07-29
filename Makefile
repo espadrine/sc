@@ -50,7 +50,9 @@ test:
 
 update:
 	@git clone git://github.com/espadrine/ScoutCamp.git
-	@mv ScoutCamp/lib/* ./lib/
+	@cp ScoutCamp/lib/* ./lib/
+	@cp ScoutCamp/Makefile .
+	@cp ScoutCamp/web/js/scout.js ./web/js/scout.js
 	@rm -rf ScoutCamp/
 
 help:
