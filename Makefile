@@ -68,4 +68,4 @@ coffee:
 sandwich:
 	@if [ `id -u` = "0" ] ; then echo "\nOKAY." ; else echo "\nWhat? Make it yourself." ; fi
 
-.PHONY: all nodeploy startweb clean deploy minify start stop test help wtf ? coffee sandwich
+.PHONY: all nodeploy startweb clean deploy minify start stop test update help wtf ? coffee sandwich
