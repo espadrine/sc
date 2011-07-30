@@ -56,7 +56,7 @@ update:
 	@rm -rf ScoutCamp/
 
 help:
-	@cat Makefile
+	@cat Makefile | less
 	
 ?: help
 
