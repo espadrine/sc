@@ -6,7 +6,7 @@
 var Camp = require ('./lib/camp.js');
 
 // templating information of the index page
-Camp.format ('/index.html', function (query, path) {
+Camp.handle ('/index.html', function (query, path) {
   var data = {
      title: query.title || 'Success',
      h1: query.h1 || 'Success!',
