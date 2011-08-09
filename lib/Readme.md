@@ -51,7 +51,7 @@ must trigger an XHR(XML Http Request) when a specific event is fired. This is
 what you do, most of the time, anyway. Otherwise, it is also easy to attach an
 XHR upon a "setTimeout", and so on.
 
-    Scout ( '#id-of-element' ).on ( 'click', function (evt, params, xhr) {
+    Scout ( '#id-of-element' ).on ( 'click', function (params, evt, xhr) {
       params.action = 'getinfo';
       var sent = this.parentNode.textContent;
       params.data = { ready: true, data: sent };
