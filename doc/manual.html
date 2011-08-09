@@ -119,14 +119,14 @@ js/  index.html  page.html ...</pre>
   &lt;button>Post message&lt;/button>
 
   &lt;script><em>
-  Scout('#form').on('submit', function(xhr, e, params) {
+  Scout('#form').on('submit', function(e, params) {
     xhr.but = Scout('#form>button');
     xhr.but.disabled = true;
     xhr.but.textContent = 'Submitting...';
     
-    params.open = {url:'/$note'};
+    params.action = 'note';
     params.data = {message: this.firstElementChild.value};
-    params.resp = function (xhr, resp) {
+    params.resp = function (resp, xhr) {
       xhr.but.disabled = false;
       Scout('output#msg').textContent = resp.message;
       xhr.but.textContent = 'New post';
