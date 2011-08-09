@@ -1,0 +1,37 @@
+<!doctype html>
+<meta charset=utf-8>
+<title>doctor</title>
+
+<section id=log>
+</section>
+
+<form id=sofa>
+  <input id=in type=text>
+  <input type=submit value=go>
+</form>
+
+<script src=/js/scout.js></script>
+
+<script>
+
+  function log(message) {
+    Scout('#log').appendChild(document.createElement('p')).textContent = message;
+    Scout('#in').focus();
+    Scout('#in').scrollIntoView();
+  }
+
+  Scout('#sofa').on('submit', function (query) {
+    
+    var message = Scout('#in').value;
+    Scout('#in').value = '';
+    log(message);
+
+    query.action = 'doctor';
+    query.data = { text: message };
+    query.resp = function (data) {
+      log(data.reply);
+    };
+  });
+
+</script>
+
