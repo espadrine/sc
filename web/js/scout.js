@@ -1769,7 +1769,7 @@ Scout = (function Scoutmaker () {
 
   var onprop = function (eventName, before) {
     /* Defaults. */
-    before = before || function (e, params, xhr) {};
+    before = before || function (params, e, xhr) {};
     
     /* Event Listener callback. */
     var listenerfunc = function (e) {
@@ -1786,7 +1786,7 @@ Scout = (function Scoutmaker () {
       if (e.stopPropagation) e.stopPropagation();*/
       
       /* User action before xhr send. */
-      before.apply(target, [e, params, xhr]);
+      before.apply(target, [params, e, xhr]);
       
       sendxhr(target, params);
     };

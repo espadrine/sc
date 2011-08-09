@@ -119,7 +119,7 @@ js/  index.html  page.html ...</pre>
   &lt;button>Post message&lt;/button>
 
   &lt;script><em>
-  Scout('#form').on('submit', function(e, params) {
+  Scout('#form').on('submit', function(params) {
     xhr.but = Scout('#form>button');
     xhr.but.disabled = true;
     xhr.but.textContent = 'Submitting...';
