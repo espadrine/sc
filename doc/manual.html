@@ -205,42 +205,48 @@ function given, through the <code>resp</code> parameter.
 <h3>Scout.js</h3>
 <dl>
   <dt><code>function Scout ( id ) { return domEltWrapped; }</code>
-  <dd>The id is a string that identifies a list of html elements using a
-  <a href="http://www.w3.org/TR/selectors-api/#selector-string">selector
-    string</a> (see www.w3.org/TR/selectors-api). It returns a
-  modified version of the DOM element corresponding to the first match, or
-  <code>null</code>, if there is no match.
+  <dd>
+  The id is a string that identifies a list of html elements using a
+  <a href="http://www.w3.org/TR/selectors-api/#selector-string">
+    selector string</a> (see www.w3.org/TR/selectors-api).
+  It returns a modified version of the DOM element corresponding to the first
+  match, or <code>null</code>, if there is no match.
+
   The modification of this element
   is the addition of a <code>on</code> function, decribed furthermore here.
-  <dt><code>domEltWrapped.on = function ( eventName,
-  function ( xhr, event, params ) { } )</code>
-  <dd>The eventName parameter is the name of the event we are listening to,
+
+  <dt><code>
+    domEltWrapped.on = function ( eventName,
+        function ( event, params, xhr ) { } )</code>
+
+  <dd> The eventName parameter is the name of the event we are listening to,
   and the second parameter is a function triggered immediately before the ajax
   call. The first and second parameters of this function are, respectively,
   the xmlHttpRequest object and the event object;
   its third parameter is an object with the following overridable properties:
   <ul>
-    <li><code>open</code>: it contains a <code>method</code> property that is
-    either 'POST' (default) or 'GET'; and a <code>url</code> that locates
-    the server-side program to run (no default, you must set it or there will
-    be no xhr sent),
-    an optional user and password properties for identification
-    purposes where it is necessary (default: none).
+    <li><code>url</code>: string that locates the server-side program to run
+    (no default, you must set it or there will be no xhr sent).
+    <li><code>action</code>: it calls a camp.js action of the same name.
+    <li><code>method</code>: either 'POST' (default) or 'GET'.
+    <li><code>user</code>: if there is an HTTP password identification on the
+    program, you can identify using the user and password parameters.
+    <li><code>password</code>: see <code>user</code>.
     <li><code>data</code>: this JSON-serializable object will be sent as a query
     string to the server-side program.
     <li><code>redirect</code>: it indicates the new webpage which will be loaded
     instead of the current one (default: we stay on the same webpage).
-    <li><code>resp = function(xhr, resp){}</code>:
+    <li><code>resp = function(resp, xhr){}</code>:
     This function is run whenever we receive the response from
     the ajax call. Its resp parameter is a javascript object containing the
     data that the server-side program sends back.
-    <li><code>error = function(xhr, status){}</code>:
+    <li><code>error = function(status, xhr){}</code>:
     If the request results in an error, this function is run, the
     status parameter being the HTTP status returned.
   </ul>
   Inside the callback function, the <code>this</code> parameter is bound to
   the DOM element that was called.<br/>
-  <dt><code>function Scout.send ( function ( xhr, params ) { } )</code>
+  <dt><code>function Scout.send ( function ( params, xhr ) { } )</code>
   <dd>A call to this function returns a function that, when run, triggers
   an xmlHttpRequest. The params parameter to the function is the same as in the
   domEltWrapped.on function parameter.<br>
