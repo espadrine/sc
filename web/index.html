@@ -2,18 +2,25 @@
 <title>{{=title|html}}</title>
 <meta charset=utf-8>
 <style>
-html body {
+body {
   font-family: fixed, monospace;
-}
-div.content {
   text-align: center;
   display: block;
-  margin: 100px auto;
+  margin: 50px auto;
 }
-h1 { font-size: 1em; }
+h1, nav>ul { font-size: 1em; margin: 0.67em; }
+a { color: #e2a5f4; text-decoration: none; }
+nav { position: absolute; top: 0px; left: 0px; width: 100%; }
+nav>h1 { display: inline; float: left; }
+nav>ul { list-style: none; display: table; padding-left: 0px; }
+nav>ul>li { display: table-cell; padding: 0px 17px; }
 </style>
-<div class=content>
+
+<nav><h1>                       Demos:     </h1>
+<ul><li><a href=/doctor.html>   - doctor   </a>
+    <li><a href=/template.html> - template </a>
+</ul></nav>
+
 <h1>{{=h1|html}}</h1>
-<img title=web src="img/web.jpg">
+<img width="50%" src="img/web.jpg">
 <p>{{=p|html}}</p>
-</div>
