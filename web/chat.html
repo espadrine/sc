@@ -2,16 +2,17 @@
 <meta charset=utf-8>
 <title>doctor</title>
 
-<section id=log>
-</section>
+<section id=log></section>
 
 <form id=sofa>
   <input id=in type=text placeholder="Say hello to the doctor">
-  <input type=submit value=go>
 </form>
 
-<script src=/js/scout.js></script>
+<style>
+  #sofa { position:absolute; bottom:0px; left:0px; width:100%; }
+</style>
 
+<script src=/js/scout.js>/* Ajax library. */</script>
 <script>
 
   function log(message) {
