@@ -1,38 +1,61 @@
 <!doctype html>
 <meta charset=utf-8>
-<title>doctor</title>
+<title>Chat</title>
 
 <section id=log></section>
 
 <form id=sofa>
-  <input id=in type=text placeholder="Say hello to the doctor">
+  <div id=prompt><input id=in type=text placeholder="Start Chatting!"></div>
 </form>
 
 <style>
-  #sofa { position:absolute; bottom:0px; left:0px; width:100%; }
+  #log { position:fixed; top:0px; bottom:2em; right:0px;
+    width:100%; overflow-x:auto; }
+  #sofa { position:fixed; bottom:0px; left:0px; width:100%; }
+  #prompt { padding:0px 3px; }
+  #in { width:100%; border:0px; padding:0px 0px; font-size:1.5em; }
 </style>
 
 <script src=/js/scout.js>/* Ajax library. */</script>
 <script>
+(function(){
 
-  function log(message) {
-    Scout('#log').appendChild(document.createElement('p')).textContent = message;
+  function log(nick, message) {
+    var p = document.createElement('p');
+    Scout('#log').appendChild(p).textContent = nick + ': ' + message;
     Scout('#in').focus();
-    Scout('#in').scrollIntoView();
+    p.scrollIntoView();
   }
 
   Scout('#sofa').on('submit', function (query) {
-    
-    var message = Scout('#in').value;
-    Scout('#in').value = '';
-    log(message);
+    var box = Scout('#in'),
+        message = box.value;
+    box.value = '';
 
-    query.action = 'doctor';
-    query.data = { text: message };
-    query.resp = function (data) {
-      log(data.reply);
-    };
+    query.action = 'talk';
+    query.data = { nick:nick, message:message };
   });
 
+  // Local variables.
+  var nick = 'John Doe';
+
+  // Main function.
+  window.onload = function loading () {
+    nick = prompt ('What do you want your nickname to be?');
+
+    (function listen () {
+      Scout.maker().send(function (query) {
+        query.action = 'all';
+        query.data = {a:0};
+        query.resp = function (data) {
+          if (data.message) log(data.nick, data.message);
+          listen();
+        };
+        query.error = function () { listen(); };
+      })();
+    }());
+  };
+
+}());
 </script>
 

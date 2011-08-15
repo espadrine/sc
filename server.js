@@ -18,7 +18,8 @@ Camp.handle('/template.html', function (data, path) {
 });
 
 // Doctor demo
-var replies = ['Ok.', 'Oh⁉', 'Is that so?', 'How interesting!', 'Hm…', 'So say we all.']
+var replies = ['Ok.', 'Oh⁉', 'Is that so?', 'How interesting!',
+               'Hm…', 'What do you mean?', 'So say we all.'];
 Camp.add('doctor', function (data) {
   replies.push (data.text);
   return { reply: replies [ Math.floor ( Math.random() * replies.length ) ] };
@@ -26,7 +27,7 @@ Camp.add('doctor', function (data) {
 
 // Chat demo
 Camp.add('talk', function(data) {
-  Camp.Server.emit('incoming', data);
+    Camp.Server.emit('incoming', data);
 });
 Camp.add('all', function() {
   return function incoming(data){
