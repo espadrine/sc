@@ -9,7 +9,7 @@ var Camp = require ('./lib/camp.js');
 
 // Templating demo
 Camp.handle('/template.html', function (data, path) {
-  var map = {
+  var map = {    // Try http://localhost/template.html?title=Hello&info=[Redacted].
      title: data.title || 'Success',
      enc: data.enc || 'utf-8',
      info: data.info || 'This document has been templated!'
