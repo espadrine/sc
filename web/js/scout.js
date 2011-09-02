@@ -1815,12 +1815,32 @@ Scout = (function Scoutmaker () {
   ret.send = function (before) {
     before = before || function (params, xhr) {};
 
-    return function () {
+    return function (undefined) {
       before.apply(undefined, [params, xhr]);
       sendxhr(undefined, params);
     };
   };
   ret.maker = Scoutmaker;
+
+  /* ServerSent Events implementation */
+  ret.listen = function (source) {
+    // `source`: the camp.js action associated with this.
+    // TODO: have an EventSource polyfill.
+    var evsource = new EventSource('$' + source);
+    evsource.on = function (serverevent, callback, othercallbacks) {
+      evsource.onmessage = function (event) {
+        callback (event.data, event);
+      };
+      // Other callbacks include `open` and `error`.
+      evsource.onopen = function (event) {
+        othercallbacks.open (event);
+      };
+      evsource.onerror = function (event) {
+        othercallbacks.error (event);
+      };
+    };
+    return evsource;
+  };
   
   return ret;
 })();
