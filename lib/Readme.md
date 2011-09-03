@@ -86,6 +86,13 @@ actions is to treat servers more like applications. You first serve the
 graphical interface, in html and css, and then, you let the user interact with
 the server's data seemlessly through ajax calls.
 
+Another small feature we have in there is the possibility to delay the sending
+back of json data. If instead of returning a json from the function, you return
+a named function that itself returns the json
+(eg, `function nameOfTheFunction ( param1, param2 ) { ... return json; }`),
+then Camp.js will only send the json back when you emit the corresponding event
+with a call to `camp.Server.emit ( nameOfTheFunction, param1, param2, ... )`.
+
 
 Plate.js
 --------

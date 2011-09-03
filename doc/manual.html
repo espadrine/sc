@@ -265,8 +265,8 @@ function given, through the <code>resp</code> parameter.
 <h3>Camp.js</h3>
 <p><code>var camp = require ( './camp.js' );</code></p>
 <dl>
-  <dt><code>camp.add = function ( action, function ( jsonQuery, ... ) { return
-    jsonRespOrNamedFunction; } )</code>
+  <dt><code>camp.add ( action, function ( jsonQuery, ... ) {
+              return jsonRespOrNamedFunction; } )</code>
   <dd>The Camp function registers an action located at '/$[action]',
   which runs the function given as the second argument.<br>
   Either the function returns an object literal, which will immediately be sent
@@ -282,8 +282,8 @@ function given, through the <code>resp</code> parameter.
   The second case will usually be uncommon. It is there to cover very specific,
   strongly app-oriented websites.
 
-  <dt><code>camp.format = function ( path, function literal ( jsonQuery ) {
-    return jsonFiller; } )</code>
+  <dt><code>camp.format ( path, function literal ( jsonQuery ) {
+              return jsonFiller; } )</code>
   <dd>You may wish to write template html files (or any other kind) that will be
   preprocessed server-side. This function lets you tell the system that the
   string `path` is preprocessed against the literal data returned by the
@@ -292,7 +292,7 @@ function given, through the <code>resp</code> parameter.
   The templating language used is specified <a href=#plate.js>in the next
     section</a>.
 
-  <dt><code>camp.Server.start = function ( port='80', debug=false ) { }</code>
+  <dt><code>camp.Server.start ( port='80', debug=false ) { }</code>
   <dd>The start function starts the web server, listening on port 80 by default.
 </dl>
 
