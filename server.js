@@ -36,7 +36,7 @@ Camp.add('all', function() {
 });
 
 // Not found demo
-Camp.notfound(/.*/, function (data, path) {
+Camp.notfound(/.*\.lol$/, function (data, path) {
   path[0] = '/404.html';
 });
 

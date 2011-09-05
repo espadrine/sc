@@ -6,9 +6,9 @@ a Node.js framework for easy Web Apps
 2. fork or download [ScoutCamp] (https://github.com/espadrine/ScoutCamp)
 
 ##Use it
-1. put website in web/
-2. edit server.js
-3. run 'make'
+1. put website in `web/`
+2. edit `server.js`
+3. run `make`
 4. hit [localhost/] (http://localhost/)
 5. enjoy
 

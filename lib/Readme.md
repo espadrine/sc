@@ -172,6 +172,8 @@ Default macros are the following:
   which you can extend if need be). Default parsers (self-explanatory):
    * plain (text)
    * html (text)
+   * xml (text)
+   * xmlattr (text)
    * uri (text)
    * !uri (text)
    * integer (text)
