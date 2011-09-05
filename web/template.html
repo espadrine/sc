@@ -3,3 +3,8 @@
 <meta charset={{=charset|plain}}>
 <h1>{{=title|html}}</h1>
 <p>{{=info|html}}</p>
+<form method=get action=template.html>
+  title <input type=text name=title value='{{=title|html}}'>
+  info <input type=text name=info value='{{=info|html}}'>
+  <input type=submit value=template>
+</form>

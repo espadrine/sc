@@ -21,15 +21,18 @@
 <script>
 (function(){
 
+  var box = Scout('#in'),
+      wall = Scout('#log')
+
   function log(nick, message) {
     var p = document.createElement('p');
-    Scout('#log').appendChild(p).textContent = nick + ': ' + message;
-    Scout('#in').focus();
+    wall.appendChild(p).textContent = nick + ': ' + message;
+    box.focus();
     p.scrollIntoView();
   }
 
+
   Scout('#sofa').on('submit', function (query) {
-    var box = Scout('#in');
     query.action = 'talk';
     query.data = { nick:nick, message:box.value };
     box.value = '';
