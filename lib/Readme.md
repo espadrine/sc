@@ -174,6 +174,7 @@ Default macros are the following:
    * html (text)
    * xml (text)
    * xmlattr (text)
+   * jsonstring (text)
    * uri (text)
    * !uri (text)
    * integer (text)
