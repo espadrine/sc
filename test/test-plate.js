@@ -57,8 +57,9 @@ t.teq (Plate.format ('Xml {{=data|xml}}.',{data:'<text & stuff>'}),
        'Xml &lt;text &amp; stuff&gt;.');
 t.teq (Plate.format ('XmlAttr {{=data|xmlattr}}.',{data:'<\'text\' & "stuff">'}),
        'XmlAttr &lt;&apos;text&apos; &amp; &quot;stuff&quot;&gt;.');
-t.teq (Plate.format ('JsonString {{=data|jsonstring}}.',{data:'<\'text\' & "stuff">'}),
-       'JsonString <\\\'text\\\' & \\"stuff\\">.');
+t.teq (Plate.format ('JsonString "{{=data|jsonstring}}"',
+                     {data:'file "foo\\bar":\tok\nBody:\r\fdel=\b'}),
+       'JsonString "file \\"foo\\\\bar\\":\\tok\\nBody:\\r\\fdel=\\b"');
 t.teq (Plate.format ('Uri {{=data|uri}}.',{data:'conversion done'}),
        'Uri conversion%20done.');
 t.teq (Plate.format ('Non-Uri {{=data|!uri}}.',{data:'conversion%20done'}),
