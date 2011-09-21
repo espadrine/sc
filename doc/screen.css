@@ -42,10 +42,6 @@ h2, h3 {
   margin-top: 40px;
 }
 
-p {
-  text-indent: 7px;
-}
-
 pre, code, kbd {
   font-family: Inconsolata, monospace;
   background-color: #faffe6;
@@ -82,6 +78,14 @@ span.ipa { font-style: auto; font-family: sans-serif; margin-right: 7px; }
   font-weight: bold;
   margin-right: 13px;
 }
+
+
+/* Manual */
+
+.manual {
+  text-indent: 7px;
+}
+
 
 
 /* Downloads */
