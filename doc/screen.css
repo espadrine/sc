@@ -42,10 +42,6 @@ h2, h3 {
   margin-top: 40px;
 }
 
-p {
-  text-indent: 7px;
-}
-
 pre, code, kbd {
   font-family: Inconsolata, monospace;
   background-color: #faffe6;
@@ -54,6 +50,7 @@ pre {
   padding: 10px;
   border: 1px dashed purple;
   letter-spacing: 1px;
+  text-indent: 0px;
 }
 
 a, a:visited {
@@ -81,6 +78,13 @@ span.ipa { font-style: auto; font-family: sans-serif; margin-right: 7px; }
   font-size: x-large;
   font-weight: bold;
   margin-right: 13px;
+}
+
+
+/* Manual */
+
+.manual {
+  text-indent: 7px;
 }
 
 
@@ -126,10 +130,10 @@ span.ipa { font-style: auto; font-family: sans-serif; margin-right: 7px; }
 .camp {
   background-color: hsl(260, 70%, 60%);
 }
-.release {
+.zipball {
   background-color: #e46787;
 }
-.sources {
+.browse {
   background-color: #7dc4e8;     /* or hsl(110, 75%, 60%) ? */
 }
 .nodejs {

@@ -1,18 +1,23 @@
-<!DOCTYPE html>
+<!doctype html>
 <meta charset=utf-8>
 <link rel=stylesheet type=text/css href=screen.css>
-<title>Manual</title>
+<title>The Manual</title>
 
-<h1>The<span class=purple>Manual</span></h1>
+<body class=manual>
+  
+<code class=entry>ScoutCamp</code>
+<span class=ipa>/skoutkamp/</span> Web Apps done right.
 
+<h1>The <span class=purple>Manual</span></h1>
 
+<h2>What is ScoutCamp?</h2>
 
-<p>We let you separate <strong>the Ajax engines</strong>, run on the
-server, and <strong>the web interface</strong>, conveying information and
-giving the possibility of interaction with the engines.</p>
-</ul>
+<p><strong>ScoutCamp</strong> is a framework for <a href=http://nodejs.org/>
+Node.js</a> you can use to build <strong>web apps</strong>. It offers libraries
+for easy client-side and server-side <strong>scripting</strong>. It also
+automatically <strong>optimizes</strong> your content <strong>for the web
+</strong> when you publish it. Installing this framework gives you:</p>
 
-<p>We give you:</p>
 <ul class=speech>
   <li><code class=entry>Scout.js</code>
   <span class=ipa>/skout/</span> Ajax library that lets you asynchronously get
@@ -22,29 +27,60 @@ giving the possibility of interaction with the engines.</p>
   you focus on your content, and make seamless Ajax calls.
   <li><code class=entry>Node.js</code>
   <span class=ipa>/nōd/</span> Optimized, performance-centric, and scalable
-  web server that fits the need of all web apps, especially yours, and easy to
-  use thanks to its javascript configuration file.
+  web server that fits the need of all web apps, especially yours, and easy
+  to use thanks to its javascript configuration file.
+  <li><code class=entry>Plate.js</code>
+  <span class=ipa>/pleɪt/</span> Templating system for {{=content|text}} in text files.
 </ul>
 
-<table class=downloads>
-  <tr>
-    <td><a href=./web/js/scout.js class="download scout">
-    Download Scout.js!
-    </a></td>
-    <td><a href="./publish/js/scout.js" class="download scoutmin">
-    Download Scout.js Minified!
-    </a></td>
-  </tr>
-  <tr>
-    <td><a href="./lib/camp.js" class="download camp">
-        Download Camp.js!
-    </a></td>
-    <td><a href="http://nodejs.org" class="download nodejs">
-        Have a look at Node.js!
-    </a></td>
-  </tr>
-</table>
+<h2>The files</h2>
 
+<p>The <strong>file structure</strong> ruffly looks like this:</p>
+
+<pre>
+web/         # web content
+server.js    # server script
+Makefile     # build script</pre>
+
+<p>Using the <code>make</code> command publishes your content from
+<code>web/</code> to a new <code>publish/</code> folder, and then starts your
+server there.</p>
+
+<p>Here is a <strong>more detailed</strong> view of the ScoutCamp files:</p>
+
+<pre>
+README.md       # quick starting guide
+Makefile        # handy build script
+server.js       # your server!
+doc/
+  manual.html   # awesome reading material
+lib/
+  camp.js       # outstanding web server
+  plate.js      # templating engine
+test/
+  test.js
+  test-plate.js
+web/            # your web content!
+  index.html    # root of the website
+  robots.txt    # file for spiders, always handy
+  js/
+    scout.js    # scout.js, always within reach
+  ...
+
+# Worth noting: you can find amazing default web stuff
+# at <a href=http://html5boilerplate.com/>html5boilerplate.com</a>.</pre>
+
+<h2>Basic Usage</h2>
+
+<h2>Advanced Usage</h2>
+
+
+  <!-- old --><hr size=20 color=fuschia>
+
+<p>We let you separate <strong>the Ajax engines</strong>, run on the
+server, and <strong>the web interface</strong>, conveying information and
+giving the possibility of interaction with the engines.</p>
+</ul>
 
 <h2>Where should I start?</h2>
 
@@ -448,3 +484,5 @@ WebFontConfig = {
 
 
 </script>
+
+</body>
