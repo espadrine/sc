@@ -30,50 +30,128 @@ automatically <strong>optimizes</strong> your content <strong>for the web
   web server that fits the need of all web apps, especially yours, and easy
   to use thanks to its javascript configuration file.
   <li><code class=entry>Plate.js</code>
-  <span class=ipa>/pleɪt/</span> Templating system for {{=content|text}} in text files.
+  <span class=ipa>/pleɪt/</span> Templating system for {{=templated|text}} in files.
 </ul>
 
-<h2>The files</h2>
+<h2>The Files</h2>
 
 <p>The <strong>file structure</strong> ruffly looks like this:</p>
 
 <pre>
-web/         # web content
-server.js    # server script
-Makefile     # build script</pre>
+web/           # web content
+server.js      # server script
+Makefile       # build &amp; run script
+</pre>
 
-<p>Using the <code>make</code> command publishes your content from
-<code>web/</code> to a new <code>publish/</code> folder, and then starts your
-server there.</p>
-
-<p>Here is a <strong>more detailed</strong> view of the ScoutCamp files:</p>
+<p>Here in <strong>more details</strong>:</p>
 
 <pre>
-README.md       # quick starting guide
-Makefile        # handy build script
-server.js       # your server!
+README.md      # quick starting guide
+Makefile       # does-everything script
+server.js      # *your server!*
 doc/
-  manual.html   # awesome reading material
+  manual.html  # awesome reading material
 lib/
-  camp.js       # outstanding web server
-  plate.js      # templating engine
+  camp.js      # outstanding web server
+  plate.js     # templating engine
 test/
-  test.js
+  test.js      # some boring tests
   test-plate.js
-web/            # your web content!
-  index.html    # root of the website
-  robots.txt    # file for spiders, always handy
+web/           # *your website!*
+  index.html   # root of the website
+  robots.txt   # file for spiders, always handy
   js/
-    scout.js    # scout.js, always within reach
-  ...
+    scout.js   # keep within reach
+  [...]
 
 # Worth noting: you can find amazing default web stuff
-# at <a href=http://html5boilerplate.com/>html5boilerplate.com</a>.</pre>
+# at <a href=http://html5boilerplate.com/>html5boilerplate.com</a>.
+</pre>
 
 <h2>Basic Usage</h2>
 
+<h3>Kick-start</h3>
+
+<p>If you have <code>node</code> installed, this should <strong>set fire to the
+  dynamite!</strong></p>
+
+<pre>
+$ make     # yes, it is that simple!
+</pre>
+
+<p>This actually publishes your website from <u>web/</u> to a new
+<u>publish/</u> folder. And then it starts your server. Yay!</p>
+
+<h3>Scripts</h3>
+
+<p>A simple <code>server.js</code> script looks like this:</p>
+
+<pre>
+// server.js: main server script
+
+var Camp = require('lib/camp');          // import the camp
+Camp.Server.start(80);                   // let's rock'n'roll!
+</pre>
+
+<p><strong>And that's all there is to it!</strong></p>
+
+<p>Here is a <strong>more advanced</strong> example, using Ajax:</p>
+
+<pre>
+// server.js: yet another server script
+
+var Camp = require('lib/camp');          // this camp again
+Camp.add('greetings', function(data) {   // 'greetings' ajax hook
+    return "oh hai!";
+});
+Camp.Server.start(80);                   // let's twist again!
+</pre>
+
+<pre>
+&lt;!-- index.html: ajax triggering client -->
+
+&lt;input type=button value=greet>
+
+&lt;script>
+  Scout('#button').on('click', function (query) {
+    query.action = 'greetings';          // 'greetings' ajax hook
+    query.data = {};                     // no data in this case
+    query.resp = function (answer) {
+      Scout('#button').value = answer;   // replace button text
+    };
+  });
+&lt;script>
+</pre>
+
 <h2>Advanced Usage</h2>
 
+<h3>Amazing Ajax</h3>
+
+<h3>The Build Script</h3>
+
+<p><strong>Crunchy details</strong> for the detail lover:</p>
+
+<pre>
+$ make          # is equivalent to:
+$ make all      # which is equivalent to:
+$ make clean deploy minify stop start
+
+$ make clean    # deletes publish/ and logs
+$ make deploy   # copies web/* to publish/*
+$ make minify   # optimizes content in publish/
+$ make stop     # kills all running servers
+$ make start    # starts the server in publish/
+$ make nodeploy # starts the server in web/
+$ make update   # updates ScoutCamp
+$ make test     # runs boring tests
+$ make help     # even more crunchy details!
+</pre>
+
+<p><strong>ProTip<sup>&reg;</sup></strong> To run your server in
+<strong>background mode</strong>, simply do <code>make</code> and then
+<code>^Z</code> and then <code>bg</code>.</p>
+
+<h2>The Libraries</h2>
 
   <!-- old --><hr size=20 color=fuschia>
 
