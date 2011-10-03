@@ -4,7 +4,7 @@
 <title>The Manual</title>
 
 <body class=manual>
-  
+
 <code class=entry>ScoutCamp</code>
 <span class=ipa>/skoutkamp/</span> Web Apps done right.
 
@@ -159,7 +159,7 @@ js/  index.html  page.html ...</pre>
     xhr.but = Scout('#form>button');
     xhr.but.disabled = true;
     xhr.but.textContent = 'Submitting...';
-    
+
     params.action = 'note';
     params.data = {message: this.firstElementChild.value};
     params.resp = function (resp, xhr) {
@@ -374,14 +374,14 @@ This is a simple file.
 What you just saw above, was the Value Macro. It inserts the value corresponding
 to the "medium" key, with the html parser.
 There are other macros, too:
-0. Truth macro, 
+0. Truth macro,
 1. Value macro,
 2. Array macro,
 3. Comment macro,
 4. Macro definition macro,
 Do we have a conditional macro? YES!
 But how do we escape two curly braces? Like this: {{.
-Are there comments? 
+Are there comments?
 </pre>
 
 <p>Extensibility is achieved through the use of the plate object. This object
