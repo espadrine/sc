@@ -41,4 +41,4 @@ Camp.notfound(/.*\.lol$/, function (data, path) {
 });
 
 // Let's rock'n'roll!
-Camp.Server.start (80);
+Camp.start();
