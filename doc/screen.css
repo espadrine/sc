@@ -12,11 +12,9 @@ html {
 h1 {
   text-align: right;
   font-family: Inconsolata, monospace;
-  text-decoration: underline;
   border-bottom: solid 1px #222;
-  text-shadow: hsl(260, 70%, 70%) 0px 0px 42px;
 }
-h1 span.purple {
+span.purple {
   color: purple;
 }
 
@@ -68,6 +66,14 @@ textarea {
   height: 150px;
 }
 
+hr {
+  height: 1px;
+  border: 0px;
+  background-color: #423;
+  margin: 3em;
+  color: 
+}
+
 
 /* Heads */
 
@@ -78,6 +84,11 @@ span.ipa { font-style: auto; font-family: sans-serif; margin-right: 7px; }
   font-size: x-large;
   font-weight: bold;
   margin-right: 13px;
+}
+.glow {
+  text-shadow: hsl(260, 70%, 70%) 0px 0px 42px;
+  background: none;
+  text-decoration: underline;
 }
 
 
@@ -109,7 +120,7 @@ span.ipa { font-style: auto; font-family: sans-serif; margin-right: 7px; }
   -moz-transition: 0.3s ease-out box-shadow;
   transition: 0.3s ease-out box-shadow;
 
-  letter-spacing: 1pt;
+  letter-spacing: 2.5pt;
   font-family: "Inconsolata", monospace;
   font-size: 14pt;
   font-style: italic;

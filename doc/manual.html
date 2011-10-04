@@ -5,10 +5,10 @@
 
 <body class=manual>
 
-<code class=entry>ScoutCamp</code>
-<span class=ipa>/skoutkamp/</span> Web Apps done right.
+<code class="entry glow">Scout<span class=purple>Camp</span></code>
+<span class=ipa>/skoutkamp/</span> Web apps done right.
 
-<h1>The <span class=purple>Manual</span></h1>
+<h1 class=glow>The <span class=purple>Manual</span></h1>
 
 <h2>What is ScoutCamp?</h2>
 
@@ -30,7 +30,8 @@ automatically <strong>optimizes</strong> your content <strong>for the web
   web server that fits the need of all web apps, especially yours, and easy
   to use thanks to its javascript configuration file.
   <li><code class=entry>Plate.js</code>
-  <span class=ipa>/pleɪt/</span> Templating system for {{=templated|text}} in files.
+  <span class=ipa>/pleɪt/</span> Templating system for
+  <code>{{=templated|text}}</code>  in your files.
 </ul>
 
 <h2>The Files</h2>
@@ -52,7 +53,7 @@ server.js      # *your server!*
 doc/
   manual.html  # awesome reading material
 lib/
-  camp.js      # outstanding web server
+  camp.js      # outstanding ]web server
   plate.js     # templating engine
 test/
   test.js      # some boring tests
@@ -62,7 +63,7 @@ web/           # *your website!*
   robots.txt   # file for spiders, always handy
   js/
     scout.js   # keep within reach
-  [...]
+  …
 
 # Worth noting: you can find amazing default web stuff
 # at <a href=http://html5boilerplate.com/>html5boilerplate.com</a>.
@@ -126,7 +127,21 @@ that hook:</p>
 
 <h2>Advanced Usage</h2>
 
+<h3>A few words on the ScoutCamp philosophy</h3>
+
+<p>We let you separate <strong>the Ajax engines</strong>, run on the
+server, and <strong>the web interface</strong>, conveying information and
+giving the possibility of interaction with the engines.</p>
+
 <h3>Amazing Ajax</h3>
+
+
+<p>What's in a page? A page in Scout Camp is a way to view some data in a
+specific fashion, and have certain interaction with this data.
+Each time you want a new way to view data, a way that has a different purpose,
+you should create a new page.
+</p>
+
 
 <h3>The Build Script</h3>
 
@@ -151,169 +166,6 @@ $ make help     # even more crunchy details!
 <code>^Z</code> and then <code>bg</code>.</p>
 
 <h2>The Libraries</h2>
-
-  <!-- old --><hr size=20 color=fuschia>
-
-<p>We let you separate <strong>the Ajax engines</strong>, run on the
-server, and <strong>the web interface</strong>, conveying information and
-giving the possibility of interaction with the engines.</p>
-</ul>
-
-<h2>Where should I start?</h2>
-
-<p>First, download Node.js, scout.js minified, camp.js. Don't know where to
-find them? Please, look up! There, with the odd flashy colors!
-</p>
-<p>Then, you will want to set up your working environment like this.
-</p>
-<pre>
-camp.js   # it should be next to your main server.
-server.js # your main server is there!
-web/      # all things html are here...
-  /index.html   # root of the website.
-  /.robots.txt  # file for spiders, always handy.
-  /js/
-    /scout.js   # scout.js, always within reach.
-  ...
-
-# Worth noting: you can find amazing default stuff
-# at <a href=http://html5boilerplate.com/>html5boilerplate.com</a>.</pre>
-
-<p>The <code>run.js</code> file is something like this:
-</p>
-
-<pre>
-// run.js: starts the web server. Run "cd web &amp;&amp; sudo node ../run.js"
-
-var server = require ('camp').Camp;
-server.start ();</pre>
-
-<p>From the command line, you want to navigate to the <code>web</code> folder.
-Then, if you have node.js installed, this should set fire to the dynamite!
-</p>
-<pre>
-$ pwd
-/.../web
-$ sudo node ../run.js &amp;      # Yay!</pre>
-
-
-<h2>Pages and Ajax</h2>
-
-<p>What's in a page? A page in Scout Camp is a way to view some data in a
-specific fashion, and have certain interaction with this data.
-Each time you want a new way to view data, a way that has a different purpose,
-you should create a new page.
-</p>
-
-<p>Creating a new page is easy:
-</p>
-
-<pre>
-$ pwd
-/.../web
-$ edit page.html     # with an alias edit='vi' or something...
-$ ls
-js/  index.html  page.html ...</pre>
-
-<p>But what if you want Ajax interaction?
-
-<h3>Core Ajax scripts</h3>
-
-<p>Your new Ajax page might look like this...
-</p>
-
-<pre>
-&lt;!doctype html>
-&lt;script src="/js/scout.js">&lt;/script>
-
-&lt;p>Post a message:
-&lt;form id=form>
-  &lt;input name="message"/>
-  &lt;button>Post message&lt;/button>
-
-  &lt;script><em>
-  Scout('#form').on('submit', function(params) {
-    xhr.but = Scout('#form>button');
-    xhr.but.disabled = true;
-    xhr.but.textContent = 'Submitting...';
-
-    params.action = 'note';
-    params.data = {message: this.firstElementChild.value};
-    params.resp = function (resp, xhr) {
-      xhr.but.disabled = false;
-      Scout('output#msg').textContent = resp.message;
-      xhr.but.textContent = 'New post';
-    };
-  });
-  </em>&lt;/script>
-
-&lt;/form>
-&lt;br/>
-
-&lt;p>Last message:
-  &lt;output id=msg form=form>nothing&lt;/output>.
-</pre>
-
-<p>You can register the site-wide action "note" that answers to this Ajax call
-by writing, in run.js, something like:
-</p>
-
-<pre>
-// run.js: starts the web server. Run "cd web &amp;&amp; sudo node ../run.js"
-
-var server = require ('./camp').Camp;
-
-var notes = [];
-server('note', function(json) {
-  /* Remember the note. */
-  notes.push(json.message);
-  return {message:json.message};  // This will be sent back the html page.
-});
-
-/* The following line starts the web server. */
-server.start();</pre>
-
-
-<h3>Hard drive programs</h3>
-
-<p>Another reasonable choice is to use a binary program
-to register a specific action. It means that the Ajax call will cause
-the server to access the hard drive to fetch and run the program.
-This may be faster if the associated action already uses the hard drive.
-</p>
-
-<p>The server will then receive a request that looks something like this:
-"http://example.com/$prog?message=[input]".
-It will then run the c program located at /$prog, whose
-source code may look like that, using ScoutCamp's apis:
-</p>
-
-<pre>
-int main (int argc, char** argv) {
-  json_object *query = scQueryString();
-  /* Tells the user its name. */
-  json_object *msg = json_object_object_get(query, "message");
-  if (msg) {
-    scReturn(msg);
-  } else {
-    scReturn(NULL);
-  }
-  return 0;
-}</pre>
-
-<p>The <code>scQueryString()</code> function returns a json object whose keys
-and values are that of the query string. In this case, we ask for a message; we
-may have a query string like "message=something" (corresponding to a GET
-request that would look like http://example.com/page.html?message=something).
-</p>
-
-<p>Then, the program returns another (preferably different, unlike the example
-given) JSON object, which the webpage can manipulate in the second javascript
-function given, through the <code>resp</code> parameter.
-</p>
-
-
-<h2>Libraries</h2>
 
 <h3>Scout.js</h3>
 <dl>
@@ -395,17 +247,17 @@ function given, through the <code>resp</code> parameter.
   The second case will usually be uncommon. It is there to cover very specific,
   strongly app-oriented websites.
 
-  <dt><code>camp.format = function ( path, function literal ( jsonQuery ) {
-    return jsonFiller; } )</code>
+  <dt><code>camp.handle = function (regexp, function(query, path) { return
+    jsonOrFunction; } )</code>
   <dd>You may wish to write template html files (or any other kind) that will be
   preprocessed server-side. This function lets you tell the system that the
   string `path` is preprocessed against the literal data returned by the
-  function `literal`. That function takes as a parameter the query string it
+  callback function. That function takes as a parameter the query string it
   got.<br>
   The templating language used is specified <a href=#plate.js>in the next
     section</a>.
 
-  <dt><code>camp.Server.start = function ( port='80', debug=false ) { }</code>
+  <dt><code>camp.start = function (port = 80, debug = false) {…}</code>
   <dd>The start function starts the web server, listening on port 80 by default.
 </dl>
 
@@ -477,56 +329,7 @@ camp.Plate.macros['n'] = function ( literal, params ) {
 };
 </pre>
 
-
-<h3>The rest of it</h3>
-<p><a href=http://www.json.org>JSON</a> library. This is actually the
-<a href=http://oss.metaparadigm.com/json-c/>json-c library</a>.
-<ul>
-  <li>json_object *   json_object_get (struct json_object *this)
-  <li>void  json_object_put (struct json_object *this)
-  <li>int   json_object_is_type (struct json_object *this, enum json_type type)
-  <li>enum json_type  json_object_get_type (struct json_object *this)
-  <li>char *  json_object_to_json_string (struct json_object *this)
-  <li>json_object *   json_object_new_object ()
-  <li>lh_table *  json_object_get_object (struct json_object *this)
-  <li>void  json_object_object_add (struct json_object *this, char *key, struct json_object *val)
-  <li>json_object *   json_object_object_get (struct json_object *this, char *key)
-  <li>void  json_object_object_del (struct json_object *this, char *key)
-  <li>json_object *   json_object_new_array ()
-  <li>array_list *  json_object_get_array (struct json_object *this)
-  <li>int   json_object_array_length (struct json_object *this)
-  <li>int   json_object_array_add (struct json_object *this, struct json_object *val)
-  <li>int   json_object_array_put_idx (struct json_object *this, int idx, struct json_object *val)
-  <li>json_object *   json_object_array_get_idx (struct json_object *this, int idx)
-  <li>json_object *   json_object_new_boolean (boolean b)
-  <li>boolean   json_object_get_boolean (struct json_object *this)
-  <li>json_object *   json_object_new_int (int i)
-  <li>int   json_object_get_int (struct json_object *this)
-  <li>json_object *   json_object_new_double (double d)
-  <li>double  json_object_get_double (struct json_object *this)
-  <li>json_object *   json_object_new_string (char *s)
-  <li>json_object *   json_object_new_string_len (char *s, int len)
-  <li>char *  json_object_get_string (struct json_object *this)
-  <li>json_object_object_foreach(obj, key, val) { ... }
-  <li>FALSE
-  <li>TRUE
-  <li>enum json_type { json_type_null, json_type_boolean, json_type_double, json_type_int, json_type_object, json_type_array, json_type_string }
-</ul>
-
-<p>Scout Camp C library. Useful for stand-alone C programs.
-</p>
-<ul>
-  <li>json_object* scQueryString() : returns the query string.
-  <li>char* scInput() : returns the standard input received (it might have been
-  processed by Scout Camp, in the case of a MIME type of
-  application/x-www-form-urlencoded).
-  <li>char* scVar(char* req) : returns the string associated with the request.
-  The parameter req must be one of SERVER_PROTOCOL, SERVER_PORT, REQUEST_METHOD,
-  PATH_INFO, PATH_TRANSLATED, SCRIPT_NAME, QUERY_STRING, REMOTE_HOST,
-  REMOTE_ADDR, AUTH_TYPE, REMOTE_USER, REMOTE_IDENT,
-  CONTENT_TYPE, CONTENT_LENGTH.
-  <li>void scReturn(json_object) : sends back JSON to the client.
-</ul>
+<hr>
 
 <p>If you wish to be part of this project,
 <a href=mailto:thaddee.tyl@gmail.com>send me a mail</a>.
@@ -561,5 +364,3 @@ WebFontConfig = {
 
 
 </script>
-
-</body>
