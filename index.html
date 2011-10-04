@@ -32,3 +32,19 @@
   Don't forget the <a href=./doc/manual.html>manual</a>.
 </p>
 
+<script>  /* WEB FONTS */
+  
+  WebFontConfig = {
+    google: { families: [ 'Inconsolata', 'Droid Sans', 'IM Fell DW Pica' ] }
+  };
+
+  (function () {
+    var wf = document.createElement ('script');
+    wf.src = '//ajax.googleapis.com/ajax/libs/webfont/1/webfont.js';
+    wf.type = 'text/javascript';
+    wf.async = 'true';
+    var s = document.getElementsByTagName ('script')[0];
+    s.parentNode.insertBefore (wf, s);
+  })();
+
+</script>
