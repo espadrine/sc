@@ -70,54 +70,55 @@ web/           # *your website!*
 
 <h2>Basic Usage</h2>
 
-<h3>Kick-start</h3>
+<h3>Fast Start</h3>
 
 <p>If you have <code>node</code> installed, this should <strong>set fire to the
   dynamite!</strong></p>
 
 <pre>
-$ make     # yes, it is that simple!
+$ make         # yes, it is that simple!
 </pre>
 
 <p>This actually publishes your website from <u>web/</u> to a new
 <u>publish/</u> folder. And then it starts your server. Yay!</p>
 
-<h3>Scripts</h3>
+<h3>Server Script</h3>
 
-<p>A simple <code>server.js</code> script looks like this:</p>
+<p>The simplest <code>server.js</code> script looks like this:</p>
 
 <pre>
-// server.js: main server script
-
-var Camp = require('lib/camp');          // import the camp
-Camp.Server.start(80);                   // let's rock'n'roll!
+require('lib/camp').start()              // let's rock'n'roll!
 </pre>
 
-<p><strong>And that's all there is to it!</strong></p>
+<p>And <strong>that's all</strong> there is to it.</p>
 
-<p>Here is a <strong>more advanced</strong> example, using Ajax:</p>
+<h3>Easy Ajax</h3>
+
+<p>Oh look, this <code>server.js</code> script features an
+<strong>ajax hook</strong>:</p>
 
 <pre>
-// server.js: yet another server script
-
 var Camp = require('lib/camp');          // this camp again
+
 Camp.add('greetings', function(data) {   // 'greetings' ajax hook
-    return "oh hai!";
+    return 'oh hai!';
 });
-Camp.Server.start(80);                   // let's twist again!
+
+Camp.start();                            // let's twist again!
 </pre>
 
-<pre>
-&lt;!-- index.html: ajax triggering client -->
+<p>The following <code>web/index.html</code> page should <strong>trigger</strong>
+that hook:</p>
 
+<pre>
 &lt;input type=button value=greet>
 
 &lt;script>
   Scout('#button').on('click', function (query) {
-    query.action = 'greetings';          // 'greetings' ajax hook
-    query.data = {};                     // no data in this case
+    query.action = 'greetings';            // 'greetings' ajax hook
+    query.data = {};                       // no data in this case
     query.resp = function (answer) {
-      Scout('#button').value = answer;   // replace button text
+      Scout('#button').value = answer;     // replace button text
     };
   });
 &lt;script>
@@ -128,8 +129,6 @@ Camp.Server.start(80);                   // let's twist again!
 <h3>Amazing Ajax</h3>
 
 <h3>The Build Script</h3>
-
-<p><strong>Crunchy details</strong> for the detail lover:</p>
 
 <pre>
 $ make          # is equivalent to:
