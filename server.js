@@ -4,7 +4,7 @@
 
 
 // Import the Camp
-var Camp = require ('./lib/camp.js');
+var Camp = require ('./camp/camp.js');
 
 
 // Templating demo
