@@ -33,7 +33,7 @@ Camp.add('all', function() {
   return function incoming(data){
     return data;
   };
-});
+}, 'incoming');
 
 // Not found demo
 Camp.notfound(/.*\.lol$/, function (data, path) {
@@ -41,4 +41,4 @@ Camp.notfound(/.*\.lol$/, function (data, path) {
 });
 
 // Let's rock'n'roll!
-Camp.start();
+Camp.start(80,10);

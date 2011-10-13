@@ -231,7 +231,7 @@ $ make help     # even more crunchy details!
 <p><code>var camp = require ( './camp.js' );</code></p>
 <dl>
   <dt><code>camp.add = function ( action, function ( jsonQuery, ... ) { return
-    jsonRespOrNamedFunction; } )</code>
+    jsonRespOrNamedFunction; } , optionalEventName )</code>
   <dd>The Camp function registers an action located at '/$[action]',
   which runs the function given as the second argument.<br>
   Either the function returns an object literal, which will immediately be sent
@@ -239,7 +239,7 @@ $ make help     # even more crunchy details!
   function that takes arbitrary parameters (eg, <code>function ( foo, bar ) {
     return { result: foo + bar }; }</code>), in which case that latter function,
   which must return the JSON to send back to the client, will only be run when
-  the <code>camp.Server.emit ( nameOfTheFunction, foo, bar)</code> event is
+  the <code>camp.Server.emit ( optionalEventName, foo, bar)</code> event is
   emitted from your app.
   Then, the function will be launched with the parameters
   foo and bar, and the result will be sent back to the client if not undefined.
@@ -248,7 +248,7 @@ $ make help     # even more crunchy details!
   strongly app-oriented websites.
 
   <dt><code>camp.handle = function (regexp, function(query, path) { return
-    jsonOrFunction; } )</code>
+    jsonOrFunction; }, optionalEventName )</code>
   <dd>You may wish to write template html files (or any other kind) that will be
   preprocessed server-side. This function lets you tell the system that the
   string `path` is preprocessed against the literal data returned by the
