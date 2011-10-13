@@ -134,17 +134,14 @@ exports.Server.start = function (port, debug) {
 
 
       /* Differed sendback function (choice between func and object).
-       * `sentback` is either a func or an object.
+       * `getsentback` is the function that returns either a func or an object.
        * `treat(res)` is a func that the result goes through and is sent.
        * `evtname` is a string identifying, if `sentback` is a function,
        * the event associated to it. */
-      var differedresult = function (sentback, treat, evtname) {
-        if (typeof sentback === 'function') {
+      var differedresult = function (getsentback, treat, evtname) {
+        if (evtname !== undefined) {
           // Event-based ajax call.
-          if (evtname === undefined && debug > 2) {
-            console.log ('warning: action returns a function, but it has ' +
-              'no associated event name (third parameter).');
-          }
+          var sentback;
 
           req.pause ();   // We must wait for an event to happen.
           exports.Server.on (evtname, function evtnamecb () {
@@ -167,9 +164,17 @@ exports.Server.start = function (port, debug) {
             }
           });
 
+          // Then we execute the function to get sentback.
+          sentback = getsentback();
+
+          if (typeof sentback !== 'function' && debug > 2) {
+            console.log ('warning: action returns a function, but it has ' +
+              'no associated event name (third parameter).');
+          }
+
         } else {
           // Handle the action the usual way.
-          res.end (treat (sentback || {}));
+          res.end (treat (getsentback() || {}));
         }
       };
 
@@ -188,9 +193,10 @@ exports.Server.start = function (port, debug) {
 
           /* Launch the defined action. */
           if (exports.Server.Actions[action]) {
-            var sentback = exports.Server.Actions[action][0] (query),
-                evtname =  exports.Server.Actions[action][1];
-            differedresult (sentback, JSON.stringify, evtname);
+            var getsentback = function() {
+              return exports.Server.Actions[action][0] (query);
+            },  evtname =  exports.Server.Actions[action][1];
+            differedresult (getsentback, JSON.stringify, evtname);
           } else {
             res.end ('404');
           }
@@ -212,31 +218,28 @@ exports.Server.start = function (port, debug) {
             platepaths.forEach (function (path) {console.log ('-',path);});
           }
           var pathmatch = path.match (RegExp (platepaths[0][0]));
-          var completion = platepaths[0][1] (query, pathmatch);
-          // Extension of the template.
-          ext = p.extname (pathmatch[0]).slice (1);
-          res.writeHead (200, {
-            'Content-Type': exports.Server.mime[ext] || 'text/plain'
-          });
 
-          fs.readFile ('.' + pathmatch[0], function (err, data) {
-            if (err) {
+          // What does the plate handling yield? Direcly data, or...
+          var completion = function() {
+            var result = platepaths[0][1] (query, pathmatch);
+            // Extension of the template.
+            ext = p.extname (pathmatch[0]).slice (1);
+            res.writeHead (200, {
+              'Content-Type': exports.Server.mime[ext] || 'text/plain'
+            });
+            return result;
+          },  treat = function (templatedata) {
+            var data = fs.readFileSync ('.' + pathmatch[0]);
+            if (data === undefined) {
               if (debug > 0) { console.log ('Template not found:', err.path); }
               res.writeHead (404, 'Where the hell do you think you\'re going?');
               res.end ('404: thou hast finished me!\n');
             }
+            return Plate.format (data.toString (), templatedata);
+          };
 
-            if (data) {
-              // What does the plate handling yield? Direcly data, or...
-              differedresult (completion, function (templatedata) {
-                return Plate.format (data.toString (), templatedata);
-              }, platepaths[0][2]);
+          differedresult (completion, treat, platepaths[0][2]);
 
-            } else {
-              if (debug > 0) { console.log ('data was not there:', data); }
-              res.end ();
-            }
-          });
         };
 
         // Do we need template preprocessing?
