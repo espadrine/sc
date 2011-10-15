@@ -6,7 +6,6 @@
 // Import the Camp
 var Camp = require ('./camp/camp.js');
 
-
 // Templating demo
 Camp.handle('/template.html', function (data, path) {
   var map = {    // Try http://localhost/template.html?title=Hello&info=[Redacted].
@@ -40,5 +39,9 @@ Camp.notfound(/.*\.lol$/, function (data, path) {
   path[0] = '/404.html';
 });
 
+// Default argv
+var PORT = process.argv[2] || 80,
+    DEBUG = process.argv[3] || 0;
+
 // Let's rock'n'roll!
-Camp.start();
+Camp.start(PORT, DEBUG);
