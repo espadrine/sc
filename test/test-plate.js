@@ -23,6 +23,11 @@ t.teq (Plate.format ('Your base belongs to {{-us|me|i;\n' +
     'Your base belongs to \n- John Connor ; \n- Paul Irish ; \n' +
     '- Ash William ; ');
 
+t.teq (Plate.format ('Characters:\n{{-protagonists|guy|i; ' +
+          '{{=i|plain}}. {{=guy|plain}}\n}}',
+          {protagonists:['Blondie', 'Angel', 'Tuco']}),
+    'Characters:\n 0. Blondie\n 1. Angel\n 2. Tuco\n');
+
 // compound expressions
 t.teq (Plate.format ('Thaddee {{?apostles.indexOf(thaddee)!=-1|was|wasn\'t}} an apostle'
       ,{thaddee:'Thaddaeus', apostles:['Simon','Andrew','James','John','Philip'
