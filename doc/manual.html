@@ -146,19 +146,21 @@ you should create a new page.
 <h3>The Build Script</h3>
 
 <pre>
-$ make          # is equivalent to:
-$ make all      # which is equivalent to:
-$ make clean deploy minify stop start
+$ make                  # is equivalent to:
+$ make all              # which is equivalent to:
+$ make clean copy minify stop start
 
-$ make clean    # deletes publish/ and logs
-$ make deploy   # copies web/* to publish/*
-$ make minify   # optimizes content in publish/
-$ make stop     # kills all running servers
-$ make start    # starts the server in publish/
-$ make nodeploy # starts the server in web/
-$ make update   # updates ScoutCamp
-$ make test     # runs boring tests
-$ make help     # even more crunchy details!
+$ make clean            # deletes publish/ and logs
+$ make copy             # copies web/ to publish/
+$ make minify           # optimizes content in publish/
+$ make stop             # kills all running servers
+$ make start            # starts the server in publish/
+$ make start PORT=1337  # same as above but on port 1337
+$ make debug            # starts the server in web/
+$ make debug DEBUG=10   # maximum debug trace
+$ make update           # updates ScoutCamp
+$ make test             # runs boring tests
+$ make help             # even more crunchy details!
 </pre>
 
 <p><strong>ProTip<sup>&reg;</sup></strong> To run your server in
