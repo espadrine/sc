@@ -70,7 +70,7 @@ start:
 	@echo "start"
 	@if [ `id -u` -ne "0" -a $(PORT) -lt 1024 ] ;  \
 	then  \
-	  echo ' `make PORT=1337` if you cannot sudo' ;  \
+	  #echo ' `make PORT=1337` if you cannot sudo' ;  
 	  cd $(PUBLISH) ; sudo node ../$(SERVER) $(PORT) $(DEBUG) > ../$(LOG) ;  \
 	else  \
 	  cd $(PUBLISH) ; node ../$(SERVER) $(PORT) $(DEBUG) > ../$(LOG) ;  \
@@ -80,7 +80,7 @@ startweb:
 	@echo "start web"
 	@if [ `id -u` -ne "0" -a $(PORT) -lt 1024 ] ;  \
 	then  \
-	  echo ' `make debug PORT=1337` if you cannot sudo' ;  \
+	  #echo ' `make debug PORT=1337` if you cannot sudo' ;  
 	  cd $(WEB) ; sudo node ../$(SERVER) $(PORT) $(DEBUG) > ../$(LOG) ;  \
 	else  \
 	  cd $(WEB) ; node ../$(SERVER) $(PORT) $(DEBUG) > ../$(LOG) ;  \
