@@ -1,4 +1,4 @@
-var Plate = require ('../lib/plate'), Test = require ('./test');
+var Plate = require ('../camp/plate'), Test = require ('./test');
 
 var t = new Test ();
 

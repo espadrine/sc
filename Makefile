@@ -70,7 +70,6 @@ start:
 	@echo "start"
 	@if [ `id -u` -ne "0" -a $(PORT) -lt 1024 ] ;  \
 	then  \
-	  #echo ' `make PORT=1337` if you cannot sudo' ;  
 	  cd $(PUBLISH) ; sudo node ../$(SERVER) $(PORT) $(DEBUG) > ../$(LOG) ;  \
 	else  \
 	  cd $(PUBLISH) ; node ../$(SERVER) $(PORT) $(DEBUG) > ../$(LOG) ;  \
@@ -80,7 +79,6 @@ startweb:
 	@echo "start web"
 	@if [ `id -u` -ne "0" -a $(PORT) -lt 1024 ] ;  \
 	then  \
-	  #echo ' `make debug PORT=1337` if you cannot sudo' ;  
 	  cd $(WEB) ; sudo node ../$(SERVER) $(PORT) $(DEBUG) > ../$(LOG) ;  \
 	else  \
 	  cd $(WEB) ; node ../$(SERVER) $(PORT) $(DEBUG) > ../$(LOG) ;  \
@@ -102,6 +100,17 @@ jsmin:
 	        rm -rf jsmin.c ;  \
 	  else echo ' `sudo make jsmin`'; fi
 
+https.key:
+	openssl genrsa -aes256 -out https.key 1024
+
+https.csr: https.key
+	openssl req -new -key https.key -out https.csr
+
+https.crt: https.key https.csr
+	openssl x509 -req -days 365 -in https.csr -signkey https.key -out https.crt
+
+https: https.crt
+
 help:
 	@cat Makefile | less
 
@@ -112,8 +121,14 @@ wtf: help
 coffee:
 	@echo "\n           )      (\n           (  )   )\n         _..,-(--,.._\n      .-;'-.,____,.-';\n     (( |            |\n      \`-;            ;\n         \\          /	\n      .-''\`-.____.-'''-.\n     (     '------'     )\n      \`--..________..--'\n";
 
-sandwich:
-	@if [ `id -u` = "0" ] ; then echo "\nOKAY." ; else echo "\nWhat? Make it yourself." ; fi
+me:
+	@echo -n ""
 
-.PHONY: all publish debug clean copy minify stop start startweb test update jsmin help wtf ? coffee sandwich
+a:
+	@ls > /dev/null
+
+sandwich:
+	@if [ `id -u` = "0" ] ; then echo "OKAY." ; else echo "What? Make it yourself." ; fi
+
+.PHONY: all publish debug clean copy minify stop start startweb test update jsmin https help wtf ? coffee me a sandwich
 
