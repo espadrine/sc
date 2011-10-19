@@ -63,8 +63,12 @@ minify:
 
 stop:
 	@echo "stop"
-	@for pid in `ps aux | grep -v make | grep node | grep $(SERVER) | awk '{print $$2}'` ; do kill -9 $$pid 2> /dev/null ; done;
-
+	@for pid in `ps aux | grep -v make | grep node | grep $(SERVER) | awk '{print $$2}'` ; do  \
+	   kill -9 $$pid 2> /dev/null ;  \
+	   if [ "$$?" -ne "0" ] ; then  \
+	     sudo kill -9 $$pid 2> /dev/null ;  \
+	   fi  \
+	done;  \
 
 start:
 	@echo "start"
