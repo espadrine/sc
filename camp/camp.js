@@ -168,6 +168,7 @@ exports.Server.start = function (port, debug) {
               exports.Server.removeListener (evtname, evtnamecb);
             }
           });
+          getsentback ();
 
         } else {
           // Handle the action the usual way.
