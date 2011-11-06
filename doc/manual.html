@@ -146,21 +146,24 @@ you should create a new page.
 <h3>The Build Script</h3>
 
 <pre>
-$ make                  # is equivalent to:
-$ make all              # which is equivalent to:
+$ make                  # equivalent to:
+$ make all              # equivalent to:
+
 $ make clean copy minify stop start
 
-$ make clean            # deletes publish/ and logs
-$ make copy             # copies web/ to publish/
-$ make minify           # optimizes content in publish/
-$ make stop             # kills all running servers
-$ make start            # starts the server in publish/
+$ make start            # start the server in publish/
 $ make start PORT=1337  # same as above but on port 1337
-$ make debug            # starts the server in web/
+$ make start SECURE=yes # use https instead of http
+$ make debug            # start the server in web/
 $ make debug DEBUG=10   # maximum debug trace
-$ make update           # updates ScoutCamp
-$ make test             # runs boring tests
-$ make help             # even more crunchy details!
+$ make stop             # kill all running servers
+$ make minify           # optimize content in publish/
+$ make copy             # copy web/ to publish/
+$ make clean            # delete publish/ and logs
+$ make update           # update ScoutCamp
+$ make https            # generate https credentials
+$ make test             # run boring tests
+$ make help             # want more?
 </pre>
 
 <p><strong>ProTip<sup>&reg;</sup></strong> To run your server in
@@ -261,7 +264,7 @@ $ make help             # even more crunchy details!
   The templating language used is specified
   <a href=#plate.js>in the next section</a>.
 
-  <dt><code>camp.start = function (port = 80, debug = false) {…}</code>
+  <dt><code>camp.start = function ({port: 80, secure: 'no', debug: 0}) {…}</code>
   <dd>The start function starts the web server, listening on port 80 by default.
 </dl>
 
