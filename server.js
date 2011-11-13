@@ -30,6 +30,9 @@ Camp.add('all', function() {}, function incoming(data) { return data; });
 // Not found demo
 Camp.notfound(/.*\.lol$/, function (data, path) { path[0] = '/404.html'; });
 
+// Testing scout.js
+Camp.add('test', function(data) { return data || 'test'; });
+
 // Options
 var options = {
   port: +process.argv[2],

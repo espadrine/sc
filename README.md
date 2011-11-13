@@ -16,3 +16,9 @@ a Node.js framework for easy Web Apps
 1. see [issues] (https://github.com/espadrine/ScoutCamp/issues)
 2. send [pull requests] (http://help.github.com/send-pull-requests/)
 3. contact [Thaddee Tyl] (https://github.com/inbox/new/espadrine) or [Jan Keromnes] (https://github.com/inbox/new/jankeromnes)
+
+##Versions
+Versions are tags labeled after the year and month it was released.
+
+    v1201  → january 2012
+

@@ -1,0 +1,29 @@
+<!doctype html>
+<meta charset=utf-8>
+<title>Testing Scout</title>
+
+<!-- This page can test corner-cases. -->
+
+<script>
+
+// Testing successive XHR that happen while the previous XHR wasn't done yet.
+var count = 0;
+
+function sending(scout) {
+  scout.send(function(params) {
+    params.action = 'test';
+    params.data = {f:0};
+    params.resp = function(resp) {
+      count++;
+      console.log('resp #%s', count);
+    };
+  })();
+}
+
+addEventListener('load', function() {
+  for (var i = 0;  i < 55;  i++)  sending(Scout);
+}, false);
+
+</script>
+
+<script src=js/scout.js></script>
