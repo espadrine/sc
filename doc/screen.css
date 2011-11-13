@@ -41,7 +41,7 @@ h2, h3 {
 }
 
 pre, code, kbd {
-  font-family: Inconsolata, monospace;
+  font-family: "Ubuntu Mono", monospace;
   background-color: #faffe6;
 }
 pre {
@@ -121,7 +121,7 @@ span.ipa { font-style: auto; font-family: sans-serif; margin-right: 7px; }
   transition: 0.3s ease-out box-shadow;
 
   letter-spacing: 2.5pt;
-  font-family: "Inconsolata", monospace;
+  font-family: "Ubuntu Mono", monospace;
   font-size: 14pt;
   font-style: italic;
   font-weight: bold;
