@@ -337,7 +337,8 @@ exports.Server.start = function (port, security, debug) {
 // Exported start function.
 //
 exports.start = function(options) {
-  var security = {};
+  var security = {},
+      options = options || {};
   if (options.secure === 'yes' || options.key || options.cert) {
     security.key = options.key || '../https.key',
     security.cert = options.cert || '../https.crt'
