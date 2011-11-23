@@ -70,9 +70,11 @@ t.teq (Plate.format ('Uri {{=data|uri}}.',{data:'conversion done'}),
 t.teq (Plate.format ('Non-Uri {{=data|!uri}}.',{data:'conversion%20done'}),
        'Non-Uri conversion done.');
 t.teq (Plate.format ('Int {{=data|integer}}.',{data:73.6}), 'Int 74.');
-t.teq (Plate.format ('Radix {{=data|intradix|2}}.',{data:2}), 'Radix 10.');
-t.teq (Plate.format ('Float {{=data|float|2}}.',{data:73.6}), 'Float 73.60.');
-t.teq (Plate.format ('Exp {{=data|exp|2}}.',{data:73.6}), 'Exp 7.36e+1.');
+t.teq (Plate.format ('Radix {{=data|intradix 2}}.',{data:2}), 'Radix 10.');
+t.teq (Plate.format ('Float {{=data|float 2}}.',{data:73.6}), 'Float 73.60.');
+t.teq (Plate.format ('Exp {{=data|exp 2}}.',{data:73.6}), 'Exp 7.36e+1.');
+t.teq (Plate.format ('Twice {{=data|uri|xmlattr}}',{data:'\"&\"'}),
+    'Twice %22&amp;%22');
 
 // error test.
 t.teq (Plate.format ('Nonint {{=data|integer}}.',{data:'hi'}), 'Nonint .');
