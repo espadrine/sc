@@ -206,9 +206,10 @@ Default macros are the following:
    * html (text)
    * xml (text)
    * xmlattr (text)
-   * jsonstring (text)
+   * jsonstring (text)          // Escapes like a json string.
+   * json (text, indentation)   // Takes a JS object.
    * uri (text)
-   * !uri (text)    (unencode the URI)
+   * !uri (text)                // Unencode the URI.
    * integer (text)
    * intradix (text, [radix])
    * float (text, [fractionDigits])

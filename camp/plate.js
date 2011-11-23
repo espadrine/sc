@@ -172,6 +172,9 @@ Plate.parsers = {
                .replace (/\r/g,'\\r').replace (/\t/g,'\\t')
                .replace (RegExp('\b','g'),'\\b');
   },
+  'json': function (text, indent) {
+    return JSON.stringify (text, null, +indent[0]);
+  },
   'integer': function (integer) {
     return typeof integer == 'number'? integer.toFixed (0): '';
   },
