@@ -318,7 +318,10 @@ exports.Server.start = function (port, security, debug) {
 
     } catch(e) {
       res.writeHead (404, 'You killed me!');
-      if (debug > 1) { res.write(e.toString() + '\n'); }
+      if (debug > 1) {
+        res.write(e.toString() + '\n');
+        console.log(e.stack);
+      }
       res.end ('404: thou hast finished me!\n');
     }
 
