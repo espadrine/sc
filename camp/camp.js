@@ -26,8 +26,8 @@ exports.Server = new EventEmitter ();
 exports.add = (function () {
 
   // The exports.add function is the following.
-  var adder = function (action, callback, evtname) {
-  	exports.Server.Actions[action] = [callback, evtname];
+  var adder = function (action, callback, evtfunc) {
+  	exports.Server.Actions[action] = [callback, evtfunc];
   };
 
   exports.Server.Actions = {};    // This will be extended by the add function.
