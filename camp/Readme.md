@@ -35,9 +35,9 @@ code, a function of some sort, to handle some event.  Passing functions as a
 parameter is typically cumbersome in C, etc.  You have to declare it in global
 space, define it there, even though you may not have access to all the variables
 you need, and you therefore enter a hell of billion-parameters functions.
-Closures, on the other hand, adresses this concern beautifully.  All variables in
-scope are accessible, and you may pass in anonymous functions without needing to
-worry.
+Closures, on the other hand, adresses this concern beautifully.  All variables
+in scope are accessible, and you may pass in anonymous functions without needing
+to worry.
 
 
 Scout.js
@@ -87,12 +87,14 @@ calls.  By default, when given a request, it looks for files in the current
 directory.  However, it also has the concept of actions.
 
     var camp = require ( './camp.js' );
-    camp.add ( 'getinfo', function (json) { console.log (json); return json; } );
+    camp.add ( 'getinfo', function (json) {
+      console.log (json); return json;
+    } );
     camp.start ();
 
-An action maps a string to the path request "/$<string>".  When a client asks for
-this resource, sending in information stored in the "json" parameter, Camp.js
-will send it back the object literal that the callback function gives.
+An action maps a string to the path request "/$<string>".  When a client asks
+for this resource, sending in information stored in the "json" parameter,
+Camp.js will send it back the object literal that the callback function gives.
 
 In the example given, it merely sends back whatever information the client
 gives, which is a very contrived example.
@@ -104,19 +106,20 @@ the server's data seemlessly through ajax calls.
 
 You may also differ the moment when you send the json back to the client.  The
 basic idea is, you want to send it when an event is raised: `camp.Server.emit
-('name_of_the_event', data)`.  In that case, you need to add a third parameter to
-the definition of your action:
+('name_of_the_event', data)`.  In that case, you need to add a third parameter
+to the definition of your action:
 
     camp.add ( actionname, function () {
-      …  // don't return anything at all
-    }, function name_of_the_event (data) {
+      …
+      return localdata;
+    }, function name_of_the_event (data1, data2, localdata) {
       return json;
     });
 
     …
 
     // Somewhere, sometime later:
-    camp.Server.emit ( 'name_of_the_event', data);
+    camp.Server.emit ( 'name_of_the_event', data1, data2);
 
 
 Plate.js
@@ -127,8 +130,9 @@ handle templates.  Those are server-side preprocessed files.
 
 ### Basic Usage
 
-Mostly, you first decide where to put your template file.  Let's say we have such
-a file at `/first/post.html` (from the root of the web/ or publish/ directory).
+Mostly, you first decide where to put your template file.  Let's say we have
+such a file at `/first/post.html` (from the root of the web/ or publish/
+directory).
 
     var posts = ['This is the f1rst p0st!'];
 
@@ -168,9 +172,9 @@ the following file:
 
 ### Diving In
 
-There are two main elements of interest here.  The easiest is the camp.js binding
-to the template system, the more documentation-heavy one is the actual grammar
-of the templating language.
+There are two main elements of interest here.  The easiest is the camp.js
+binding to the template system, the more documentation-heavy one is the actual
+grammar of the templating language.
 
 The camp.js binding is a very straightforward function; namely:
 
@@ -180,9 +184,9 @@ The camp.js binding is a very straightforward function; namely:
 
 This function registers `paths` as being redirected to a template file.  The
 template file is either `paths`, literally, or the path you affect `path[0]` to
-(indeed, `path[0]` is the match object).  The return value of the `call` function
-is an object literal that will be fed to the template file.  This object literal
-can very well be dynamically generated.
+(indeed, `path[0]` is the match object).  The return value of the `call`
+function is an object literal that will be fed to the template file.  This
+object literal can very well be dynamically generated.
 
 The template syntax follows those basic rules:
 
@@ -206,15 +210,19 @@ Default macros are the following:
    * html (text)
    * xml (text)
    * xmlattr (text)
-   * jsonstring (text)
+   * jsonstring (text)          // Escapes like a json string.
+   * json (text, indentation)   // Takes a JS object.
    * uri (text)
-   * !uri (text)
+   * !uri (text)                // Unencode the URI.
    * integer (text)
-   * intradix (text, radix)
-   * float (text, fractionDigits)
-   * exp (text, fractionDigits)  
-  For instance, `{{=expNumber|exp|2}}` will only print the variable `expNumber`
-  with 2 fractional digits.
+   * intradix (text, [radix])
+   * float (text, [fractionDigits])
+   * exp (text, [fractionDigits])  
+  For instance, `{{=expNumber|exp 2}}` will only print the variable `expNumber`
+  with 2 fractional digits.  
+  You can sequence parsers like so: `{{=key|uri|xmlattr}}` goes through the URI
+  escaper, and then through the xmlattr parser. As a result, giving this the
+  string `"\"&\""` will insert the string `"%22&amp;%22"`.
 * `{{?bool; rest }}` will print the rest if the variable `bool` is truthy.
 * `{{-object|value|key; rest }}` will parse the rest once for each key in
   `object`, adding the new variables `value` and `key` to the scope.
@@ -225,6 +233,27 @@ Default macros are the following:
 * `{{~macro; rest }}` will run the macro named `macro` (please note that this
   macro has more than one character in it, this is legit).
 
+You may create a user-defined parser, say a parser "remove\_t", like so:
+
+    camp.Plate.parsers['remove_t'] = function (text, additionalParams) {
+      return escapedText;
+    };
+
+The `additionalParams` are an array that comes from space-separated strings
+given, in the template, after the parser name. It is useful to tune the behavior
+of the parser. For instance, the `2` in `{{=number|exp 2}}` asks the `exp`
+parser to give 2 decimal digits.
+
+Similarly to how you add parsers, you can add user-defined macros (here, the
+macro `i`):
+
+    camp.Plate.macros['i'] = function (literal, params) {
+      return insertedtext;
+    };
+
+The `literal` object contains all objects that are given to the template, and
+the params are what is given to the macro between pipe characters `|`.
+
 You may, just as with `Camp.add` actions, give `Camp.handle` a third parameter,
 a function, to serve as a callback for the event that will trigger that function
 (and will send the templated document back to the client).
@@ -232,12 +261,13 @@ a function, to serve as a callback for the event that will trigger that function
 
 ## Fall through
 
-There are three steps when treating URLs.  Once it has not matched any handle, it
-is matched against the web/ folder on hard drive.  Finally, if nothing was found
-before, it returns a 404 message.  This can be overriden by the `camp.notfound`
-function, which is identical to the `camp.handle` function.  It does the same
-thing, too, but only after even searching in the file system failed to provide a
-result.
+There are three steps when treating URLs.  Once it has not matched any handle,
+it is matched against the web/ folder on hard drive.  Finally, if nothing was
+found before, it returns a 404 message.  This can be overriden by the
+`camp.notfound` function, which is identical to the `camp.handle` function.  It
+does the same thing, too, but only after even searching in the file system
+failed to provide a result.
 
 
 Thaddee Tyl, author of Scout Camp.
+

@@ -26,8 +26,8 @@ exports.Server = new EventEmitter ();
 exports.add = (function () {
 
   // The exports.add function is the following.
-  var adder = function (action, callback, evtname) {
-  	exports.Server.Actions[action] = [callback, evtname];
+  var adder = function (action, callback, evtfunc) {
+  	exports.Server.Actions[action] = [callback, evtfunc];
   };
 
   exports.Server.Actions = {};    // This will be extended by the add function.
@@ -132,7 +132,8 @@ function parsequery (query, strquery) {
     // Each element of key=value is then again split along `=`.
     var elems = items[item].split('=');
     try {
-      query[unescape(elems[0])] = JSON.parse(unescape(elems[1]));
+      query[decodeURIComponent(elems[0])] =
+        JSON.parse(decodeURIComponent(elems[1]));
     } catch (e) {
       console.log ('query:', JSON.stringify(query), e.toString());
     }
@@ -155,8 +156,8 @@ exports.Server.start = function (port, security, debug) {
     , qs = require('querystring');
 
   // The request listener
-  function listener(req,res){
-    var uri = url.parse (req.url, true);
+  function listener (req,res) {
+    var uri = url.parse (decodeURI (req.url), true);
     var path = uri.pathname;
     var query = uri.query;
 
@@ -166,9 +167,9 @@ exports.Server.start = function (port, security, debug) {
 
 
       /* Differed sendback function (choice between func and object).
-       * `getsentback` is the function that returns either an object or ∅..
+       * `getsentback` is the function that returns either an object or ∅.
        * `treat(res)` is a func that the result goes through and is sent.
-       * `sentback` is a function, fired by the event whose name is that
+       * `sentback` is a function, fired by the event whose name is
        * that function's name. */
       var differedresult = function (getsentback, treat, sentback) {
         if (sentback !== undefined) {
@@ -184,6 +185,9 @@ exports.Server.start = function (port, security, debug) {
           exports.Server.on (evtname, function evtnamecb () {
             var args = [];    // The argument list to send to action.
             for (var i in arguments) { args.push (arguments[i]); }
+            // After all arguments given to `emit`, comes the returned value of
+            // `getsentdata`, in `camp.add('action', getsentback, sentback)`.
+            args.push (actiondata);
 
             var resp = sentback.apply (query, args);
             if (debug > 3) { console.log ('event',evtname,
@@ -200,7 +204,7 @@ exports.Server.start = function (port, security, debug) {
               exports.Server.removeListener (evtname, evtnamecb);
             }
           });
-          getsentback ();
+          var actiondata = getsentback ();
 
         } else {
           // Handle the action the usual way.
@@ -317,7 +321,10 @@ exports.Server.start = function (port, security, debug) {
 
     } catch(e) {
       res.writeHead (404, 'You killed me!');
-      if (debug > 1) { res.write(e.toString() + '\n'); }
+      if (debug > 1) {
+        res.write(e.toString() + '\n');
+        console.log(e.stack);
+      }
       res.end ('404: thou hast finished me!\n');
     }
 
