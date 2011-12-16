@@ -2,9 +2,5 @@
 *.dat
 *.out
 *.pid
-*.gz
 
 publish
-
-node_modules
-npm-debug.log
