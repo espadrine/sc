@@ -245,7 +245,7 @@ $ make help             # want more?
   have yet another parameter, a function that takes arbitrary parameters (eg,
   <code>function eventName( foo, bar ) { return { result: foo + bar }; }</code>
   ), in which case that latter function, which must return the JSON to send back
-  to the client, will only be run when the <code>camp.Server.emit (
+  to the client, will only be run when the <code>camp.server.emit (
     'eventName', foo, bar)</code> event is emitted from your app.
   Then, the function will be launched with the parameters foo and bar, and the
   result will be sent back to the client if not undefined.

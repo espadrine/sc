@@ -3,11 +3,19 @@
  * Code covered by the LGPL license. */
 
 
-// Import the Camp
-var Camp = require ('./camp/camp.js');
+// Options
+var options = {
+  port: +process.argv[2],
+  secure: process.argv[3],
+  debug: +process.argv[4]
+};
+console.log(options);
+
+// Let's rock'n'roll!
+var camp = require('./camp/camp').start(options);
 
 // Templating demo
-Camp.handle('/template.html', function (data, path) {
+camp.handle('/template.html', function (data, path) {
   return {    // Try http://localhost/template.html?title=Hello&info=[Redacted].
      title: data.title || 'Success',
      enc: data.enc || 'utf-8',
@@ -18,27 +26,18 @@ Camp.handle('/template.html', function (data, path) {
 // Doctor demo
 var replies = ['Ok.', 'Oh⁉', 'Is that so?', 'How interesting!',
                'Hm…', 'What do you mean?', 'So say we all.'];
-Camp.add('doctor', function (data) {
+camp.add('doctor', function (data) {
   replies.push (data.text);
   return { reply: replies [ Math.floor ( Math.random() * replies.length ) ] };
 });
 
 // Chat demo
-Camp.add('talk', function(data) { Camp.Server.emit('incoming', data); });
-Camp.add('all', function() {}, function incoming(data) { return data; });
+camp.add('talk', function(data) { camp.server.emit('incoming', data); });
+camp.add('all', function() {}, function incoming(data) { return data; });
 
 // Not found demo
-Camp.notfound(/.*\.lol$/, function (data, path) { path[0] = '/404.html'; });
+camp.notfound(/.*\.lol$/, function (data, path) { path[0] = '/404.html'; });
 
 // Testing scout.js
-Camp.add('test', function(data) { return data || 'test'; });
+camp.add('test', function(data) { return data || 'test'; });
 
-// Options
-var options = {
-  port: +process.argv[2],
-  secure: process.argv[3],
-  debug: +process.argv[4]
-}
-
-// Let's rock'n'roll!
-Camp.start(options);

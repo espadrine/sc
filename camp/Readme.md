@@ -105,7 +105,7 @@ graphical interface, in html and css, and then, you let the user interact with
 the server's data seemlessly through ajax calls.
 
 You may also differ the moment when you send the json back to the client.  The
-basic idea is, you want to send it when an event is raised: `camp.Server.emit
+basic idea is, you want to send it when an event is raised: `camp.server.emit
 ('name_of_the_event', data)`.  In that case, you need to add a third parameter
 to the definition of your action:
 
@@ -119,7 +119,7 @@ to the definition of your action:
     …
 
     // Somewhere, sometime later:
-    camp.Server.emit ( 'name_of_the_event', data1, data2);
+    camp.server.emit ( 'name_of_the_event', data1, data2);
 
 
 Plate.js
