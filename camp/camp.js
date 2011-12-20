@@ -21,7 +21,7 @@ var EventEmitter = require ('events').EventEmitter,
 // not meant to be changed thereafter.
 var settings = {
   port: 80,
-  security: false,
+  security: {},
   debug: 0
 };
 
@@ -382,8 +382,12 @@ function startServer () {
 exports.start = function (options) {
   var options = options || {};
 
+  for (var setting in options) {
+    settings[setting] = options[setting];
+  }
+
   // Populate security values with the corresponding files.
-  if (options.secure === 'yes' || options.key || options.cert) {
+  if (options.secure || options.key || options.cert) {
     settings.security.key = options.key || '../https.key';
     settings.security.cert = options.cert || '../https.crt';
   }

@@ -6,10 +6,9 @@
 // Options
 var options = {
   port: +process.argv[2],
-  secure: process.argv[3],
+  secure: process.argv[3] === 'yes',
   debug: +process.argv[4]
 };
-console.log(options);
 
 // Let's rock'n'roll!
 var camp = require('./camp/camp').start(options);
