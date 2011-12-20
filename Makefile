@@ -97,7 +97,6 @@ update:
 	@git clone https://github.com/espadrine/ScoutCamp.git
 	@cp ScoutCamp/web/js/scout.js ./web/js/scout.js
 	@cp ScoutCamp/camp/* ./camp/
-	@cp ScoutCamp/.gitignore .
 	@cp ScoutCamp/Makefile .
 	@rm -rf ScoutCamp/
 
