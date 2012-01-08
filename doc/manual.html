@@ -241,7 +241,8 @@ $ make help             # want more?
   <dd>The Camp function registers an action located at '/$[action]',
   which runs the function given as the second argument.<br>
   Either the function returns an object literal, which will immediately be sent
-  back to the client in JSON if not undefined, or it returns nothing, and we
+  back to the client in JSON if not undefined, or nothing if not given.
+
   have yet another parameter, a function that takes arbitrary parameters (eg,
   <code>function eventName( foo, bar ) { return { result: foo + bar }; }</code>
   ), in which case that latter function, which must return the JSON to send back
@@ -249,9 +250,20 @@ $ make help             # want more?
     'eventName', foo, bar)</code> event is emitted from your app.
   Then, the function will be launched with the parameters foo and bar, and the
   result will be sent back to the client if not undefined.
+
+  <dt><code>camp.addDiff = function ( action, function ( jsonQuery, ...) {
+    return {differ:true, data:localData}; } , function ( emitData, localData ) { return
+    jsonObject; } )</code>
+  <dd> This function is like <code>add</code>. The difference is that it will
+  not send anything back to the client, while keeping the connection open. Then,
+  when the <code>action</code> event is emitted
+  (<code>camp.server.emit ( action, emitData )</code>), and if what the first
+  function returned was <code>differ:true</code> (or nothing), the third
+  parameter is run, and the result is sent back to the client.
   <br>
-  The second case will usually be uncommon. It is there to cover very specific,
-  strongly app-oriented websites.
+  If the second parameter yields <code>differ:false</code>, Camp will
+  immediately send back to the client the data given, just like with
+  <code>add</code>.
 
   <dt><code>camp.handle = function (regexp,
     function(query, path) { return jsonOrNothing; }, function

@@ -106,21 +106,27 @@ the server's data seemlessly through ajax calls.
 
 You may also differ the moment when you send the json back to the client.  The
 basic idea is, you want to send it when an event is raised: `camp.server.emit
-('name_of_the_event', data)`.  In that case, you need to add a third parameter
-to the definition of your action:
+('actionname', data)`.  In that case, use the `camp.addDiffer` function.
+You need to add a third parameter to the definition of your action:
 
-    camp.add ( actionname, function () {
+    camp.addDiffer ( actionname, function () {
       …
-      return localdata;
-    }, function name_of_the_event (data1, data2, localdata) {
+      return {differ:true, data:localdata};
+    }, function (data1, data2, localdata) {
       return json;
     });
 
     …
 
     // Somewhere, sometime later:
-    camp.server.emit ( 'name_of_the_event', data1, data2);
+    camp.server.emit ( actionname, data1, data2);
 
+Please note that the second parameter to `addDiffer` (if given) returns
+information to indicate whether you wish to differ this action.
+
+If you do want to differ, `data` will be given as an argument to the third
+parameter, when the event is emitted.
+Otherwise, `data` is the data sent back to the client.
 
 Plate.js
 --------

@@ -58,6 +58,8 @@ exports.add = (function () {
   return adder;
 })();
 
+exports.addDiffer = exports.add;
+
 
 exports.server.mime = require('./mime.json');
 
@@ -101,7 +103,7 @@ function differedresult (ask, getsentback, treat, sentback) {
       res = ask.res;
   if (sentback !== undefined) {
     // Event-based ajax call.
-    var evtname = sentback.name;
+    var evtname = req.url.slice(2);
 
     if (typeof sentback !== 'function' && settings.debug > 2) {
       console.log ('warning: has a third parameter that isn\'t an ' +
@@ -114,7 +116,7 @@ function differedresult (ask, getsentback, treat, sentback) {
       for (var i in arguments) { args.push (arguments[i]); }
       // After all arguments given to `emit`, comes the returned value of
       // `getsentdata`, in `camp.add('action', getsentback, sentback)`.
-      args.push (actiondata);
+      if (actiondata)  args.push (actiondata.data);
 
       var resp = sentback.apply (undefined, args);
       if (settings.debug > 3) { console.log ('event',evtname,
@@ -132,6 +134,11 @@ function differedresult (ask, getsentback, treat, sentback) {
       }
     });
     var actiondata = getsentback ();
+    // actiondata must be {differ:false/true, data:{}}.
+    if (actiondata && !actiondata.differ) {
+      res.end (treat (actiondata.data || {}));
+      exports.server.removeListener (evtname, evtnamecb);
+    }
 
   } else {
     // Handle the action the usual way.
