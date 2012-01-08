@@ -260,9 +260,11 @@ macro `i`):
 The `literal` object contains all objects that are given to the template, and
 the params are what is given to the macro between pipe characters `|`.
 
-You may, just as with `Camp.add` actions, give `Camp.handle` a third parameter,
-a function, to serve as a callback for the event that will trigger that function
-(and will send the templated document back to the client).
+You may, just as with `Camp.addDiffer` actions, give `Camp.handle` a third
+parameter, a function, to serve as a callback for the event that will trigger
+that function (and will send the templated document back to the client).
+Since we cannot use the action name as an event name (there are no action), we
+use the name of the function given as a third parameter.
 
 
 ## Fall through

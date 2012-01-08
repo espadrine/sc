@@ -103,7 +103,8 @@ function differedresult (ask, getsentback, treat, sentback) {
       res = ask.res;
   if (sentback !== undefined) {
     // Event-based ajax call.
-    var evtname = req.url.slice(2);
+    console.log('sentback', sentback.name);
+    var evtname = sentback.name === ''? req.url.slice(2): sentback.name;
 
     if (typeof sentback !== 'function' && settings.debug > 2) {
       console.log ('warning: has a third parameter that isn\'t an ' +
