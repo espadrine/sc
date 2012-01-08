@@ -252,14 +252,17 @@ $ make help             # want more?
   result will be sent back to the client if not undefined.
 
   <dt><code>camp.addDiff = function ( action, function ( jsonQuery, ...) {
-    return {differ:true, data:localData}; } , function ( emitData, localData ) { return
-    jsonObject; } )</code>
+    return {differ:true, data:localData}; } , function action ( emitData,
+    localData ) { return jsonObject; } )</code>
   <dd> This function is like <code>add</code>. The difference is that it will
   not send anything back to the client, while keeping the connection open. Then,
   when the <code>action</code> event is emitted
   (<code>camp.server.emit ( action, emitData )</code>), and if what the first
   function returned was <code>differ:true</code> (or nothing), the third
   parameter is run, and the result is sent back to the client.
+  <code>action</code> is either the name of the function given as a third
+  parameter, or, if there is no name given, the name of the action.
+
   <br>
   If the second parameter yields <code>differ:false</code>, Camp will
   immediately send back to the client the data given, just like with
