@@ -311,7 +311,6 @@ function startServer () {
 //
 exports.start = function (options) {
   var options = options || {};
-  console.log(options);
 
   for (var setting in options) {
     settings[setting] = options[setting];
