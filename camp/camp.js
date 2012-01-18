@@ -328,7 +328,8 @@ exports.start = function (options) {
     settings.security.ca = options.ca || [ '../https.ca' ];
   }
 
-  settings.port = options.port || (security.key && security.cert ? 443 : 80);
+  settings.port = options.port ||
+    (settings.security.key && settings.security.cert ? 443 : 80);
   settings.debug = options.debug || 0;
 
   startServer();
