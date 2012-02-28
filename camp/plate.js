@@ -126,8 +126,8 @@ Plate.macros = {
   '?': function (literal, params) {
     var val = Plate.value (literal, params[0]);
     if (val) {
-      return params[1];
-    } else return params[2]? params[2]: '';
+      return Plate.format(params[1], literal);
+    } else return params[2]? Plate.format(params[2], literal): '';
   },
   '-': function (literal, params) {
     var val = Plate.value (literal, params[0]);
