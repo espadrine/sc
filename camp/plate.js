@@ -89,7 +89,7 @@ Plate.format = function (text, literal) {
 // Can throw pretty easily if the template is too complex.
 Plate.value = function (literal, strval) {
   try {
-    // TODO: special-case faster, single variable access lookups.
+    // Special-case faster, single variable access lookups.
     if (/^[a-zA-Z_\$]+$/.test(strval)) {
       return literal[strval];
     } else {
