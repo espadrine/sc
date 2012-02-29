@@ -32,7 +32,7 @@ camp.add('doctor', function (data) {
 
 // Chat demo
 camp.add('talk', function(data) { camp.server.emit('all', data); });
-camp.addDiffer('all', function() {}, function(data) { return data; });
+camp.add('all', function() {}, function(data) { return data; });
 
 // Not found demo
 camp.notfound(/.*\.lol$/, function (data, path) { path[0] = '/404.html'; });
