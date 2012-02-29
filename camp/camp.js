@@ -32,7 +32,7 @@ var settings = {
 var catches = [],
     fallthrough = [];
 
-exports.handle = function (paths, literalcall, evtcb) {
+exports.route = function (paths, literalcall, evtcb) {
   catches.push ([RegExp(paths).source, literalcall, evtcb]);
 };
 
@@ -60,8 +60,7 @@ exports.add = (function () {
 
 
 // Useful aliases
-exports.on = exports.add;
-exports.route = exports.handle;
+exports.addDefer = exports.add;
 exports.emit = function(e,f) {exports.server.emit(e,f);}
 
 exports.server.mime = require('./mime.json');
@@ -157,7 +156,7 @@ function deferredresult (ask, getsentback, treat, sentback) {
 //
 // - look into the 'web' folder (default)
 // - trigger the corresponding action (if it starts with a $)
-// - run the template (if camp.handle was used)
+// - run the template (if camp.route was used)
 //
 
 function listener (req, res) {

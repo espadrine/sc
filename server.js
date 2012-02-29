@@ -14,7 +14,7 @@ var options = {
 var camp = require('./camp/camp').start(options);
 
 // Templating demo
-camp.handle('/template.html', function (data, path) {
+camp.route('/template.html', function (data, path) {
   return {    // Try http://localhost/template.html?title=Hello&info=[Redacted].
      title: data.title || 'Success',
      enc: data.enc || 'utf-8',
@@ -32,7 +32,7 @@ camp.add('doctor', function (data) {
 
 // Chat demo
 camp.add('talk', function(data) { camp.server.emit('all', data); });
-camp.add('all', function() {}, function(data) { return data; });
+camp.addDefer('all', function() {}, function(data) { return data; });
 
 // Not found demo
 camp.notfound(/.*\.lol$/, function (data, path) { path[0] = '/404.html'; });
