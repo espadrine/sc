@@ -1,24 +1,36 @@
-#ScoutCamp
-a Node.js framework for easy Web Apps
+# ScoutCamp
 
-##Get it
-1. install [Node.js] (http://nodejs.org) and [JSMin] (http://www.crockford.com/javascript/jsmin.html)
-2. fork or download [ScoutCamp] (https://github.com/espadrine/ScoutCamp)
+Framework for awesome WebApps!
 
-##Use it
-1. put website in `web/`
-2. edit `server.js`
-3. run `make`
-4. hit [localhost/] (http://localhost/)
-5. enjoy
+## Get it
 
-##Contribute
-1. see [issues] (https://github.com/espadrine/ScoutCamp/issues)
-2. send [pull requests] (http://help.github.com/send-pull-requests/)
-3. contact [Thaddee Tyl] (https://github.com/inbox/new/espadrine) or [Jan Keromnes] (https://github.com/inbox/new/jankeromnes)
+- install [node] (http://nodejs.org)
+- fork or download [ScoutCamp] (https://github.com/espadrine/ScoutCamp)
 
-##Versions
+## Use it
+
+- put website in `web/`
+- edit `server.js`
+- run `make`
+- hit [localhost/] (http://localhost/)
+- enjoy!
+
+## Why?
+
+- cool web server with routes, templates and all!
+- super easy Ajax scripting!
+- build-script to make your app super fast!
+- focus on your website, not on the framework!
+
+## Contribute
+
+- open [issues] (https://github.com/espadrine/ScoutCamp/issues)
+- send [pull requests] (http://help.github.com/send-pull-requests/)
+- contact [Thaddee Tyl] (https://github.com/inbox/new/espadrine) or [Jan Keromnes] (https://github.com/inbox/new/jankeromnes)
+
+## Versions
+
 Versions are tags labeled after the year and month it was released.
 
-    v1201  → january 2012
+    v1201 → january 2012
 
