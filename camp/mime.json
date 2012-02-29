@@ -15,11 +15,13 @@
   "cpp": "text/x-c++src",
   "cs": "text/x-csharp",
   "java": "text/x-java",
+  "go": "text/x-go",
   "groovy": "text/x-groovy",
   "clj": "text/x-clojure",
   "coffee": "text/x-coffeescript",
   "diff": "text/x-diff",
   "hs": "text/x-haskell",
+  "less": "text/less",
   "lua": "text/x-lua",
   "md": "text/x-markdown",
   "nt": "text/n-triples",
@@ -29,6 +31,7 @@
   "pls": "text/x-plsql",
   "sql": "text/x-plsql",
   "py": "text/x-python",
+  "spec": "text/x-rpm-spec",
   "r": "text/x-rsrc",
   "rst": "text/x-rst",
   "rb": "text/x-ruby",
@@ -41,6 +44,7 @@
   "tex": "text/x-stex",
   "latex": "text/x-stex",
   "vtl": "text/velocity",
+  "v": "text/x-verilog",
   "yaml": "text/x-yaml",
 
   "pdf": "application/pdf",
@@ -76,7 +80,6 @@
   "mp4": "video/mp4",
   "ogv": "video/ogg",
   "mov": "video/quicktime",
-  "v": "text/x-verilog",
   "webm": "video/webm",
   "wmv": "video/x-ms-wmv"
 }
