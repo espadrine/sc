@@ -251,26 +251,27 @@ $ make help             # want more?
   Then, the function will be launched with the parameters foo and bar, and the
   result will be sent back to the client if not undefined.
 
-  <dt><code>camp.addDiff = function ( action, function ( jsonQuery, ...) {
-    return {differ:true, data:localData}; } , function action ( emitData,
+  <dt><code>camp.addDefer = function ( action, function ( jsonQuery, ...) {
+    return {defer:true, data:localData}; } , function action ( emitData,
     localData ) { return jsonObject; } )</code>
   <dd> This function is like <code>add</code>. The difference is that it will
   not send anything back to the client, while keeping the connection open. Then,
   when the <code>action</code> event is emitted
-  (<code>camp.server.emit ( action, emitData )</code>), and if what the first
-  function returned was <code>differ:true</code> (or nothing), the third
+  (<code>camp.emit ( action, emitData )</code>), and if what the first
+  function returned was <code>defer:true</code> (or nothing), the third
   parameter is run, and the result is sent back to the client.
   <code>action</code> is either the name of the function given as a third
   parameter, or, if there is no name given, the name of the action.
 
   <br>
-  If the second parameter yields <code>differ:false</code>, Camp will
+  If the second parameter yields <code>defer:false</code>, Camp will
   immediately send back to the client the data given, just like with
   <code>add</code>.
 
-  <dt><code>camp.handle = function (regexp,
-    function(query, path) { return jsonOrNothing; }, function
-    optionalEventCallback ( ) { return data; })</code>
+  <dt><code>camp.route = function (regexp, function(query, path) {
+    return jsonOrNothing; }, function optionalEventCallback ( ) {
+    return data;
+  })</code>
   <dd>You may wish to write template html files (or any other kind) that will be
   preprocessed server-side. This function lets you tell the system that the
   string `path` is preprocessed against the literal data returned by the
