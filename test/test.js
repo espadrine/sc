@@ -23,5 +23,9 @@ Test.prototype.tldr = function () {
   }
 };
 
+Test.prototype.exit = function () {
+  process.exit((this.errors > 0)? 1: 0);
+};
+
 module.exports = Test;
 

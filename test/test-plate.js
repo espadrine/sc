@@ -89,4 +89,6 @@ t.teq (Plate.format ('Nonint {{=data|integer}}.',{data:'hi'}), 'Nonint .');
 // tl;dr.
 t.tldr ();
 
+// exit.
+t.exit();
 
