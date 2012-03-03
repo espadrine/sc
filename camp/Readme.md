@@ -213,7 +213,8 @@ The template syntax follows those basic rules:
 
 Default macros are the following:
 
-* `{{=key|parser}}` will print `key` as a string, escaping characters along what
+* `{{=key|parser}}` will print the variable `key` (obtained from the literal
+  given to the template) as a string, escaping characters along what
   `parser` returns.  `parser` is one of Plate.parsers (which is a real array,
   which you can extend if need be).  Default parsers (self-explanatory):
    * plain (text)
@@ -234,9 +235,13 @@ Default macros are the following:
   escaper, and then through the xmlattr parser. As a result, giving this the
   string `"\"&\""` will insert the string `"%22&amp;%22"`.
 * `{{?bool; rest }}` will print the rest if the variable `bool` is truthy.
+  `bool` may be any JS expression, but this feature is unwise to use, as it will
+  hurt performance.
 * `{{-object|value|key; rest }}` will parse the rest once for each key in
   `object`, adding the new variables `value` and `key` to the scope.
 * `{{# rest }}` will not print anything at all.
+* `{{<template_file}}` will import a partial template in-place.
+  This is bad practice, however, as it may hurt performance.
 * `{{!m| func }}` will add a new macro `m` to the system, giving it the function
   whose body is `func`, which receives the arguments `literal` (the literal
   given to the template file) and `params` (parameters given to the macro).

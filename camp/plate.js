@@ -110,6 +110,7 @@ Plate.value = function (literal, strval) {
 
 Plate.macros = {
   '=': function (literal, params) {
+    // Displaying a variable.
     var parsedtext = Plate.value (literal, params[0]),
         parsercalls = params.slice(1).map(function(el) {return el.split(' ');}),
         parsers = parsercalls.map(function(el) {return el[0];}),
@@ -124,12 +125,14 @@ Plate.macros = {
     return parsedtext;
   },
   '?': function (literal, params) {
+    // If / then [ / else ].
     var val = Plate.value (literal, params[0]);
     if (val) {
       return Plate.format(params[1], literal);
     } else return params[2]? Plate.format(params[2], literal): '';
   },
   '-': function (literal, params) {
+    // Iterate through an object / an array / a string.
     var val = Plate.value (literal, params[0]);
     if (val === undefined) {
       console.error ('Template error: literal ' + JSON.stringify (params[0]) +
@@ -145,12 +148,26 @@ Plate.macros = {
     }
     return list;
   },
-  '#': function () { return ''; },
+  '#': function () { return ''; },  // Comment.
+  '<': function (literal, params) {
+    // Loading another template.
+    // The fact that this exists is only used as an example that this is wrong.
+    if (require && typeof require === 'function') {
+      var fs = require('fs');
+      if (fs && fs.readFileSync) {
+        var file = params[0].trim();
+        return Plate.format(fs.readFileSync(file, 'utf8'), literal);
+      }
+    }
+    return '';
+  },
   '!': function (literal, params) {
+    // Add a macro from inside a template.
     Plate.macros[params[0]] = Function ('literal', 'params', params[1]);
     return '';
   },
   '~': function (literal, params) {
+    // Use a named macro.
     return Plate.macros[params[0]] (literal, params.slice (1)) || '';
   }
 };

@@ -46,6 +46,10 @@ t.teq (Plate.format ('I am{{?present| here. Hello!; out.}} Anyway, how do you do
 t.teq (Plate.format ('There should be{{# nothing!}}...', {}),
        'There should be...');
 
+t.teq (Plate.format ('Importing: {{<test/import.plate}}.',
+                     {data: 'a template'}),
+       'Importing: imported a template.\n.');
+
 // macro macro test.
 t.teq (Plate.format ('First param{{!s; return params[0]}}: {{steh; yep...}}!', {}),
        'First param: teh!');
