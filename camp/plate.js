@@ -11,10 +11,14 @@
 //
 
 Plate = {};
+
 Plate._escape = function (text) {
   return (text? text: '').replace ('{{','{').replace ('}}','}');
 };
-Plate.format = function (text, literal) {
+
+// Return the boundaries of the next content to substitute,
+// as a list containing [index of {{ start, index of }} stop].
+function toplevel (text) {
   var state = 0, boundaries = [], bracecount = 0;
   for (var i = 0;  i < text.length;  i++) {
     if (state === 0) {
@@ -47,27 +51,39 @@ Plate.format = function (text, literal) {
       state = 2;
     }
   }
+  return boundaries;
+}
 
-  var span = text.slice (boundaries[0] + 3, boundaries[1] - 1),
-      macro = text[boundaries[0] + 2];
+// Return an Array of String parameters given to the macro.
+// Deals with escapes for | and ;.
+function fragparams (span) {
+  var params = [], last = 0, param = '';
+  for (var i = 0; i < span.length; i++) {
+    if (span[i] === '\\') {       // Go to escape state.
+      param += span.slice(last, i) + span[i+1];
+      i++;
+      last = i + 1;
+    } else if (span[i] === ';') { // Go to rest state.
+      params.push(param + span.slice(last, i));
+      last = i + 1;
+      break;
+    } else if (span[i] === '|') { // New parameter.
+      params.push(param + span.slice(last, i));
+      last = i + 1;
+      param = '';
+    }
+  }
+  params.push(param + span.slice(last));
+  return params;
+}
+
+Plate.format = function (text, literal) {
+  var boundaries = toplevel (text),
+      span = text.slice (boundaries[0] + 3, boundaries[1] - 1),
+      macro = text[boundaries[0] + 2],
+      params = fragparams(span);    // Fragment the parameters.
 
   if (!macro) { return text; }
-
-  // Fragment the parameters.
-  var params = [];
-  var semi = span.indexOf (';');
-  var prevpipe = pipe = 0;
-  while ((pipe = span.indexOf ('|', pipe)) > -1
-         && (semi>0? pipe < semi: true)) {
-    params.push (span.slice (prevpipe, pipe));
-    prevpipe = (pipe ++) + 1;
-  }
-  if (semi > 0) {
-    params.push (span.slice (prevpipe, semi));
-    prevpipe = semi+1;
-  }
-  params.push (span.slice (prevpipe));
-  ///console.log (params);
 
   // Call the macro.
   var result = Plate._escape (text.slice (0, boundaries[0]));
@@ -87,6 +103,7 @@ Plate.format = function (text, literal) {
 
 // Helper function to parse simple expressions.
 // Can throw pretty easily if the template is too complex.
+// Also, using variables is a lot faster.
 Plate.value = function (literal, strval) {
   try {
     // Special-case faster, single variable access lookups.

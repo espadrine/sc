@@ -15,6 +15,11 @@ t.teq ((Plate.format ('There is {{{\\nso much}}} {{=a_man|plain}} can do.\n\n' +
     'My friend &amp; I we have many friends: \n' +
     'there is Thaddee, there is Serge, there is Marie, ...');
 
+t.teq (Plate.format ('Escaping {{?pipes|\\| pipes \\|}} ' +
+                     'and {{?rest|\\; rest \\;...}}',
+                     {pipes: true, rest: true}),
+       'Escaping | pipes | and ; rest ;...');
+
 // test 2 - 2 levels of indentation.
 
 t.teq (Plate.format ('Your base belongs to {{-us|me|i;\n' +
@@ -46,6 +51,7 @@ t.teq (Plate.format ('I am{{?present| here. Hello!; out.}} Anyway, how do you do
 t.teq (Plate.format ('There should be{{# nothing!}}...', {}),
        'There should be...');
 
+// import macro test.
 t.teq (Plate.format ('Importing: {{<test/import.plate}}.',
                      {data: 'a template'}),
        'Importing: imported a template.\n.');

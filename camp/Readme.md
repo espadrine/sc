@@ -200,7 +200,9 @@ object literal can very well be dynamically generated.
 
 The template syntax follows those basic rules:
 
-* Nothing is treated specially, but chunks of text surrounded by {{ and }}.
+* Plate substitutes all chunks of text surrounded by {{ and }}
+  (which you can escape by adding a curly brace to the number of curly braces
+  you want).
 * Those special chunks are a series of distinct parameters:
    1. The first character is the macro that is used,
    2. The next blocks of data separated by bars `|` are arguments to that macro,
@@ -209,6 +211,7 @@ The template syntax follows those basic rules:
   follows: first the macro `-`, then the first argument `hellos`, then the
   second `hello`, then the rest ` I say {{=hello|plain}}! `. You can probably
   guess that, in this case, the rest has nested syntax too.
+* You can escape the macro parameters with `\|` and `\;`.
 * The special chunks are substituted by some *real text* that the macro returns.
 
 Default macros are the following:
