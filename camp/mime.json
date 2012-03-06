@@ -13,7 +13,9 @@
 
   "js": "text/javascript",
   "c": "text/x-csrc",
+  "h": "text/x-csrc",
   "cpp": "text/x-c++src",
+  "hpp": "text/x-c++src",
   "cs": "text/x-csharp",
   "java": "text/x-java",
   "go": "text/x-go",
