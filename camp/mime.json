@@ -9,6 +9,7 @@
   "csv": "text/csv",
   "dtd": "application/xml-dtd",
   "json": "application/json",
+  "appcache": "text/cache-manifest",
 
   "js": "text/javascript",
   "c": "text/x-csrc",
