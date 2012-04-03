@@ -232,7 +232,11 @@ function listener (req, res) {
             res.writeHead (404, 'Where the hell do you think you\'re going?');
             res.end ('404: thou hast finished me!\n');
           }
-          return Plate.format (data.toString (), templatedata);
+          if (!Object.keys(templatedata).length) {
+            return data.toString ();
+          } else {
+            return Plate.format (data.toString (), templatedata);
+          }
         };
 
         // `platepaths[0][2]` is the callback associated to the event,
