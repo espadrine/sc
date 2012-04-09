@@ -8,7 +8,7 @@
   ],
   "name": "camp",
   "description": "Streamed Web Server with easy Ajax, EventSource, Templating, Static pages; Middleware approach and extensibility.",
-  "version": "1204",
+  "version": "12.04.09",
   "homepage": "http://espadrine.github.com/sc/",
   "repository": {
     "type": "git",
@@ -23,10 +23,10 @@
   "optionalDependencies": {},
   "engines": {
     "node": "*"
-  }
+  },
   "directories": {
-    "lib": "lib/",
-    "doc": "doc/",
-    "example": "sudo node app"
+    "lib": "./lib",
+    "doc": "./doc",
+    "examples": "node app 1234"
   }
 }
