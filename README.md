@@ -5,26 +5,27 @@ Framework for awesome WebApps!
 ## Get it
 
 - install [node] (http://nodejs.org)
-- fork or download [ScoutCamp] (https://github.com/espadrine/ScoutCamp)
+- install [npm] (http://npmjs.org)
 
 ## Use it
 
 - put website in `web/`
-- edit `server.js`
-- run `make`
-- hit [localhost/] (http://localhost/)
+- edit `app.js`
+- run `node app 1234`
+- hit [localhost:1234] (http://localhost:1234/)
 - enjoy!
 
 ## Why?
 
 - cool web server with routes, templates and all!
 - super easy Ajax scripting!
+- super easy EventSource!
 - build-script to make your app super fast!
 - focus on your website, not on the framework!
 
 ## Contribute
 
-- open [issues] (https://github.com/espadrine/ScoutCamp/issues)
+- open [issues] (https://github.com/espadrine/sc/issues)
 - send [pull requests] (http://help.github.com/send-pull-requests/)
 - contact [Thaddee Tyl] (https://github.com/inbox/new/espadrine) or [Jan Keromnes] (https://github.com/inbox/new/jankeromnes)
 

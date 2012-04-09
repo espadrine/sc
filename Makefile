@@ -94,11 +94,11 @@ test:
 	node test/test-plate.js
 
 update:
-	@git clone https://github.com/espadrine/ScoutCamp.git
-	@cp ScoutCamp/web/js/scout.js ./web/js/scout.js
-	@cp ScoutCamp/camp/* ./camp/
-	@cp ScoutCamp/Makefile .
-	@rm -rf ScoutCamp/
+	@git clone https://github.com/espadrine/sc.git
+	@cp sc/web/js/scout.js ./web/js/scout.js
+	@cp sc/camp/* ./camp/
+	@cp sc/Makefile .
+	@rm -rf sc/
 
 jsmin:
 	@if [ `id -u` = "0" ] ;  \

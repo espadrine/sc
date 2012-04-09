@@ -4,7 +4,7 @@
 
 
 // Let's rock'n'roll!
-var camp = require('./lib/camp'),
+var camp = require('.'),
     ajax = camp.ajax
 
 camp.start({

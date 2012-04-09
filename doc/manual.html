@@ -34,42 +34,25 @@ automatically <strong>optimizes</strong> your content <strong>for the web
   <code>{{=templated|text}}</code>  in your files.
 </ul>
 
-<h2>The Files</h2>
-
-<p>The <strong>file structure</strong> ruffly looks like this:</p>
-
-<pre>
-web/           # web content
-server.js      # server script
-Makefile       # build &amp; run script
-</pre>
-
-<p>Here in <strong>more details</strong>:</p>
-
-<pre>
-README.md      # quick starting guide
-Makefile       # does-everything script
-server.js      # *your server!*
-doc/
-  manual.html  # awesome reading material
-lib/
-  camp.js      # outstanding ]web server
-  plate.js     # templating engine
-test/
-  test.js      # some boring tests
-  test-plate.js
-web/           # *your website!*
-  index.html   # root of the website
-  robots.txt   # file for spiders, always handy
-  js/
-    scout.js   # keep within reach
-  …
-
-# Worth noting: you can find amazing default web stuff
-# at <a href=http://html5boilerplate.com/>html5boilerplate.com</a>.
-</pre>
 
 <h2>Basic Usage</h2>
+
+<h3>Install</h3>
+
+<p>If you have <a href=http://npmjs.org>npm</a> installed, you may install
+ScoutCamp like this:</p>
+
+<pre>
+$ npm install camp
+</pre>
+
+<p> You are advised to create a <code>web/<code> folder for static pages. Put an
+    <code>index.html</code> file in it, or copy the default installation:</p>
+
+<pre>
+$ cp -r node_modules/camp/web/ web/
+$ cp node_modules/camp/app.js .
+</pre>
 
 <h3>Fast Start</h3>
 
@@ -77,18 +60,19 @@ web/           # *your website!*
   dynamite!</strong></p>
 
 <pre>
-$ make         # yes, it is that simple!
+$ npm install camp
+$ cd node_modules/camp
+$ node app 1234         # yes, it is that simple!
 </pre>
 
-<p>This actually publishes your website from <u>web/</u> to a new
-<u>publish/</u> folder. And then it starts your server. Yay!</p>
+  <p>This starts your server, serving the pages in <code>web/</code>. Yay!</p>
 
 <h3>Server Script</h3>
 
 <p>The simplest <code>server.js</code> script looks like this:</p>
 
 <pre>
-require('lib/camp').start()              // let's rock'n'roll!
+require('camp').start()              // let's rock'n'roll!
 </pre>
 
 <p>And <strong>that's all</strong> there is to it.</p>
@@ -99,13 +83,13 @@ require('lib/camp').start()              // let's rock'n'roll!
 <strong>ajax hook</strong>:</p>
 
 <pre>
-var Camp = require('lib/camp');          // this camp again
+var camp = require('camp');          // this camp again
 
-Camp.add('greetings', function(data) {   // 'greetings' ajax hook
+camp.ajax.on('greetings', function(data) {   // 'greetings' ajax hook
     return 'oh hai!';
 });
 
-Camp.start();                            // let's twist again!
+camp.start();                            // let's twist again!
 </pre>
 
 <p>The following <code>web/index.html</code> page should <strong>trigger</strong>
@@ -235,38 +219,15 @@ $ make help             # want more?
 <h3>Camp.js</h3>
 <p><code>var camp = require ( './camp.js' );</code></p>
 <dl>
-  <dt><code>camp.add = function ( action, function ( jsonQuery, ... ) { return
-    jsonRespOrNothing; } , function optionalEventCallback ( ) { return data; }
-    )</code>
+  <dt><code>camp.ajax.on = function ( action, function ( jsonQuery, end ) {
+    end ( jsonRespOrNothing ); } )</code>
   <dd>The Camp function registers an action located at '/$[action]',
   which runs the function given as the second argument.<br>
-  Either the function returns an object literal, which will immediately be sent
-  back to the client in JSON if not undefined, or nothing if not given.
 
-  have yet another parameter, a function that takes arbitrary parameters (eg,
-  <code>function eventName( foo, bar ) { return { result: foo + bar }; }</code>
-  ), in which case that latter function, which must return the JSON to send back
-  to the client, will only be run when the <code>camp.server.emit (
-    'eventName', foo, bar)</code> event is emitted from your app.
-  Then, the function will be launched with the parameters foo and bar, and the
-  result will be sent back to the client if not undefined.
-
-  <dt><code>camp.addDefer = function ( action, function ( jsonQuery, ...) {
-    return {defer:true, data:localData}; } , function action ( emitData,
-    localData ) { return jsonObject; } )</code>
-  <dd> This function is like <code>add</code>. The difference is that it will
-  not send anything back to the client, while keeping the connection open. Then,
-  when the <code>action</code> event is emitted
-  (<code>camp.emit ( action, emitData )</code>), and if what the first
-  function returned was <code>defer:true</code> (or nothing), the third
-  parameter is run, and the result is sent back to the client.
-  <code>action</code> is either the name of the function given as a third
-  parameter, or, if there is no name given, the name of the action.
-
-  <br>
-  If the second parameter yields <code>defer:false</code>, Camp will
-  immediately send back to the client the data given, just like with
-  <code>add</code>.
+  <dt><code>camp.eventSource = function ( action )</code>
+  <dd> This function returns an EventSource object on which you can call
+  <code>es.emit ( event, textualData )</code> or <code>es.send ( jsonData
+    )</code>.
 
   <dt><code>camp.route = function (regexp, function(query, path) {
     return jsonOrNothing; }, function optionalEventCallback ( ) {
@@ -362,15 +323,10 @@ camp.Plate.macros['n'] = function ( literal, params ) {
 <pre>
 Thäddëë Tÿl (thaddee.tyl, gmail.com)
 Jän Kërömnës (jan.keromnes, gmail.com)
-Räphäël Cätölïnö (raphael.catolino, gmail.com)
-Gäëtän Trïvïnö (gaetan, trivino.fr)
-Jönäs Lënwë (jonas.lenwe, gmail.com)
-Hïchäm Ël-Fäthï (hicham.el-fathi, insa-lyon.fr)
-Mïchäël Fägnö (michael.fagno, free.fr)</pre>
+</pre>
 
 
 <script>  /* WEB FONTS */
-  
   WebFontConfig = {
     google: { families: [ 'Ubuntu+Mono::latin', 'Droid Sans', 'IM Fell DW Pica' ] }
   };
