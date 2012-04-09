@@ -324,8 +324,6 @@ Each element of the route is a function which takes two parameters:
 - a `next` function, which the layer may call if it will not send an HTTP
   response.
 
-The default layers provided are located in `camp.unit`.
-
 The Ask class is a way to provide a lot of useful elements associated with a
 request.  It contains the following fields:
 
@@ -338,6 +336,21 @@ request.  It contains the following fields:
 
 Additionally, you can set the mime type of the response with
 `ask.mime('text/plain')`, for instance.
+
+### Default layers
+
+The default layers provided are located in `camp.unit`.
+
+These layers use functions that `camp` exports:
+
+- `camp.route` (seen previously),
+- `camp.ajax` (idem),
+- `camp.notfound` (idem),
+- `camp.eventSource` (idem),
+- `camp.documentRoot`: this string specifies the location of the root of your
+  static web files.  The default is "./web".
+- `camp.mime` is a JSON object whose keys are file extensions, associated with
+  their usual mime type.
 
 
 

@@ -1,0 +1,32 @@
+{
+  "author": "Thaddee Tyl <thaddee.tyl@gmail.com> (http://espadrine.github.com/)",
+  "contributors": [
+    "Thaddee Tyl <thaddee.tyl@gmail.com>",
+    "Jan Keromnes <janx@linux.com>",
+    "Remy Sharp <remy@leftlogic.com>",
+    "Douglas Crockford <douglas@crockford.com>"
+  ],
+  "name": "camp",
+  "description": "Streamed Web Server with easy Ajax, EventSource, Templating, Static pages; Middleware approach and extensibility.",
+  "version": "1204",
+  "homepage": "http://espadrine.github.com/sc/",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/espadrine/sc.git"
+  },
+  "main": "lib/camp.js",
+  "scripts": {
+    "test": "make test"
+  },
+  "dependencies": {},
+  "devDependencies": {},
+  "optionalDependencies": {},
+  "engines": {
+    "node": "*"
+  }
+  "directories": {
+    "lib": "lib/",
+    "doc": "doc/",
+    "example": "sudo node app"
+  }
+}
