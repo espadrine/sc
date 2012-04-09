@@ -4,7 +4,7 @@
 
 var Test = function () { this.test = []; this.n = 0; this.errors = 0; };
 
-Test.prototype.teq = function (a, b) {
+Test.prototype.eq = function (a, b) {
   this.n ++;
   if (a !== b) {
     console.log ('#' + this.n + ' failed: got ' + JSON.stringify (a) +

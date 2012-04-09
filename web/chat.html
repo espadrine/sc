@@ -24,15 +24,8 @@
 <script src=/js/scout.js>/* Ajax library. */</script>
 <script>
 (function(){
-
-  var box = Scout('#in'), wall = Scout('#log'), nick = Scout('#nick');
-
-  function log(nick, message) {
-    var p = document.createElement('p');
-    wall.appendChild(p).textContent = nick + ': ' + message;
-    box.focus();
-    p.scrollIntoView();
-  }
+  var d = document; d.id = d.getElementById;
+  var box = d.id('in'), wall = d.id('log'), nick = d.id('nick');
 
   Scout('#sofa').on('submit', function (query) {
     query.action = 'talk';
@@ -40,22 +33,12 @@
     box.value = '';
   });
 
-
-  // Main function.
-  window.onload = function loading () {
-
-    (function listen () {
-      Scout.maker().send (function (query) {
-        query.action = 'all';
-        query.data = {a:0};
-        query.resp = function (data) {
-          if (data.message) log(data.nick, data.message);
-          listen();
-        };
-        query.error = function () { listen(); };
-      })();
-    }());
-  };
+  Scout.EventSource('all').onrecv(function (data) {
+    var p = d.createElement('p');
+    wall.appendChild(p).textContent = data.nick + ': ' + data.message;
+    box.focus();
+    p.scrollIntoView();
+  });
 
 }());
 </script>

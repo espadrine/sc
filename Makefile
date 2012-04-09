@@ -1,6 +1,6 @@
 # Makefile: Publish your website and start/stop your server.
 # Copyright © 2011 Jan Keromnes, Thaddee Tyl. All rights reserved.
-# Code covered by the LGPL license. 
+# Code covered by the LGPL license.
 
 # The JS minifier. Change the order to your convenience.
 # Note: you must create google-closure.sh yourself if you want it.
@@ -12,7 +12,7 @@ JSMIN = uglifyjs jsmin google-closure.sh
 LOG = node.log
 
 # The name you gave your main server file.
-SERVER = server.js
+SERVER = app.js
 
 # The folder where your precious website is.
 WEB = web
@@ -121,6 +121,18 @@ rmhttps:
 
 https: https.crt
 
+scout-update:
+	@curl https://raw.github.com/jquery/sizzle/master/sizzle.js > web/js/sizzle.js 2> /dev/null
+	@curl https://raw.github.com/douglascrockford/JSON-js/master/json2.js > web/js/json2.js 2> /dev/null
+	@curl https://raw.github.com/remy/polyfills/master/EventSource.js > web/js/EventSource.js 2> /dev/null
+
+scout-build:
+	@for ajsmin in $(JSMIN); do  \
+	  if which $$ajsmin > /dev/null; then chosenjsmin=$$ajsmin; break; fi;  \
+	done;  \
+	cat web/js/{sizzle,json2,EventSource,additions}.js | $$ajsmin > web/js/scout.js
+	@cp web/js/scout.js .
+
 help:
 	@cat Makefile | less
 
@@ -129,16 +141,13 @@ wtf: help
 ?: wtf
 
 coffee:
-	@echo "\n           )      (\n           (  )   )\n         _..,-(--,.._\n      .-;'-.,____,.-';\n     (( |            |\n      \`-;            ;\n         \\          /	\n      .-''\`-.____.-'''-.\n     (     '------'     )\n      \`--..________..--'\n";
+	@echo "\n           )      (\n           (  )   )\n         _..,-(--,.._\n      .-;'-.,____,.-';\n     (( |            |\n      \`-;            ;\n         \\          /\n      .-''\`-.____.-'''-.\n     (     '------'     )\n      \`--..________..--'\n";
 
-me:
-	@echo -n ""
-
-a:
-	@ls > /dev/null
+me a:
+	@cd .
 
 sandwich:
 	@if [ `id -u` = "0" ] ; then echo "OKAY." ; else echo "What? Make it yourself." ; fi
 
-.PHONY: all publish debug clean copy minify stop start startweb test update jsmin https help wtf ? coffee me a sandwich
+.PHONY: all publish debug clean copy minify stop start startweb test update jsmin https scout-update scout-build help wtf ? coffee me a sandwich
 

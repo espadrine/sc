@@ -24,4 +24,20 @@
                /___/\__\___/\____/ |_|     \__\|___|_||_|_|
 
 
-[todo]
+lib/            Major server-side files.
+  camp.js       Main export point.
+  mime.json     List of default mime types associated with file extensions.
+  plate.js      Default template engine.
+
+doc/            Documentation folder (including the website).
+  Readme.md     Must-read.
+
+app.js          Example server. Run it with `sudo node app`
+web/            Example document root folder.
+  js/
+    *.js        Files necessary to build scout.js.
+
+scout.js        Compressed client-side library.
+                Designed to be `cp .node_modules/camp/scout.js web/`.
+
+test/           Testing directory. Feel free to add your own stuff.

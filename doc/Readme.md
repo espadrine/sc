@@ -9,43 +9,14 @@ distinction between:
   * powering applications.
 
 
-Node.js
--------
-
-The technology that Scout Camp is built on top of is Node.js, a modest library
-for creating server applications.
-
-Node.js is a high-performance library implementing a series of protocols
-including HTTP 1.1, TCP, and so much more.  It is designed to be event-based and
-non-blocking, a combination which has already proven to be awesome in web
-browsers.  However, using events has typically been awkward in C and similar
-non-closure languages.  As a result, Node.js uses a javascript interface built
-with V8, with which one can script anything and have access to all Node.js'
-functionnality.
-
-The reason why the combination non-blocking IO + events + closures is
-particularly witful is the following.  In order to perform non-blocking IO, one
-does need some kind of parallelism, or dispatch mechanism.  Threads, or even
-processes, can be used for that, but they are technically challenging to use,
-even for alert mutex experts.  CSP is another option, but it is not present by
-default in programming languages, and it is hard to "install".  On the other
-hand, events are very easy to use, they are already present in the browser and
-scriptable from javascript.  However, events require that one give a chunk of
-code, a function of some sort, to handle some event.  Passing functions as a
-parameter is typically cumbersome in C, etc.  You have to declare it in global
-space, define it there, even though you may not have access to all the variables
-you need, and you therefore enter a hell of billion-parameters functions.
-Closures, on the other hand, adresses this concern beautifully.  All variables
-in scope are accessible, and you may pass in anonymous functions without needing
-to worry.
-
-
 Scout.js
 --------
 
-Today's built-in Ajax library is poor.  It is not cross-browser (because of
-Internet Explorer) and it can quickly become a hassle.  Scout.js is a javascript
-library that removes that hassle.
+### XHR
+
+Browsers' built-in Ajax libraries are usually poor.  They are not cross-browser
+(because of Internet Explorer) and they can quickly become a hassle.  Scout.js
+is a javascript library to remove that hassle.
 
 With Scout.js, one can easily target a specific element in the page which
 must trigger an XHR(XML Http Request) when a specific event is fired.  This is
@@ -62,7 +33,7 @@ XHR upon a "setTimeout", and so on.
         }
       };
     });
-  
+
     // or...
 
     setTimeout ( Scout.send ( function ( params, xhr ) { ... } ), 1000 );
@@ -78,21 +49,46 @@ that it was killed by another XHR call.
 The cure is to create another Scout object through the
 `var newscout = Scout.maker()` call.
 
+### Server-Sent Events
+
+All modern browsers support a mechanism for receiving a continuous,
+event-driven flow of information from the server.  This technology is called
+*Server-Sent Events*.
+
+The bad news about it is that it is a hassle to set up server-side.  The good
+news is that you are using ScoutCamp, which makes it a breeze.  Additionally,
+ScoutCamp makes it work even in IE7.
+
+    var es = Scout.EventSource('channel');
+
+    es.on('eventName', function (data) {
+      // `data` is a string.
+    });
+
+    es.onrecv(function (json) {
+      // `json` is a JSON object.
+    });
+
+
 
 Camp.js
 -------
 
+### Ajax
+
 The Camp.js engine targets ease of use of both serving plain html files and ajax
 calls.  By default, when given a request, it looks for files in the current
-directory.  However, it also has the concept of actions.
+directory.  However, it also has the concept of Ajax actions.
 
-    var camp = require ( './camp.js' );
-    camp.add ( 'getinfo', function (json) {
-      console.log (json); return json;
-    } );
+    var camp = require ( 'camp' );
     camp.start ();
 
-An action maps a string to the path request "/$<string>".  When a client asks
+    camp.ajax.on ( 'getinfo', function (json, end) {
+      console.log (json);
+      end (json);   // Send that back to the client.
+    } );
+
+An action maps a string to the path request `/$<string>`.  When a client asks
 for this resource, sending in information stored in the "json" parameter,
 Camp.js will send it back the object literal that the callback function gives.
 
@@ -104,33 +100,24 @@ actions is to treat servers more like applications.  You first serve the
 graphical interface, in html and css, and then, you let the user interact with
 the server's data seemlessly through ajax calls.
 
-You may also defer the moment when you send the json back to the client.  The
-basic idea is, you want to send it when an event is raised: `camp.emit
-('actionname', data)`.  In that case, use the `camp.addDefer` function.
-You need to add a third parameter to the definition of your action, to be run
-when the event is emitted:
+### EventSource
 
-    camp.addDefer ( 'actionname', function () {
-      …
-      return {defer:true, data:localdata};
-    }, function actionname (data1, data2, localdata) {
-      return json;
-    });
+I promised earlier that Server-Sent Events were a breeze in ScoutCamp.  They
+are.  Let's build a channel named `channel`.  When we receive an Ajax call on
+the `talk` event, we send the data it gives us to the EventSource channel.
 
-    …
+    // This is actually a full-fledged chat.
+    var chat = camp.eventSource ( 'all' );
+    camp.ajax.on ('talk', function(data, end) { chat.send(data); end(); });
 
-    // Somewhere, sometime later:
-    camp.emit ( 'actionname', data1, data2);
+This EventSource object we get has two methods:
 
-The name of the event to raise is either the name of the third parameter to
-`addDefer`, or, if it has no name, the name of the action.
+- The `send` method takes a JSON object and emits the `message` event to the
+  client.  It is meant to be used with `es.onrevc`.
+- The `emit` method takes an event name and a textual message and emits this
+  event with that message to the client.  It is meant to be used with
+  `es.on(event, callback)`.
 
-Please note that the second parameter to `addDefer` (if given) returns
-information to indicate whether you wish to defer this action.
-
-If you do want to defer, `data` will be given as an argument to the third
-parameter, when the event is emitted.
-Otherwise, `data` is the data sent back to the client.
 
 Plate.js
 --------
@@ -272,12 +259,6 @@ macro `i`):
 The `literal` object contains all objects that are given to the template, and
 the params are what is given to the macro between pipe characters `|`.
 
-You may, just as with `camp.addDefer` actions, give `camp.route` a third
-parameter, a function, to serve as a callback for the event that will trigger
-that function (and will send the templated document back to the client).
-Since we cannot use the action name as an event name (there are no action), we
-use the name of the function given as a third parameter.
-
 
 ## Fall through
 
@@ -288,6 +269,79 @@ found before, it returns a 404 message.  This can be overriden by the
 does the same thing, too, but only after even searching in the file system
 failed to provide a result.
 
+
+
+Camp In Depth
+-------------
+
+In Camp.js, there is a lot more than meets the eye.  Up until now, we have only
+discussed the default behaviour of ScoutCamp.  For most uses, this is actually
+more than enough.  Sometimes, however, you need to dig a little deeper.
+
+### The Camp Object
+
+`camp.start` is the simple way to launch the server in a single line.  You may
+not know, however, that it returns an `http.Server` (or an `https.Server`)
+subclass instance.  As a result, you can use all node.js' HTTP and HTTPS
+methods.
+
+You may provide the `start` function with a JSON object which defaults to this:
+
+    {
+      port: 80,     // The port to listen to.
+      security: {
+        key: 'https.key',
+        cert: 'https.crt',
+        ca: 'https.ca'
+      }
+    }
+
+If you provide the relevant HTTPS files, the server will be secure.
+
+`camp.createServer` creates a Camp instance directly, and
+`camp.createSecureCamp` creates an HTTPS Camp instance.  The latter takes the
+same parameters as `https.Server`.
+
+`camp.Camp` and `camp.SecureCamp` are the class constructors.
+
+
+### The route
+
+Camp is stack-base.  When we receive a request, it goes through all the layers
+of the stack until it hits the bottom.  It should never hit the bottom: each
+layer can either pass it on to the next, or end the request (by sending a
+response).
+
+The default route is defined this way:
+
+    var unit = camp.unit;
+    campInstance.route = [unit.ajax, unit.eventSource,
+        unit.template, unit.static, unit.notfound];
+
+Each element of the route is a function which takes two parameters:
+
+- an Ask object (more below),
+- a `next` function, which the layer may call if it will not send an HTTP
+  response.
+
+The default layers provided are located in `camp.unit`.
+
+The Ask class is a way to provide a lot of useful elements associated with a
+request.  It contains the following fields:
+
+- server: the Camp instance,
+- req: the http.ServerRequest object,
+- res: the http.ServerResponse object,
+- uri: the URI,
+- path: the pathname associated with the request,
+- query: the query taken from the URI.
+
+Additionally, you can set the mime type of the response with
+`ask.mime('text/plain')`, for instance.
+
+
+
+- - -
 
 Thaddee Tyl, author of Scout Camp.
 
