@@ -12,12 +12,12 @@ var camp = require('.').start({
     ajax = camp.ajax
 
 // Templating demo
-camp.route('/template.html', function(data, path) {
-  return {    // Try http://localhost/template.html?title=Hello&info=[Redacted].
+camp.route('/template.html', function(data, match, end) {
+  end({    // Try http://localhost/template.html?title=Hello&info=[Redacted].
      title: data.title || 'Success',
      enc: data.enc || 'utf-8',
      info: data.info || 'This document has been templated!'
-  }
+  })
 })
 
 // Doctor demo
@@ -33,5 +33,7 @@ var chat = camp.eventSource('all')
 ajax.on('talk', function(data, end) {chat.send(data); end()})
 
 // Not found demo
-camp.notfound(/.*\.lol$/, function(data, path, ask) { path[0] = '/404.html' })
+camp.notfound(/.*\.lol$/, function(data, match, end, ask) {
+  match[0] = '/404.html'; end()
+})
 
