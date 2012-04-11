@@ -80,10 +80,9 @@ The Camp.js engine targets ease of use of both serving plain html files and ajax
 calls.  By default, when given a request, it looks for files in the current
 directory.  However, it also has the concept of Ajax actions.
 
-    var camp = require ( 'camp' );
-    camp.start ();
+    var server = require ( 'camp' ).start ( );
 
-    camp.ajax.on ( 'getinfo', function (json, end) {
+    server.ajax.on ( 'getinfo', function (json, end) {
       console.log (json);
       end (json);   // Send that back to the client.
     } );
@@ -107,8 +106,8 @@ are.  Let's build a channel named `channel`.  When we receive an Ajax call on
 the `talk` event, we send the data it gives us to the EventSource channel.
 
     // This is actually a full-fledged chat.
-    var chat = camp.eventSource ( 'all' );
-    camp.ajax.on ('talk', function(data, end) { chat.send(data); end(); });
+    var chat = server.eventSource ( 'all' );
+    server.ajax.on ('talk', function(data, end) { chat.send(data); end(); });
 
 This EventSource object we get has two methods:
 
@@ -133,7 +132,7 @@ directory).
 
     var posts = ['This is the f1rst p0st!'];
 
-    camp.route ( /\/first\/post.html/, function ( query, path ) {
+    server.route ( /\/first\/post.html/, function ( query, path ) {
       return {
         text: posts[0],
         comments: ['first comment!', 'second comment...']
@@ -175,7 +174,7 @@ grammar of the templating language.
 
 The camp.js binding is a very straightforward function; namely:
 
-    camp.route ( paths = /pattern/, call = function ( query = {}, path = [] ) {
+    server.route ( /pattern/, function ( query = {}, path = [] ) {
       return {};
     });
 
@@ -262,11 +261,11 @@ the params are what is given to the macro between pipe characters `|`.
 
 ## Fall through
 
-There are three steps when treating URLs.  Once it has not matched any route,
+There are three steps when treating URLs.  Once it has not matched any template,
 it is matched against the web/ folder on hard drive.  Finally, if nothing was
 found before, it returns a 404 message.  This can be overriden by the
-`camp.notfound` function, which is identical to the `camp.route` function.  It
-does the same thing, too, but only after even searching in the file system
+`camp.notfound` function, which is identical to the `camp.route` function.
+It does the same thing, too, but only after even searching in the file system
 failed to provide a result.
 
 
@@ -305,7 +304,7 @@ same parameters as `https.Server`.
 `camp.Camp` and `camp.SecureCamp` are the class constructors.
 
 
-### The route
+### The stack
 
 Camp is stack-base.  When we receive a request, it goes through all the layers
 of the stack until it hits the bottom.  It should never hit the bottom: each
@@ -314,9 +313,8 @@ response).
 
 The default route is defined this way:
 
-    var unit = camp.unit;
-    campInstance.route = [unit.ajax, unit.eventSource,
-        unit.template, unit.static, unit.notfound];
+    campInstance.stack = [ajaxLayer, eventSourceLayer,
+        routeLayer, staticLayer, notfoundLayer];
 
 Each element of the route is a function which takes two parameters:
 
@@ -343,14 +341,13 @@ The default layers provided are located in `camp.unit`.
 
 These layers use functions that `camp` exports:
 
-- `camp.route` (seen previously),
-- `camp.ajax` (idem),
-- `camp.notfound` (idem),
-- `camp.eventSource` (idem),
-- `camp.documentRoot`: this string specifies the location of the root of your
-  static web files.  The default is "./web".
-- `camp.mime` is a JSON object whose keys are file extensions, associated with
-  their usual mime type.
+- `camp.ajaxUnit` (seen previously),
+- `camp.eventSourceUnit` (idem),
+- `camp.routeUnit` (idem),
+- `camp.staticUnit` (idem),
+- `camp.notfoundUnit` (idem),
+- `server.documentRoot`: this string specifies the location of the root of
+  your static web files.  The default is "./web".
 
 
 

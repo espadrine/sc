@@ -4,14 +4,12 @@
 
 
 // Let's rock'n'roll!
-var camp = require('.'),
+var camp = require('.').start({
+      port: +process.argv[2],
+      secure: process.argv[3] === 'yes',
+      debug: +process.argv[4]
+    }),
     ajax = camp.ajax
-
-camp.start({
-  port: +process.argv[2],
-  secure: process.argv[3] === 'yes',
-  debug: +process.argv[4]
-})
 
 // Templating demo
 camp.route('/template.html', function(data, path) {
