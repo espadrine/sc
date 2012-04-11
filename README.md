@@ -31,7 +31,7 @@ Framework for awesome WebApps!
 
 ## Versions
 
-Versions are tags labeled after the year and month it was released.
+Versions are tags labeled after the day it was released.
 
-    v1201 → january 2012
+    12.11.10 → january 10th, 2012
 
