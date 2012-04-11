@@ -15,7 +15,6 @@ var camp = require('.').start({
 camp.route('/template.html', function(data, match, end) {
   end({    // Try http://localhost/template.html?title=Hello&info=[Redacted].
      title: data.title || 'Success',
-     enc: data.enc || 'utf-8',
      info: data.info || 'This document has been templated!'
   })
 })
