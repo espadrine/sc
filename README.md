@@ -9,11 +9,16 @@ Framework for awesome WebApps!
 
 ## Use it
 
+- `npm install camp`
 - put website in `web/`
 - edit `app.js`
 - run `node app 1234`
 - hit [localhost:1234] (http://localhost:1234/)
 - enjoy!
+
+Try the default demo for free by
+[downloading] (https://github.com/espadrine/sc/zipball/master) ScoutCamp and
+issuing `node app 1234` to the command prompt!
 
 ## Why?
 
