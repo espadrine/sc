@@ -4,7 +4,7 @@
 
 
 // Let's rock'n'roll!
-var camp = require('.').start({
+var camp = require('./lib/camp.js').start({
       port: +process.argv[2],
       secure: process.argv[3] === 'yes',
       debug: +process.argv[4]
