@@ -293,13 +293,15 @@ You may provide the `start` function with a JSON object which defaults to this:
     {
       port: 80,     // The port to listen to.
       security: {
+        secure: true,
         key: 'https.key',
         cert: 'https.crt',
         ca: 'https.ca'
       }
     }
 
-If you provide the relevant HTTPS files, the server will be secure.
+If you provide the relevant HTTPS files and set the `secure` option to true, the
+server will be secure.
 
 `camp.createServer` creates a Camp instance directly, and
 `camp.createSecureCamp` creates an HTTPS Camp instance.  The latter takes the
