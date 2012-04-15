@@ -59,7 +59,7 @@ The bad news about it is that it is a hassle to set up server-side.  The good
 news is that you are using ScoutCamp, which makes it a breeze.  Additionally,
 ScoutCamp makes it work even in IE7.
 
-    var es = Scout.EventSource('channel');
+    var es = Scout.eventSource('channel');
 
     es.on('eventName', function (data) {
       // `data` is a string.

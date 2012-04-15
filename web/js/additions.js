@@ -164,7 +164,7 @@ Scout = (function Scoutmaker () {
   ret.maker = Scoutmaker;
 
   /* Wrapper for EventSource. */
-  ret.EventSource = function (channel) {
+  ret.eventSource = function (channel) {
     var es = new EventSource('/$' + channel);
     es.onrecv = function (cb) {
       es.onmessage = function (event) {
