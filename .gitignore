@@ -3,4 +3,6 @@
 *.out
 *.pid
 
+https.*
+
 publish
