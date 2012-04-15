@@ -117,6 +117,22 @@ This EventSource object we get has two methods:
   event with that message to the client.  It is meant to be used with
   `es.on(event, callback)`.
 
+### Socket.io
+
+We also include the duplex communication system that socket.io provides. When
+you start the server, by default, socket.io is already launched. You can use its
+APIs as documented at <http://socket.io#how-to-use> from the `camp.io` object.
+
+    camp.io.sockets.on('connection', function (socket) { … });
+
+On the client-side, `Scout.js` also provides shortcuts, through its
+`Scout.socket(namespace)` function. Calling `Scout.socket()` returns the
+documented Socket.io object that you can use according to their API.
+
+    var io = Scout.socket();
+    io.emit('event name', {data: 'to send'});
+    io.on('event name', function (jsonObject) { … });
+
 
 Plate.js
 --------
@@ -319,7 +335,7 @@ response).
 
 The default route is defined this way:
 
-    campInstance.stack = [ajaxLayer, eventSourceLayer,
+    campInstance.stack = [socketLayer, ajaxLayer, eventSourceLayer,
         routeLayer, staticLayer, notfoundLayer];
 
 Each element of the route is a function which takes two parameters:
@@ -348,6 +364,7 @@ The default layers provided are located in `camp.unit`.
 These layers use functions that `camp` exports:
 
 - `camp.ajaxUnit` (seen previously),
+- `camp.socketUnit` (idem),
 - `camp.eventSourceUnit` (idem),
 - `camp.routeUnit` (idem),
 - `camp.staticUnit` (idem),
