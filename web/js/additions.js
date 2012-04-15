@@ -174,6 +174,18 @@ Scout = (function Scoutmaker () {
     return es;
   };
 
+  /* Wrapper for socket.io – if downloaded. */
+  if (io) {
+    ret.socket = function (namespace) {
+      if (namespace === undefined) {
+        namespace = '/';    // Default namespace.
+      }
+      return io.connect(namespace, {
+        resource: '$socket.io'
+      });
+    };
+  }
+
 
   return ret;
 })();

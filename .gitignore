@@ -3,4 +3,6 @@
 *.out
 *.pid
 
+node_modules
+
 publish
