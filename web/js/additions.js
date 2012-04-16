@@ -175,7 +175,7 @@ Scout = (function Scoutmaker () {
   };
 
   /* Wrapper for socket.io – if downloaded. */
-  if (io) {
+  if (window.io) {
     ret.socket = function (namespace) {
       if (namespace === undefined) {
         namespace = '/';    // Default namespace.
