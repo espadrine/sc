@@ -4,5 +4,6 @@
 *.pid
 
 node_modules
+https.*
 
 publish
