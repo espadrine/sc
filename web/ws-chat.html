@@ -33,6 +33,7 @@
   d.id('sofa').onsubmit = function (event) {
     io.emit('msg', {nick: nick.value, message: box.value});
     box.value = '';
+    event.preventDefault();
     event.returnValue = false;
   };
 
