@@ -35,6 +35,7 @@
   "rs": "text/x-rustsrc",
   "rst": "text/x-rst",
   "scm": "text/x-scheme",
+  "sequence": "text/x-sequence",
   "sh": "text/x-sh",
   "sparql": "text/x-sparql-query",
   "spec": "text/x-rpm-spec",
