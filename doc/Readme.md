@@ -107,6 +107,14 @@ parameters from the following sources:
 - POST requests with enctype multipart/form-data. This one uses the same API as
   [formidable](https://github.com/felixge/node-formidable) for file objects.
 
+Before downloading POST Ajax data, you can hook a function up using the
+following code:
+
+    camp.ajaxReq.on('getinfo', function(ask) { … });
+
+That can be useful to give information about the progress of an upload, for
+instance, using `ask.form.on('progress', function(bytesReceived, bytesExpected) {})`.
+
 ### EventSource
 
 I promised earlier that Server-Sent Events were a breeze in ScoutCamp.  They
