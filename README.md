@@ -1,4 +1,4 @@
-# ScoutCamp [![Build Status](https://secure.travis-ci.org/espadrine/ScoutCamp.png?branch=master)](http://travis-ci.org/espadrine/ScoutCamp)
+# ScoutCamp [![Build Status](https://travis-ci.org/espadrine/sc.png)](https://travis-ci.org/espadrine/sc)
 
 Framework for awesome WebApps!
 
