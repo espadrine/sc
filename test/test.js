@@ -1,14 +1,40 @@
 // test.js: A module for unit tests.
-// Copyright (c) 2011 Jan Keromnes, Yann Tyl. All rights reserved.
+// Copyright © 2011-2013 Thaddee Tyl, Jan Keromnes. All rights reserved.
 // Code covered by the LGPL license.
 
-var Test = function () { this.test = []; this.n = 0; this.errors = 0; };
+var Test = function () { this.n = 0; this.errors = 0; };
 
-Test.prototype.eq = function (a, b) {
+// Deep inequality.
+function notEqual(a, b) {
+  if (a instanceof Array || a instanceof Object) {
+    if (typeof a === typeof b) {
+      for (var key in a) {
+        if (notEqual(a[key], b[key])) {
+          return true;
+        }
+      }
+      for (var key in b) {
+        if (notEqual(a[key], b[key])) {
+          return true;
+        }
+      }
+      return false;
+    } else {
+      return true;
+    }
+  } else {
+    return a !== b;
+  }
+}
+
+Test.prototype.eq = function (a, b, msg) {
   this.n ++;
-  if (a !== b) {
+  if (notEqual(a, b)) {
     console.log ('#' + this.n + ' failed: got ' + JSON.stringify (a) +
                                 ' instead of ' + JSON.stringify (b));
+    if (msg) {
+      console.log (msg.split('\n').map(function(e){return '  '+e;}).join('\n'));
+    }
     this.errors ++;
   }
 };
