@@ -15,7 +15,7 @@ do {
 } while (needAServer);
 
 t.seq([
-  function (end) {
+  function (next) {
     http.get('http://localhost:' + portNumber, function(res) {
       t.eq(res.httpVersion, '1.1', "Server must be HTTP 1.1.");
       t.eq(res.headers.connection, 'keep-alive',
@@ -25,7 +25,7 @@ t.seq([
       res.on('data', function(content) {
         t.eq('' + content, '404',
              "Did not receive content of index.html.");
-        end();
+        next();
       });
     });
   }
