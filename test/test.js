@@ -39,6 +39,31 @@ Test.prototype.eq = function (a, b, msg) {
   }
 };
 
+Test.prototype.each = function (tests, result) {
+  var len = tests.length;
+  var i = tests.length;
+  function endTest () {
+    i++;
+    // When all tests have been performed…
+    if (i === len) { result (); }
+  }
+  for (var j = 0; j < tests.length; j++) {
+    tests[j] (endTest);
+  }
+};
+
+Test.prototype.seq = function (tests, result) {
+  var len = tests.length;
+  var i = 0;
+  function endTest() {
+    i++;
+    // When all tests have been performed…
+    if (i === len) { result (); }
+    else { tests[i] (endTest); }
+  }
+  tests[i] (endTest);
+};
+
 Test.prototype.tldr = function () {
   if (this.errors === 0) { console.log ('All ' + this.n + ' tests passed.');
   } else if (this.errors === this.n) { console.log ('All tests failed.');
