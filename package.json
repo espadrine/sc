@@ -22,7 +22,7 @@
     "socket.io": ">=0.9.13",
     "formidable": ">=1.0.13",
     "hun": ">=13.03.11",
-    "fleau": ">=13.01.18"
+    "fleau": ">=13.04.27"
   },
   "devDependencies": {},
   "optionalDependencies": {},
