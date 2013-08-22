@@ -1,5 +1,5 @@
-// Server demo. Run this with ndoe to start your server.
-// Copyright © 2011 Thaddee Tyl, Jan Keromnes. All rights reserved.
+// Server demo. Run this with node to start your server.
+// Copyright © 2011-2013 Thaddee Tyl, Jan Keromnes. All rights reserved.
 // Code covered by the LGPL license.
 
 var fleau = require('fleau');
