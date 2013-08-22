@@ -41,6 +41,6 @@ camp.io.sockets.on('connection', function (socket) {
 
 // Not found demo
 camp.notfound(/.*\.lol$/, function(data, match, end, ask) {
-  match[0] = '/404.html'; end()
+  end(null, { template: '/404.html' })
 })
 
