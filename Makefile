@@ -1,11 +1,11 @@
 # Makefile: Publish your website and start/stop your server.
-# Copyright © 2011 Jan Keromnes, Thaddee Tyl. All rights reserved.
+# Copyright © 2011-2013 Thaddee Tyl, Jan Keromnes. All rights reserved.
 # Code covered by the LGPL license.
 
 # The JS minifier. Change the order to your convenience.
 # Note: you must create google-closure.sh yourself if you want it.
 # It must have some JS in stdin, and must produce the result on stdout.
-JSMIN = uglifyjs jsmin google-closure.sh
+JSMIN = uglifyjs jsmin google-closure.sh js-minifier
 
 # The output of console.log statements goes in this file when you `make`.
 # Note: when you `make debug`, the output appears on the console.
