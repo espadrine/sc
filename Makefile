@@ -130,7 +130,7 @@ scout-build:
 	@for ajsmin in $(JSMIN); do  \
 	  if which $$ajsmin > /dev/null; then chosenjsmin=$$ajsmin; break; fi;  \
 	done;  \
-	cat web/js/{sizzle,json2,EventSource,additions}.js | $$ajsmin > web/js/scout.js
+	cat web/js/sizzle.js web/js/json2.js web/js/EventSource.js web/js/additions.js | $$ajsmin > web/js/scout.js
 	@cp web/js/scout.js .
 
 help:
