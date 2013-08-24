@@ -16,8 +16,8 @@ var camp = require('./lib/camp.js').start({
 // Templating demo
 camp.route('/template.html', function(data, match, end) {
   end({    // Try http://localhost/template.html?title=Hello&info=[Redacted].
-     title: data.title || 'Success'
-   , info: data.info || 'This document has been templated!'
+    title: data.title || 'Success'
+  , info: data.info || 'This document has been templated!'
   })
 })
 
@@ -33,11 +33,8 @@ ajax.on('doctor', function(data, end) {
 var chat = camp.eventSource('all')
 ajax.on('talk', function(data, end) {chat.send(data); end()})
 
-// Websocket chat demo
-camp.io.configure('development', function () { camp.io.set('log level', 0) })
-camp.io.sockets.on('connection', function (socket) {
-  socket.on('msg', function (data) { camp.io.sockets.emit('msg', data) })
-})
+// WebSocket chat demo
+camp.wsBroadcast('chat', function(data, end) {end(data)})
 
 // Not found demo
 camp.notfound(/.*\.lol$/, function(data, match, end, ask) {

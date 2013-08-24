@@ -1,6 +1,6 @@
 <!doctype html>
 <meta charset=utf-8>
-<title>Chat</title>
+<title> Chat </title>
 
 <section id=log></section>
 
@@ -21,28 +21,29 @@
   #nick { position:fixed; top:5px; right:5px; text-align: right; }
 </style>
 
-<script src=/$socket.io/socket.io.js></script>
 <script src=/js/scout.js>/* Ajax library. */</script>
 <script>
 (function(){
   var d = document; d.id = d.getElementById;
   var box = d.id('in'), wall = d.id('log'), nick = d.id('nick');
 
-  var io = Scout.socket();
+  var socket = Scout.webSocket('chat');
+  console.log('socket url:', socket.url);
 
-  d.id('sofa').onsubmit = function (event) {
-    io.emit('msg', {nick: nick.value, message: box.value});
+  d.id('sofa').onsubmit = function (e) {
+    socket.sendjson({ nick: nick.value, message: box.value });
     box.value = '';
-    event.preventDefault();
-    event.returnValue = false;
+    e.preventDefault();
+    e.returnValue = false;
   };
 
-  io.on('msg', function (data) {
+  socket.onmessage = function recvMsg(e) {
+    var data = JSON.parse(e.data);
     var p = d.createElement('p');
     wall.appendChild(p).textContent = data.nick + ': ' + data.message;
     box.focus();
     p.scrollIntoView();
-  });
+  };
 
 }());
 </script>
