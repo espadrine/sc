@@ -36,7 +36,7 @@ XHR upon a "setTimeout", and so on.
 
     // or...
 
-    setTimeout ( Scout.send ( function ( params, xhr ) { ... } ), 1000 );
+    setTimeout ( Scout.send ( function ( params, xhr ) { … } ), 1000 );
 
 One thing that can bite is the fact that each Scout object only has one XHR
 object inside.  If you do two Ajax roundtrips at the same time, with the same
@@ -47,7 +47,7 @@ the "Network" tab, if a `$action` POST request is red (or cancelled), it means
 that it was killed by another XHR call.
 
 The cure is to create another Scout object through the
-`var newscout = Scout.maker()` call.
+`var newScout = Scout.maker()` call.
 
 ### Server-Sent Events
 
@@ -133,7 +133,53 @@ This EventSource object we get has two methods:
   event with that message to the client.  It is meant to be used with
   `es.on(event, callback)`.
 
+### WebSocket
+
+We also include the raw duplex communication system provided by the WebSocket
+protocol.
+
+    camp.ws('channel', function (socket));
+
+Every time a WebSocket connection is initiated (say, by a Web browser), the
+function is run. The `socket` is an instance of [ws.WebSocket]
+(https://github.com/einaros/ws/blob/master/doc/ws.md#class-wswebsocket).
+Usually, you only need to know about `socket.on('message', function(data))`,
+and `socket.send(data)`.
+
+This function returns an instance of a [WebSocket server]
+(https://github.com/einaros/ws/blob/master/doc/ws.md#class-wsserver)
+for that channel.
+Most notably, it has a `wsServer.clients` list of opened sockets on a channel.
+
+A map from channel names to WebSocket servers is available at:
+
+    camp.wsChannels[channel];
+
+For the purpose of broadcasting (ie, sending messages to every connected socket
+on the channel), we provide the following function.
+
+    camp.wsBroadcast('channel', function recv(data, function end(data)))
+
+The `recv` function is run once every time a client sends data.
+The `end` function sends some data, the same data, to each socket on the
+channel.
+
+Client-side, obviously, your browser needs to have a
+[WebSocket API](http://dev.w3.org/html5/websockets/#websocket).
+Check that it does provide that. For each browser, Chrome 14, Firefox 11,
+IE10, Safari 6 and Blackberry Browser 7, all onwards, support WebSocket,
+even on mobile phones.
+The `scout.js` API follows.
+
+    // `socket` is a genuine WebSocket instance.
+    var socket = var Scout.webSocket('channel');
+    // It has an additional field.
+    socket.sendjson({ some: "data" });  // (Gets sent as a JSON string.)
+
 ### Socket.io
+
+Be warned before you read on: the Socket.io interface is deprecated.
+Use the WebSocket interface provided above instead.
 
 We also include the duplex communication system that socket.io provides. When
 you start the server, by default, socket.io is already launched. You can use its
@@ -150,8 +196,8 @@ documented Socket.io object that you can use according to their API.
     io.on('event name', function (jsonObject) { … });
 
 
-Plate.js
---------
+Templates
+---------
 
 An associated possibility, very much linked to the normal use of Camp.js, is to
 handle templates.  Those are server-side preprocessed files.
@@ -167,7 +213,7 @@ directory).
     server.route ( /\/first\/post.html/, function ( query, match, end ) {
       end ({
         text: posts[0],
-        comments: ['first comment!', 'second comment...']
+        comments: ['first comment!', 'second comment…']
       });
     });
 
@@ -374,7 +420,7 @@ response).
 
 The default route is defined this way:
 
-    campInstance.stack = [socketLayer, ajaxLayer, eventSourceLayer,
+    campInstance.stack = [socketLayer, wsLayer, ajaxLayer, eventSourceLayer,
         routeLayer, staticLayer, notfoundLayer];
 
 Each element of the route is a function which takes two parameters:
@@ -410,6 +456,7 @@ These layers use functions that `camp` exports:
 
 - `camp.ajaxUnit` (seen previously),
 - `camp.socketUnit` (idem),
+- `camp.wsUnit` (idem),
 - `camp.eventSourceUnit` (idem),
 - `camp.routeUnit` (idem),
 - `camp.staticUnit` (idem),
