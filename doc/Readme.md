@@ -180,6 +180,8 @@ The `scout.js` API follows.
 
 Be warned before you read on: the Socket.io interface is deprecated.
 Use the WebSocket interface provided above instead.
+Also, do not use *both* the socket.io interface and the WebSocket interface.
+That seems to be asking for trouble.
 
 We also include the duplex communication system that socket.io provides. When
 you start the server, by default, socket.io is already launched. You can use its
