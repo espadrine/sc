@@ -230,11 +230,11 @@ On the other side of the fence, the file `/web/first/post.html` might look like
 this:
 
     <!doctype html><title></title>
-    <p>{{=text|html}}</p>
+    <p>{{= text in html}}</p>
     <ul>
-    {{-comments|comment|i;
-      <li>{{=comment|html}}</li>
-    }}
+    {{for comment in comments {{
+      <li>{{= comment in html}}</li>
+    }}}}
     </ul>
 
 Because it will be preprocessed server-side, the browser will actually receive
@@ -253,7 +253,8 @@ with the following fields:
 - `template`: the file (relative to the `web` directory) to read as the
   template, or a readable stream (see
   [the standard library](http://nodejs.org/api/stream.html)).
-- `reader`: the template engine to use.
+- `reader`: the template engine to use. It defaults to `server.templateReader`,
+  which defaults to (Fleau)[https://github.com/espadrine/fleau].
 
 By default, the following will be executed:
 
@@ -289,81 +290,6 @@ The return value (strictly speaking, the value passed to the continuation here
 named `end`) is an object literal that will be fed to the template file.
 Finally, the `ask` parameter is an Ask instance (see later on for more
 information).
-
-The template syntax follows those basic rules:
-
-* Plate substitutes all chunks of text surrounded by {{ and }}
-  (which you can escape by adding a curly brace to the number of curly braces
-  you want).
-* Those special chunks are a series of distinct parameters:
-   1. The first character is the macro that is used,
-   2. The next blocks of data separated by bars `|` are arguments to that macro,
-   3. What comes after a semi-colon `;` is the rest of the chunk.  
-  For instance, `{{-hellos|hello; I say {{=hello|plain}}! }}` is separated as
-  follows: first the macro `-`, then the first argument `hellos`, then the
-  second `hello`, then the rest ` I say {{=hello|plain}}! `. You can probably
-  guess that, in this case, the rest has nested syntax too.
-* You can escape the macro parameters with `\|` and `\;`.
-* The special chunks are substituted by some *real text* that the macro returns.
-
-Default macros are the following:
-
-* `{{=key|parser}}` will print the variable `key` (obtained from the literal
-  given to the template) as a string, escaping characters along what
-  `parser` returns.  `parser` is one of Plate.parsers (which is a real array,
-  which you can extend if need be).  Default parsers (self-explanatory):
-   * plain (text)
-   * html (text)
-   * xml (text)
-   * xmlattr (text)
-   * jsonstring (text)          // Escapes like a json string.
-   * json (text, indentation)   // Takes a JS object.
-   * uri (text)
-   * !uri (text)                // Unencode the URI.
-   * integer (text)
-   * intradix (text, [radix])
-   * float (text, [fractionDigits])
-   * exp (text, [fractionDigits])  
-  For instance, `{{=expNumber|exp 2}}` will only print the variable `expNumber`
-  with 2 fractional digits.  
-  You can sequence parsers like so: `{{=key|uri|xmlattr}}` goes through the URI
-  escaper, and then through the xmlattr parser. As a result, giving this the
-  string `"\"&\""` will insert the string `"%22&amp;%22"`.
-* `{{?bool; rest }}` will print the rest if the variable `bool` is truthy.
-  `bool` may be any JS expression, but this feature is unwise to use, as it will
-  hurt performance.
-* `{{-object|value|key; rest }}` will parse the rest once for each key in
-  `object`, adding the new variables `value` and `key` to the scope.
-  `{{~for|object|value|key; rest}}` works too.
-* `{{# rest }}` will not print anything at all.
-* `{{<template_file}}` will import a partial template in-place.
-  This is bad practice, however, as it may hurt performance.
-* `{{!m| func }}` will add a new macro `m` to the system, giving it the function
-  whose body is `func`, which receives the arguments `literal` (the literal
-  given to the template file) and `params` (parameters given to the macro).
-* `{{~macro; rest }}` will run the macro named `macro` (please note that this
-  macro has more than one character in it, this is legit).
-
-You may create a user-defined parser, say a parser "remove\_t", like so:
-
-    camp.Plate.parsers['remove_t'] = function (text, additionalParams) {
-      return escapedText;
-    };
-
-The `additionalParams` are an array that comes from space-separated strings
-given, in the template, after the parser name. It is useful to tune the behavior
-of the parser. For instance, the `2` in `{{=number|exp 2}}` asks the `exp`
-parser to give 2 decimal digits.
-
-Similarly to how you add parsers, you can add user-defined macros (here, the
-macro `i`):
-
-    camp.Plate.macros['i'] = function (literal, params) {
-      return insertedtext;
-    };
-
-The `literal` object contains all objects that are given to the template, and
-the params are what is given to the macro between pipe characters `|`.
 
 
 ## Fall through
@@ -470,5 +396,5 @@ These layers use functions that `camp` exports:
 
 - - -
 
-Thaddee Tyl, author of Scout Camp.
+Thaddee Tyl, author of ScoutCamp.
 

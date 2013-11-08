@@ -2,14 +2,11 @@
 // Copyright © 2011-2013 Thaddee Tyl, Jan Keromnes. All rights reserved.
 // Code covered by the LGPL license.
 
-var fleau = require('fleau');
-
 // Let's rock'n'roll!
 var camp = require('./lib/camp.js').start({
       port: +process.argv[2],
       secure: process.argv[3] === 'yes',
       debug: +process.argv[4],
-      templateReader: fleau
     })
   , ajax = camp.ajax
 
