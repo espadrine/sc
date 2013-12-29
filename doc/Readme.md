@@ -372,6 +372,9 @@ request.  It contains the following fields:
   this property is settable),
   `form.path` (where the uploaded file resides),
   and `form.on('progress', function(bytesReceived, bytesExpected) {})`.
+- username, password: in the case of a Basic Authentication HTTP request, parses
+  the contents of the request and places the username and password as strings in
+  those fields.
 
 Additionally, you can set the mime type of the response with
 `ask.mime('text/plain')`, for instance.
