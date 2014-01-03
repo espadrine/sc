@@ -361,8 +361,8 @@ The Ask class is a way to provide a lot of useful elements associated with a
 request.  It contains the following fields:
 
 - server: the Camp instance,
-- req: the http.ServerRequest object,
-- res: the http.ServerResponse object,
+- req: the [http.IncomingMessage](http://nodejs.org/api/http.html#http_http_incomingmessage) object,
+- res: the [http.ServerResponse](http://nodejs.org/api/http.html#http_class_http_serverresponse) object,
 - uri: the URI,
 - path: the pathname associated with the request,
 - query: the query taken from the URI.
