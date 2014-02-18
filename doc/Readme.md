@@ -74,13 +74,26 @@ ScoutCamp makes it work even in IE7.
 Camp.js
 -------
 
+We start the web server.
+
+    var server = require ( 'camp' ).start ( );
+
+The `start()` function has the following properties:
+
+- `documentRoot`: the path to the directory containing the static files you
+  serve (and the template files, potentially). If your website is made of HTML
+  pages, this is where they are located. Defaults to `./web`.
+- `templateReader`: the default template engine used. See below.
+- `passphrase`, `key`, `cert`, `ca`: in the case of a secure website (using
+  HTTPS), those are fields you may specify to indicate where to find information
+  about the website's security. Defaults include "https.key", "https.crt", and,
+  as the CA (Certificate Authority, a list of certificates) an empty list.
+
 ### Ajax
 
 The Camp.js engine targets ease of use of both serving plain html files and ajax
 calls.  By default, when given a request, it looks for files in the `./web/`
 directory.  However, it also has the concept of Ajax actions.
-
-    var server = require ( 'camp' ).start ( );
 
     server.ajax.on ( 'getinfo', function (json, end) {
       console.log (json);
