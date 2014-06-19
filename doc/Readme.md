@@ -267,7 +267,7 @@ with the following fields:
   template, or a readable stream (see
   [the standard library](http://nodejs.org/api/stream.html)).
 - `reader`: the template engine to use. It defaults to `server.templateReader`,
-  which defaults to (Fleau)[https://github.com/espadrine/fleau].
+  which defaults to [Fleau](https://github.com/espadrine/fleau).
 
 By default, the following will be executed:
 
