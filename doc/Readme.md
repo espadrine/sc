@@ -389,6 +389,13 @@ request.  It contains the following fields:
   the contents of the request and places the username and password as strings in
   those fields.
 
+An `Ask` instance is provided as an extra parameter to
+`server.route ( pattern, function ( query, path, end, ask ) )`
+(see the start of section "Diving In"),
+and as a parameter in each function of the server's stack
+`function ( ask, next )`
+(see the start of section "The stack").
+
 Additionally, you can set the mime type of the response with
 `ask.mime('text/plain')`, for instance.
 
