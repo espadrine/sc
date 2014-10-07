@@ -21,6 +21,7 @@
   "dependencies": {
     "socket.io": "~0.9.16",
     "ws": "~0.4.29",
+    "multilog": "~14.4.29",
     "formidable": "~1.0.14",
     "fleau": "~13.7.22"
   },
