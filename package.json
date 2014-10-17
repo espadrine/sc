@@ -3,12 +3,11 @@
   "contributors": [
     "Thaddee Tyl <thaddee.tyl@gmail.com>",
     "Jan Keromnes <janx@linux.com>",
-    "Remy Sharp <remy@leftlogic.com>",
-    "Douglas Crockford <douglas@crockford.com>"
+    "Remy Sharp <remy@leftlogic.com>"
   ],
   "name": "camp",
   "description": "Streamed Web Server with easy Ajax, EventSource, Templating, Static pages; Middleware approach and extensibility.",
-  "version": "14.6.22",
+  "version": "14.10.12",
   "homepage": "http://espadrine.github.com/sc/",
   "repository": {
     "type": "git",
