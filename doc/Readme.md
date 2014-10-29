@@ -76,7 +76,9 @@ Camp.js
 
 We start the web server.
 
-    var server = require ( 'camp' ).start ( );
+```js
+var server = require ( 'camp' ).start ( );
+```
 
 The `start()` function has the following properties:
 
@@ -89,16 +91,29 @@ The `start()` function has the following properties:
   about the website's security. Defaults include "https.key", "https.crt", and,
   as the CA (Certificate Authority, a list of certificates) an empty list.
 
+The result of `require ( 'camp' )` can also be useful, for instance, to log
+warnings from the server. The logging system uses
+[multilog](https://www.npmjs.org/package/multilog).
+
+```js
+var Camp = require ( 'camp' );
+Camp.log.pipe ( 'warn', 'stderr' );
+// There are three streams: warn, error, and all.
+// Errors are already logged to stderr.
+```
+
 ### Ajax
 
 The Camp.js engine targets ease of use of both serving plain html files and ajax
 calls.  By default, when given a request, it looks for files in the `./web/`
 directory.  However, it also has the concept of Ajax actions.
 
-    server.ajax.on ( 'getinfo', function (json, end) {
-      console.log (json);
-      end (json);   // Send that back to the client.
-    } );
+```js
+server.ajax.on ( 'getinfo', function (json, end) {
+  console.log (json);
+  end (json);   // Send that back to the client.
+} );
+```
 
 An action maps a string to the path request `/$<string>`.  When a client asks
 for this resource, sending in information stored in the "json" parameter,
@@ -123,7 +138,9 @@ parameters from the following sources:
 Before downloading POST Ajax data, you can hook a function up using the
 following code:
 
-    camp.ajaxReq.on('getinfo', function(ask) { … });
+```js
+camp.ajaxReq.on('getinfo', function(ask) { … });
+```
 
 That can be useful to give information about the progress of an upload, for
 instance, using `ask.form.on('progress', function(bytesReceived, bytesExpected) {})`.
@@ -134,9 +151,11 @@ I promised earlier that Server-Sent Events were a breeze in ScoutCamp.  They
 are.  Let's build a channel named `channel`.  When we receive an Ajax call on
 the `talk` event, we send the data it gives us to the EventSource channel.
 
-    // This is actually a full-fledged chat.
-    var chat = server.eventSource ( 'all' );
-    server.ajax.on ('talk', function(data, end) { chat.send(data); end(); });
+```js
+// This is actually a full-fledged chat.
+var chat = server.eventSource ( 'all' );
+server.ajax.on ('talk', function(data, end) { chat.send(data); end(); });
+```
 
 This EventSource object we get has two methods:
 
@@ -151,7 +170,9 @@ This EventSource object we get has two methods:
 We also include the raw duplex communication system provided by the WebSocket
 protocol.
 
-    camp.ws('channel', function (socket));
+```js
+camp.ws('channel', function (socket));
+```
 
 Every time a WebSocket connection is initiated (say, by a Web browser), the
 function is run. The `socket` is an instance of [ws.WebSocket]
@@ -166,12 +187,16 @@ Most notably, it has a `wsServer.clients` list of opened sockets on a channel.
 
 A map from channel names to WebSocket servers is available at:
 
-    camp.wsChannels[channel];
+```js
+camp.wsChannels[channel];
+```
 
 For the purpose of broadcasting (ie, sending messages to every connected socket
 on the channel), we provide the following function.
 
-    camp.wsBroadcast('channel', function recv(data, function end(data)))
+```js
+camp.wsBroadcast('channel', function recv(data, function end(data)))
+```
 
 The `recv` function is run once every time a client sends data.
 The `end` function sends some data, the same data, to each socket on the
@@ -184,10 +209,12 @@ IE10, Safari 6 and Blackberry Browser 7, all onwards, support WebSocket,
 even on mobile phones.
 The `scout.js` API follows.
 
-    // `socket` is a genuine WebSocket instance.
-    var socket = var Scout.webSocket('channel');
-    // It has an additional field.
-    socket.sendjson({ some: "data" });  // (Gets sent as a JSON string.)
+```js
+// `socket` is a genuine WebSocket instance.
+var socket = var Scout.webSocket('channel');
+// It has an additional field.
+socket.sendjson({ some: "data" });  // (Gets sent as a JSON string.)
+```
 
 ### Socket.io
 
@@ -200,15 +227,19 @@ We also include the duplex communication system that socket.io provides. When
 you start the server, by default, socket.io is already launched. You can use its
 APIs as documented at <http://socket.io#how-to-use> from the `camp.io` object.
 
-    camp.io.sockets.on('connection', function (socket) { … });
+```js
+camp.io.sockets.on('connection', function (socket) { … });
+```
 
 On the client-side, `Scout.js` also provides shortcuts, through its
 `Scout.socket(namespace)` function. Calling `Scout.socket()` returns the
 documented Socket.io object that you can use according to their API.
 
-    var io = Scout.socket();
-    io.emit('event name', {data: 'to send'});
-    io.on('event name', function (jsonObject) { … });
+```js
+var io = Scout.socket();
+io.emit('event name', {data: 'to send'});
+io.on('event name', function (jsonObject) { … });
+```
 
 
 Templates
@@ -223,14 +254,16 @@ Mostly, you first decide where to put your template file.  Let's say we have
 such a file at `/first/post.html` (from the root of the web/ or publish/
 directory).
 
-    var posts = ['This is the f1rst p0st!'];
+```js
+var posts = ['This is the f1rst p0st!'];
 
-    server.route ( /\/first\/post.html/, function ( query, match, end ) {
-      end ({
-        text: posts[0],
-        comments: ['first comment!', 'second comment…']
-      });
-    });
+server.route ( /\/first\/post.html/, function ( query, match, end ) {
+  end ({
+    text: posts[0],
+    comments: ['first comment!', 'second comment…']
+  });
+});
+```
 
 In this `camp.route` function, `query` is the object literal associated to the
 query string sent in the URL.  For instance, `/first/post.html?key=value` has an
@@ -242,23 +275,27 @@ evaluating the regular expression against the path.
 On the other side of the fence, the file `/web/first/post.html` might look like
 this:
 
-    <!doctype html><title></title>
-    <p>{{= text in html}}</p>
-    <ul>
-    {{for comment in comments {{
-      <li>{{= comment in html}}</li>
-    }}}}
-    </ul>
+```html
+<!doctype html><title></title>
+<p>{{= text in html}}</p>
+<ul>
+{{for comment in comments {{
+  <li>{{= comment in html}}</li>
+}}}}
+</ul>
+```
 
 Because it will be preprocessed server-side, the browser will actually receive
 the following file:
 
-    <!doctype html><title></title>
-    <p>This is the f1rst p0st!</p>
-    <ul>
-      <li>first comment!</li>
-      <li>second comment...</li>
-    </ul>
+```html
+<!doctype html><title></title>
+<p>This is the f1rst p0st!</p>
+<ul>
+  <li>first comment!</li>
+  <li>second comment...</li>
+</ul>
+```
 
 You can tweak how the router works using `end`'s second parameter, an object
 with the following fields:
@@ -271,17 +308,19 @@ with the following fields:
 
 By default, the following will be executed:
 
-    var posts = ['This is the f1rst p0st!'];
+```js
+var posts = ['This is the f1rst p0st!'];
 
-    server.route ( /\/first\/post.html/, function ( query, match, end ) {
-      end ({
-        text: posts[0],
-        comments: ['first comment!', 'second comment...']
-      }, {
-        template: '/first/post.html',   // The file given as a regex.
-        reader: server.templateReader
-      });
-    });
+server.route ( /\/first\/post.html/, function ( query, match, end ) {
+  end ({
+    text: posts[0],
+    comments: ['first comment!', 'second comment...']
+  }, {
+    template: '/first/post.html',   // The file given as a regex.
+    reader: server.templateReader
+  });
+});
+```
 
 ### Diving In
 
@@ -291,9 +330,11 @@ grammar of the templating language.
 
 The camp.js binding is a very straightforward function; namely:
 
-    server.route ( /pattern/, function ( query = {}, path = [], end, ask ) {
-      end ({});
-    });
+```js
+server.route ( /pattern/, function ( query = {}, path = [], end, ask ) {
+  end ({});
+});
+```
 
 This function registers a pattern (name it `paths`) as being redirected to a
 template file.  The template file is either the match corresponding to `paths`,
@@ -332,15 +373,17 @@ methods.
 
 You may provide the `start` function with a JSON object which defaults to this:
 
-    {
-      port: 80,     // The port to listen to.
-      security: {
-        secure: true,
-        key: 'https.key',
-        cert: 'https.crt',
-        ca: 'https.ca'
-      }
-    }
+```js
+{
+  port: 80,     // The port to listen to.
+  security: {
+    secure: true,
+    key: 'https.key',
+    cert: 'https.crt',
+    ca: 'https.ca'
+  }
+}
+```
 
 If you provide the relevant HTTPS files and set the `secure` option to true, the
 server will be secure.
@@ -361,8 +404,10 @@ response).
 
 The default route is defined this way:
 
-    campInstance.stack = [socketLayer, wsLayer, ajaxLayer, eventSourceLayer,
-        routeLayer, staticLayer, notfoundLayer];
+```js
+campInstance.stack = [socketLayer, wsLayer, ajaxLayer, eventSourceLayer,
+    routeLayer, staticLayer, notfoundLayer];
+```
 
 Each element of the route is a function which takes two parameters:
 
