@@ -23,20 +23,22 @@ must trigger an XHR(XML Http Request) when a specific event is fired.  This is
 what you do, most of the time, anyway.  Otherwise, it is also easy to attach an
 XHR upon a "setTimeout", and so on.
 
-    Scout ( '#id-of-element' ).on ( 'click', function (params, evt, xhr) {
-      params.action = 'getinfo';
-      var sent = this.parentNode.textContent;
-      params.data = { ready: true, data: sent };
-      params.resp = function ( resp, xhr ) {
-        if (resp.data === sent) {
-          console.log ('Got exactly what we sent.');
-        }
-      };
-    });
+```js
+Scout ( '#id-of-element' ).on ( 'click', function (params, evt, xhr) {
+  params.action = 'getinfo';
+  var sent = this.parentNode.textContent;
+  params.data = { ready: true, data: sent };
+  params.resp = function ( resp, xhr ) {
+    if (resp.data === sent) {
+      console.log ('Got exactly what we sent.');
+    }
+  };
+});
 
-    // or...
+// or...
 
-    setTimeout ( Scout.send ( function ( params, xhr ) { … } ), 1000 );
+setTimeout ( Scout.send ( function ( params, xhr ) { … } ), 1000 );
+```
 
 One thing that can bite is the fact that each Scout object only has one XHR
 object inside.  If you do two Ajax roundtrips at the same time, with the same
@@ -59,16 +61,17 @@ The bad news about it is that it is a hassle to set up server-side.  The good
 news is that you are using ScoutCamp, which makes it a breeze.  Additionally,
 ScoutCamp makes it work even in IE7.
 
-    var es = Scout.eventSource('channel');
+```js
+var es = Scout.eventSource('channel');
 
-    es.on('eventName', function (data) {
-      // `data` is a string.
-    });
+es.on('eventName', function (data) {
+  // `data` is a string.
+});
 
-    es.onrecv(function (json) {
-      // `json` is a JSON object.
-    });
-
+es.onrecv(function (json) {
+  // `json` is a JSON object.
+});
+```
 
 
 Camp.js
@@ -397,7 +400,7 @@ same parameters as `https.Server`.
 
 ### The stack
 
-Camp is stack-base.  When we receive a request, it goes through all the layers
+Camp is stack-based.  When we receive a request, it goes through all the layers
 of the stack until it hits the bottom.  It should never hit the bottom: each
 layer can either pass it on to the next, or end the request (by sending a
 response).
