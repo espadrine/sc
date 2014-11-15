@@ -378,7 +378,8 @@ You may provide the `start` function with a JSON object which defaults to this:
 
 ```js
 {
-  port: 80,     // The port to listen to.
+  port: 80,       // The port to listen to.
+  hostname: '::', // The hostname to use as a server
   security: {
     secure: true,
     key: 'https.key',
