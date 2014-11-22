@@ -100,9 +100,9 @@ warnings from the server. The logging system uses
 
 ```js
 var Camp = require ( 'camp' );
-Camp.log.pipe ( 'warn', 'stderr' );
+Camp.log.unpipe ( 'warn', 'stderr' );
 // There are three streams: warn, error, and all.
-// Errors are already logged to stderr.
+// warn and error are individually piped to stderr by default.
 ```
 
 ### Ajax
