@@ -2,9 +2,11 @@
 
 *WebApps Framework*
 
+[Documentation] (https://github.com/espadrine/sc/tree/master/doc/Readme.md).
+
 ## Get started
 
-- `[npm] (http://nodejs.org) install camp`
+- <code>[npm](http://nodejs.org) install camp</code>
 - put website files in `web/`
 - edit `app.js` with `require('camp').start({port: 1234})`
 - run `node app`
@@ -16,11 +18,9 @@ Spoilers: one-liner WebSocket chat demo.
 [Download it for free] (https://github.com/espadrine/sc/zipball/master) to try
 the demo!
 
-[The documentation sits here] (https://github.com/espadrine/sc/tree/master/doc/Readme.md).
-
 ## Features
 
-- routes, templates (with one by default)
+- routes, templates (with one parser by default)
 - query parameters processing, file upload, HTTP authentication
 - ajax, EventSource (SSE), WebSockets built-in
 
