@@ -3,12 +3,14 @@
 // Code covered by the LGPL license.
 
 // Let's rock'n'roll!
+var port = +process.argv[2] || 1234;
 var camp = require('./lib/camp.js').start({
-      port: +process.argv[2] || 1234,
+      port: port,
       secure: process.argv[3] === 'yes',
       debug: +process.argv[4],
     })
   , ajax = camp.ajax
+console.log('http://[::0]:' + port);
 
 // Templating demo
 camp.route('/template.html', function(data, match, end) {
