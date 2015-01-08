@@ -112,7 +112,7 @@ calls.  By default, when given a request, it looks for files in the `./web/`
 directory.  However, it also has the concept of Ajax actions.
 
 ```js
-server.ajax.on ( 'getinfo', function (json, end) {
+server.ajax.on ( 'getinfo', function (json, end, ask) {
   console.log (json);
   end (json);   // Send that back to the client.
 } );
@@ -137,6 +137,8 @@ parameters from the following sources:
 - POST requests with enctype application/x-www-form-urlencoded
 - POST requests with enctype multipart/form-data. This one uses the same API as
   [formidable](https://github.com/felixge/node-formidable) for file objects.
+
+You also get an [Ask](#the-ask-class) object, see below.
 
 Before downloading POST Ajax data, you can hook a function up using the
 following code:
@@ -345,8 +347,8 @@ or the path you affect `path[0]` to (indeed, `path` is the match object).
 Please note that the path is relative to the root of your static files.  
 The return value (strictly speaking, the value passed to the continuation here
 named `end`) is an object literal that will be fed to the template file.
-Finally, the `ask` parameter is an Ask instance (see later on for more
-information).
+Finally, the `ask` parameter is an [Ask](#the-ask-class) instance (see later on
+for more information).
 
 
 ## Fall through
@@ -418,6 +420,8 @@ Each element of the route is a function which takes two parameters:
 - an Ask object (more below),
 - a `next` function, which the layer may call if it will not send an HTTP
   response.
+
+### The Ask class
 
 The Ask class is a way to provide a lot of useful elements associated with a
 request.  It contains the following fields:
