@@ -22,7 +22,7 @@
     "ws": "~0.4.29",
     "multilog": "~14.11.22",
     "formidable": "~1.0.14",
-    "fleau": "~13.7.22"
+    "fleau": "~15.2.18"
   },
   "devDependencies": {},
   "optionalDependencies": {},
