@@ -7,7 +7,7 @@
   ],
   "name": "camp",
   "description": "Streamed Web Server with easy Ajax, EventSource, Templating, Static pages; Middleware approach and extensibility.",
-  "version": "15.2.23",
+  "version": "15.3.4",
   "homepage": "http://espadrine.github.com/sc/",
   "repository": {
     "type": "git",
@@ -22,7 +22,7 @@
     "ws": "~0.4.29",
     "multilog": "~14.11.22",
     "formidable": "~1.0.14",
-    "fleau": "~15.2.18"
+    "fleau": "~15.3.3"
   },
   "devDependencies": {},
   "optionalDependencies": {},
