@@ -94,9 +94,9 @@ test:
 	node test/test-api.js
 
 update:
-	@git clone https://github.com/espadrine/sc.git
-	@cp sc/web/js/scout.js ./web/js/scout.js
-	@cp sc/camp/* ./camp/
+	@git clone https://github.com/espadrine/sc
+	@cp sc/web/js/scout.js ./$(WEB)/js/scout.js
+	@cp sc/lib/* ./lib/
 	@cp sc/Makefile .
 	@rm -rf sc/
 
@@ -122,16 +122,16 @@ rmhttps:
 https: https.crt
 
 scout-update:
-	@curl https://raw.github.com/jquery/sizzle/master/sizzle.js > web/js/sizzle.js 2> /dev/null
-	@curl https://raw.github.com/douglascrockford/JSON-js/master/json2.js > web/js/json2.js 2> /dev/null
-	@curl https://raw.github.com/remy/polyfills/master/EventSource.js > web/js/EventSource.js 2> /dev/null
+	@curl https://raw.github.com/jquery/sizzle/master/sizzle.js > $(WEB)/js/sizzle.js 2> /dev/null
+	@curl https://raw.github.com/douglascrockford/JSON-js/master/json2.js > $(WEB)/js/json2.js 2> /dev/null
+	@curl https://raw.github.com/remy/polyfills/master/EventSource.js > $(WEB)/js/EventSource.js 2> /dev/null
 
 scout-build:
 	@for ajsmin in $(JSMIN); do  \
 	  if which $$ajsmin > /dev/null; then chosenjsmin=$$ajsmin; break; fi;  \
 	done;  \
-	cat web/js/sizzle.js web/js/json2.js web/js/EventSource.js web/js/additions.js | $$ajsmin > web/js/scout.js
-	@cp web/js/scout.js .
+	cat $(WEB)/js/sizzle.js $(WEB)/js/json2.js $(WEB)/js/EventSource.js $(WEB)/js/additions.js | $$ajsmin > $(WEB)/js/scout.js
+	@cp $(WEB)/js/scout.js .
 
 help:
 	@cat Makefile | less
