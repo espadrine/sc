@@ -1,28 +1,27 @@
-# Makefile: Publish your website and start/stop your server.
-# Copyright © 2011-2013 Thaddee Tyl, Jan Keromnes. All rights reserved.
+# Makefile: Publish your website, start/stop your server.
+# Copyright © 2011-2015 Thaddee Tyl, Jan Keromnes. All rights reserved.
 # Code covered by the LGPL license.
 
-# The JS minifier. Change the order to your convenience.
-# Note: you must create google-closure.sh yourself if you want it.
-# It must have some JS in stdin, and must produce the result on stdout.
-JSMIN = uglifyjs jsmin google-closure.sh js-minifier
-
-# The output of console.log statements goes in this file when you `make`.
-# Note: when you `make debug`, the output appears on the console.
-LOG = node.log
-
-# The name you gave your main server file.
+# The name of your main server file.
 SERVER = app.js
 
 # The folder where your precious website is.
 WEB = web
 
-# The folder where your minified, production-ready website will be.
+# The folder where your minified, production-ready website should be published.
 # Warning: `make` and `make clean` will delete this folder.
 PUBLISH = publish
 
+# The JS minifier. Change the priority order to your convenience.
+# It must accept some JS in stdin, and produce the result on stdout.
+# Note: you must create `google-closure.sh` yourself if you want it.
+JSMIN = uglifyjs jsmin google-closure.sh js-minifier
+
+# The suffix to use for minified files.
 MIN = min
 
+# To make your server secure, generate SSL certificates (e.g. `make https`),
+# then start it with something like `SECURE=yes make start`.
 ifdef SECURE
   PORT ?= 443
   SECURE = yes
@@ -32,23 +31,33 @@ else
 endif
 DEBUG ?= 0
 
-# Define custom rules and settings in this file.
+# The output of console.log statements goes in this file when you `make`.
+# Note: when you `make debug`, the output appears on the console.
+LOG = node.log
+
+# You can define custom rules and settings in such a file.
 -include local.mk
 
+# Default behavior for `make`.
 all: publish stop start
 
+# Publish your website.
 publish: clean copy minify
 
+# Try your unpublished website.
 debug: stop startweb
 
+# Delete generated files and logs.
 clean:
 	@echo "clean"
 	@rm -rf $(LOG) $(PUBLISH)
 
+# Simply copy all website files over to your publishing folder.
 copy:
 	@echo "copy"
 	@cp -rf $(WEB) $(PUBLISH)
 
+# Minify everything we can inside your publishing folder.
 minify:
 	@echo "minify"
 	@for ajsmin in $(JSMIN); do  \
@@ -63,6 +72,7 @@ minify:
 	  echo ' `sudo make jsmin` or install uglifyjs for minification.';  \
 	fi
 
+# Stop any previously-started Camp server.
 stop:
 	@echo "stop"
 	@for pid in `ps aux | grep -v make | grep node | grep $(SERVER) | awk '{print $$2}'` ; do  \
@@ -72,6 +82,7 @@ stop:
 	   fi  \
 	done;  \
 
+# Start a Camp server with your published website (for production).
 start:
 	@echo "start"
 	@if [ `id -u` -ne "0" -a $(PORT) -lt 1024 ] ;  \
@@ -81,6 +92,7 @@ start:
 	  node $(SERVER) $(PORT) $(SECURE) $(DEBUG) >> $(LOG) ;  \
 	fi
 
+# Start a Camp server with your unpublished website (for development).
 startweb:
 	@echo "start web"
 	@if [ `id -u` -ne "0" -a $(PORT) -lt 1024 ] ;  \
@@ -90,9 +102,12 @@ startweb:
 	  node $(SERVER) $(PORT) $(SECURE) $(DEBUG) >> $(LOG) ;  \
 	fi
 
+# Run the ScoutCamp tests.
 test:
 	node test/test-api.js
 
+# Update a ScoutCamp fork.
+# Warning: overwrites this Makefile, you may want to create a local.mk!
 update:
 	@git clone https://github.com/espadrine/sc
 	@cp sc/web/js/scout.js ./$(WEB)/js/scout.js
@@ -100,32 +115,42 @@ update:
 	@cp sc/Makefile .
 	@rm -rf sc/
 
+# Install Doug Crockford's `jsmin` in `/usr/bin/jsmin`.
 jsmin:
 	@if [ `id -u` = "0" ] ;  \
 	  then  wget "http://crockford.com/javascript/jsmin.c" && gcc -o /usr/bin/jsmin jsmin.c ;  \
 	        rm -rf jsmin.c ;  \
 	  else echo ' `sudo make jsmin`'; fi
 
-https.key:
-	@openssl genrsa -out https.key 4096
+# Generate self-signed HTTPS credentials.
+https: https.crt
 
-https.csr: https.key
-	@openssl req -new -sha256 -key https.key -out https.csr
-
-https.crt: https.key https.csr
-	@openssl x509 -req -days 365 -in https.csr -signkey https.key -out https.crt
-
+# Delete HTTPS credentials.
 rmhttps:
 	@echo "delete https credentials"
 	@rm -rf https.key https.csr https.crt
 
-https: https.crt
+# Generate an SSL certificate secret key. Never share this!
+https.key:
+	@openssl genrsa -out https.key 4096
 
+# Generate a CSR (Certificate Signing Request) for someone to sign your
+# SSL certificate.
+https.csr: https.key
+	@openssl req -new -sha256 -key https.key -out https.csr
+
+# Create a self-signed SSL certificate.
+# Warning: web users will be shown a useless security warning.
+https.crt: https.key https.csr
+	@openssl x509 -req -days 365 -in https.csr -signkey https.key -out https.crt
+
+# Download Scout's JS dependencies into your website's js/ folder.
 scout-update:
 	@curl https://raw.github.com/jquery/sizzle/master/sizzle.js > $(WEB)/js/sizzle.js 2> /dev/null
 	@curl https://raw.github.com/douglascrockford/JSON-js/master/json2.js > $(WEB)/js/json2.js 2> /dev/null
 	@curl https://raw.github.com/remy/polyfills/master/EventSource.js > $(WEB)/js/EventSource.js 2> /dev/null
 
+# Build the `scout.js` client script.
 scout-build:
 	@for ajsmin in $(JSMIN); do  \
 	  if which $$ajsmin > /dev/null; then chosenjsmin=$$ajsmin; break; fi;  \
@@ -133,6 +158,7 @@ scout-build:
 	cat $(WEB)/js/sizzle.js $(WEB)/js/json2.js $(WEB)/js/EventSource.js $(WEB)/js/additions.js | $$ajsmin > $(WEB)/js/scout.js
 	@cp $(WEB)/js/scout.js .
 
+# This is a self-documenting Makefile.
 help:
 	@cat Makefile | less
 
