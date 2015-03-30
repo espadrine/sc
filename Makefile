@@ -107,10 +107,10 @@ jsmin:
 	  else echo ' `sudo make jsmin`'; fi
 
 https.key:
-	@openssl genrsa -aes256 -out https.key 1024
+	@openssl genrsa -out https.key 4096
 
 https.csr: https.key
-	@openssl req -new -key https.key -out https.csr
+	@openssl req -new -sha256 -key https.key -out https.csr
 
 https.crt: https.key https.csr
 	@openssl x509 -req -days 365 -in https.csr -signkey https.key -out https.crt
