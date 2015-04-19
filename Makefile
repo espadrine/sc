@@ -133,16 +133,19 @@ rmhttps:
 # Generate an SSL certificate secret key. Never share this!
 https.key:
 	@openssl genrsa -out https.key 4096
+	@chmod 400 https.key # read by owner
 
 # Generate a CSR (Certificate Signing Request) for someone to sign your
 # SSL certificate.
 https.csr: https.key
 	@openssl req -new -sha256 -key https.key -out https.csr
+	@chmod 400 https.csr # read by owner
 
 # Create a self-signed SSL certificate.
 # Warning: web users will be shown a useless security warning.
 https.crt: https.key https.csr
 	@openssl x509 -req -days 365 -in https.csr -signkey https.key -out https.crt
+	@chmod 444 https.crt # read by all
 
 # Download Scout's JS dependencies into your website's js/ folder.
 scout-update:
