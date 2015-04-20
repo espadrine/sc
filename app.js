@@ -20,6 +20,16 @@ camp.route('/template.html', function(data, match, end) {
   })
 })
 
+// Templating demo with multiple templates
+camp.route('/html.template', function(data, match, end) {
+  end({
+    title: data.title || 'Success'
+  , info: data.info || 'This document has been templated!'
+  }, {
+    template: ['template.html', 'flip.html']
+  })
+})
+
 // Doctor demo
 var replies = ['Ok.', 'Oh⁉', 'Is that so?', 'How interesting!'
               ,'Hm…', 'What do you mean?', 'So say we all.']
