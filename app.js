@@ -10,7 +10,7 @@ var camp = require('./lib/camp.js').start({
       debug: +process.argv[4],
     })
   , ajax = camp.ajax
-console.log('http://[::0]:' + port);
+console.log('http://[::1]:' + port);
 
 // Templating demo
 camp.route('/template.html', function(data, match, end) {
