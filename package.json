@@ -2,12 +2,11 @@
   "author": "Thaddee Tyl <thaddee.tyl@gmail.com> (http://espadrine.github.com/)",
   "contributors": [
     "Thaddee Tyl <thaddee.tyl@gmail.com>",
-    "Jan Keromnes <janx@linux.com>",
-    "Remy Sharp <remy@leftlogic.com>"
+    "Jan Keromnes <janx@linux.com>"
   ],
   "name": "camp",
   "description": "Streamed Web Server with easy Ajax, EventSource, Templating, Static pages; Middleware approach and extensibility.",
-  "version": "15.3.4",
+  "version": "15.5.5",
   "homepage": "http://espadrine.github.com/sc/",
   "repository": {
     "type": "git",
