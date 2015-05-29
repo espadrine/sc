@@ -36,3 +36,4 @@ Versions are tags labeled after the day it was released.
 
     31.06.28 → june 28th, 2031
 
+They are all under LICENSE.md.
