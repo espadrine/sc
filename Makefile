@@ -21,13 +21,13 @@ JSMIN = uglifyjs jsmin google-closure.sh js-minifier
 MIN = min
 
 # To make your server secure, generate SSL certificates (e.g. `make https`),
-# then start it with something like `SECURE=yes make start`.
+# then start it with something like `SECURE=secure make start`.
 ifdef SECURE
   PORT ?= 443
-  SECURE = yes
+  SECURE = secure
 else
   PORT ?= 80
-  SECURE = no
+  SECURE = insecure
 endif
 DEBUG ?= 0
 
