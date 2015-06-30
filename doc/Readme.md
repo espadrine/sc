@@ -427,11 +427,12 @@ The Ask class is a way to provide a lot of useful elements associated with a
 request.  It contains the following fields:
 
 - server: the Camp instance,
-- req: the [http.IncomingMessage](http://nodejs.org/api/http.html#http_http_incomingmessage) object,
-- res: the [http.ServerResponse](http://nodejs.org/api/http.html#http_class_http_serverresponse) object,
-- uri: the URI,
-- path: the pathname associated with the request,
+- req: the [http.IncomingMessage](http://nodejs.org/api/http.html#http_http_incomingmessage) object.
+- res: the [http.ServerResponse](http://nodejs.org/api/http.html#http_class_http_serverresponse) object.
+- uri: the URI.
+- path: the pathname associated with the request.
 - query: the query taken from the URI.
+- cookies: using the [cookies](https://github.com/pillarjs/cookies) library.
 - form: a `formidable.IncomingForm` object as specified by
   the [formidable](https://github.com/felixge/node-formidable)
   library API. Noteworthy are `form.uploadDir` (where the files are uploaded,
