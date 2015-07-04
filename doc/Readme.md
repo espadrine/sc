@@ -330,8 +330,8 @@ server.route ( /\/first\/post.html/, function ( query, match, end ) {
 ```
 
 If you pass `null` instead of an object in the first parameter of `end()`, it
-sends the file specified as `template` without the reader. Use `{}` if you want
-to pass no data to the template reader.
+sends the file specified as `template` without the reader. The same goes if
+`reader` is `null`. Use `{}` if you want to pass no data to the template reader.
 
 ### Diving In
 
