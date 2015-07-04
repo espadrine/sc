@@ -310,6 +310,8 @@ with the following fields:
   [the standard library](http://nodejs.org/api/stream.html)).
 - `reader`: the template engine to use. It defaults to `server.templateReader`,
   which defaults to [Fleau](https://github.com/espadrine/fleau).
+- `string`: a quickhand to send the string content of the template you want to
+  send instead of specifying a file. It overrides `template`.
 
 By default, the following will be executed:
 
