@@ -327,6 +327,10 @@ server.route ( /\/first\/post.html/, function ( query, match, end ) {
 });
 ```
 
+If you pass `null` instead of an object in the first parameter of `end()`, it
+sends the file specified as `template` without the reader. Use `{}` if you want
+to pass no data to the template reader.
+
 ### Diving In
 
 There are two main elements of interest here.  The easiest is the camp.js
