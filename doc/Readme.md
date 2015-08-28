@@ -93,6 +93,10 @@ The `start()` function has the following properties:
   HTTPS), those are fields you may specify to indicate where to find information
   about the website's security. Defaults include "https.key", "https.crt", and,
   as the CA (Certificate Authority, a list of certificates) an empty list.
+- `setuid`: once the server has made the connection, set the user id to
+  something else. This is particularly useful if you don't want the server to
+  run as the almighty root user. However, executing this requires to be root (so
+  you will need to use `sudo` or the like to run the server).
 
 The result of `require ( 'camp' )` can also be useful, for instance, to log
 warnings from the server. The logging system uses
