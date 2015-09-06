@@ -30,6 +30,13 @@ the demo!
 - send [pull requests](http://help.github.com/send-pull-requests/)
 - contact us on [#tree](irc://irc.freenode.net/#tree)
 
+## License
+
+MIT. See LICENSE.md for more.
+
+The "Red spiders" comic is CC BY-NC 2.5 from Randall Munroe, XKCD.
+Link in `web/index.html`.
+
 ## Versions
 
 Versions are tags labeled after the day it was released.
