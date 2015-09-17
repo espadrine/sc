@@ -80,7 +80,7 @@ Camp.js
 We start the web server.
 
 ```js
-var server = require ( 'camp' ).start ( );
+var camp = require ( 'camp' ).start ( );
 ```
 
 The `start()` function has the following properties:
@@ -116,7 +116,7 @@ calls.  By default, when given a request, it looks for files in the `./web/`
 directory.  However, it also has the concept of Ajax actions.
 
 ```js
-server.ajax.on ( 'getinfo', function (json, end, ask) {
+camp.ajax.on ( 'getinfo', function (json, end, ask) {
   console.log (json);
   end (json);   // Send that back to the client.
 } );
@@ -162,8 +162,8 @@ the `talk` event, we send the data it gives us to the EventSource channel.
 
 ```js
 // This is actually a full-fledged chat.
-var chat = server.eventSource ( 'all' );
-server.ajax.on ('talk', function(data, end) { chat.send(data); end(); });
+var chat = camp.eventSource ( 'all' );
+camp.ajax.on ('talk', function(data, end) { chat.send(data); end(); });
 ```
 
 This EventSource object we get has two methods:
@@ -250,6 +250,32 @@ io.emit('event name', {data: 'to send'});
 io.on('event name', function (jsonObject) { … });
 ```
 
+### Handlers
+
+If you want a bit of code to be executed on every request, or if you want to
+manually manage requests at a low level without all that fluff described above,
+you can add handlers to the server.
+
+Each request goes through each handler you provided in the order you provided
+them. If a handler returns `true`, the request gets caught by that handler:
+
+1. None of the handlers after that one get called,
+2. None of the subsequent layers of Camp (such as WebSocket, EventSource,
+   Route…) get called.
+
+Otherwise, all the handlers get called, and the request will get caught by one
+of the subsequent layers of Camp.
+
+```js
+var addOSSHeader = function(ask) {
+  ask.res.setHeader('X-Open-Source', 'https://github.com/espadrine/sc/');
+};
+camp.handler(addOSSHeader);
+// There's no reason to remove that amazing handler, but if that was what
+// floated your boat, here is how you would do that:
+camp.removeHandler(addOSSHeader);
+```
+
 
 Templates
 ---------
@@ -266,7 +292,7 @@ directory).
 ```js
 var posts = ['This is the f1rst p0st!'];
 
-server.route ( /\/first\/post.html/, function ( query, match, end ) {
+camp.route ( /\/first\/post.html/, function ( query, match, end ) {
   end ({
     text: posts[0],
     comments: ['first comment!', 'second comment…']
@@ -312,7 +338,7 @@ with the following fields:
 - `template`: the file (relative to the `web` directory) to read as the
   template, or a readable stream (see
   [the standard library](http://nodejs.org/api/stream.html)).
-- `reader`: the template engine to use. It defaults to `server.templateReader`,
+- `reader`: the template engine to use. It defaults to `camp.templateReader`,
   which defaults to [Fleau](https://github.com/espadrine/fleau).
 - `string`: a quickhand to send the string content of the template you want to
   send instead of specifying a file. It overrides `template`.
@@ -322,13 +348,13 @@ By default, the following will be executed:
 ```js
 var posts = ['This is the f1rst p0st!'];
 
-server.route ( /\/first\/post.html/, function ( query, match, end ) {
+camp.route ( /\/first\/post.html/, function ( query, match, end ) {
   end ({
     text: posts[0],
     comments: ['first comment!', 'second comment...']
   }, {
     template: '/first/post.html',   // The file given as a regex.
-    reader: server.templateReader
+    reader: camp.templateReader
   });
 });
 ```
@@ -346,7 +372,7 @@ grammar of the templating language.
 The camp.js binding is a very straightforward function; namely:
 
 ```js
-server.route ( /pattern/, function ( query = {}, path = [], end, ask ) {
+camp.route ( /pattern/, function ( query = {}, path = [], end, ask ) {
   end ({});
 });
 ```
@@ -381,7 +407,7 @@ more than enough.  Sometimes, however, you need to dig a little deeper.
 
 ### The Camp Object
 
-`camp.start` is the simple way to launch the server in a single line.  You may
+`Camp.start` is the simple way to launch the server in a single line.  You may
 not know, however, that it returns an `http.Server` (or an `https.Server`)
 subclass instance.  As a result, you can use all node.js' HTTP and HTTPS
 methods.
@@ -404,11 +430,11 @@ You may provide the `start` function with a JSON object which defaults to this:
 If you provide the relevant HTTPS files and set the `secure` option to true, the
 server will be secure.
 
-`camp.createServer` creates a Camp instance directly, and
-`camp.createSecureCamp` creates an HTTPS Camp instance.  The latter takes the
+`Camp.createServer` creates a Camp instance directly, and
+`Camp.createSecureCamp` creates an HTTPS Camp instance.  The latter takes the
 same parameters as `https.Server`.
 
-`camp.Camp` and `camp.SecureCamp` are the class constructors.
+`Camp.Camp` and `Camp.SecureCamp` are the class constructors.
 
 
 ### The stack
@@ -418,18 +444,27 @@ of the stack until it hits the bottom.  It should never hit the bottom: each
 layer can either pass it on to the next, or end the request (by sending a
 response).
 
-The default route is defined this way:
+The default stack is defined this way:
 
 ```js
-campInstance.stack = [socketLayer, wsLayer, ajaxLayer, eventSourceLayer,
-    routeLayer, staticLayer, notfoundLayer];
+campInstance.stack = [genericLayer, wsLayer, ajaxLayer, eventSourceLayer,
+                      routeLayer, staticLayer, notfoundLayer];
 ```
 
-Each element of the route is a function which takes two parameters:
+Each element of the stack `function(ask, next){}` takes two parameters:
 
 - an Ask object (more below),
 - a `next` function, which the layer may call if it will not send an HTTP
-  response.
+  response itself.  The layer that does catch the request and responds fully to
+  it will not call `next()`, the others will call `next()`.
+
+```js
+// This works just like the handler example way above…
+campInstance.stack.unshift(function(ask, next) {
+  ask.res.setHeader('X-Open-Source', 'https://github.com/espadrine/sc/');
+  next();
+});
+```
 
 ### The Ask class
 
@@ -454,7 +489,7 @@ request.  It contains the following fields:
   those fields.
 
 An `Ask` instance is provided as an extra parameter to
-`server.route ( pattern, function ( query, path, end, ask ) )`
+`camp.route ( pattern, function ( query, path, end, ask ) )`
 (see the start of section "Diving In"),
 and as a parameter in each function of the server's stack
 `function ( ask, next )`
@@ -465,18 +500,19 @@ Additionally, you can set the mime type of the response with
 
 ### Default layers
 
-The default layers provided are located in `camp.unit`.
+The default layers provided are generated from what we call units, which are
+exported as shown below. Each unit is a function that takes a server instance
+and returns a layer (`function(ask, next){}`).
 
-These layers use functions that `camp` exports:
-
-- `camp.ajaxUnit` (seen previously),
-- `camp.socketUnit` (idem),
-- `camp.wsUnit` (idem),
-- `camp.eventSourceUnit` (idem),
-- `camp.routeUnit` (idem),
-- `camp.staticUnit` (idem),
-- `camp.notfoundUnit` (idem),
-- `server.documentRoot`: this string specifies the location of the root of
+- `Camp.genericUnit` (for `handler()` and `removeHandler()`)
+- `Camp.ajaxUnit` (seen previously)
+- `Camp.socketUnit` (idem)
+- `Camp.wsUnit` (idem)
+- `Camp.eventSourceUnit` (idem)
+- `Camp.routeUnit` (idem)
+- `Camp.staticUnit` (idem)
+- `Camp.notfoundUnit` (idem)
+- `camp.documentRoot`: this string specifies the location of the root of
   your static web files.  The default is "./web".
 
 

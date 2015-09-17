@@ -60,6 +60,9 @@ camp.route(/^\/secret$/, function(data, match, end, ask) {
   }
 })
 
+// Low-level handler
+camp.handler(function(ask) { ask.res.setHeader('X-Open-Source', 'https://github.com/espadrine/sc/'); })
+
 var stream = require('stream')
 function streamFromString(str) {
   var newStream = new stream.Readable()
