@@ -257,7 +257,7 @@ manually manage requests at a low level without all that fluff described above,
 you can add handlers to the server.
 
 Each request goes through each handler you provided in the order you provided
-them. If a handler returns `true`, the request gets caught by that handler:
+them. Unless a handler calls `next()`, the request gets caught by that handler:
 
 1. None of the handlers after that one get called,
 2. None of the subsequent layers of Camp (such as WebSocket, EventSource,
@@ -267,10 +267,11 @@ Otherwise, all the handlers get called, and the request will get caught by one
 of the subsequent layers of Camp.
 
 ```js
-var addOSSHeader = function(ask) {
+var addOSSHeader = function(req, res, next) {
   ask.res.setHeader('X-Open-Source', 'https://github.com/espadrine/sc/');
+  next();
 };
-camp.handler(addOSSHeader);
+camp.handle(addOSSHeader);
 // There's no reason to remove that amazing handler, but if that was what
 // floated your boat, here is how you would do that:
 camp.removeHandler(addOSSHeader);
@@ -447,29 +448,37 @@ response).
 The default stack is defined this way:
 
 ```js
-campInstance.stack = [genericLayer, wsLayer, ajaxLayer, eventSourceLayer,
+campInstance.stack = [wsLayer, ajaxLayer, eventSourceLayer,
                       routeLayer, staticLayer, notfoundLayer];
 ```
 
-Each element of the stack `function(ask, next){}` takes two parameters:
+Each element of the stack `function(req, res, next){}` takes two parameters:
 
-- an Ask object (more below),
+- augmented [IncomingMessage][] (`req`) and [ServerResponse][] (`res`)
+  (more on that below),
 - a `next` function, which the layer may call if it will not send an HTTP
   response itself.  The layer that does catch the request and responds fully to
   it will not call `next()`, the others will call `next()`.
 
+[IncomingMessage]: https://nodejs.org/api/http.html#http_class_http_incomingmessage
+[ServerResponse]: https://nodejs.org/api/http.html#http_class_http_serverresponse
+
+You can add layers to the stack with `handle()`, which is described way above.
+
 ```js
-// This works just like the handler example way above…
-campInstance.stack.unshift(function(ask, next) {
+camp.handle(function(ask, next) {
   ask.res.setHeader('X-Open-Source', 'https://github.com/espadrine/sc/');
   next();
 });
 ```
 
-### The Ask class
+By default, it inserts it before the `wsLayer`, but after other inserted
+handlers. Its insertion point is at `camp.stackInsertion` (an integer).
 
-The Ask class is a way to provide a lot of useful elements associated with a
-request.  It contains the following fields:
+### Ask and Augmented Request
+
+The **Ask class** is a way to provide a lot of useful elements associated with
+a request.  It contains the following fields:
 
 - server: the Camp instance,
 - req: the [http.IncomingMessage](http://nodejs.org/api/http.html#http_http_incomingmessage) object.
@@ -495,8 +504,12 @@ and as a parameter in each function of the server's stack
 `function ( ask, next )`
 (see the start of section "The stack").
 
+An **Augmented Request** is an [IncomingMessage][] which has several additional
+fields which you can also find in `Ask`: `server`, `uri`, `form`, `path`,
+`query`, `username`, `password`, `cookies`.
+
 Additionally, you can set the mime type of the response with
-`ask.mime('text/plain')`, for instance.
+`req.mime('png')`, for instance.
 
 ### Default layers
 
@@ -504,20 +517,15 @@ The default layers provided are generated from what we call units, which are
 exported as shown below. Each unit is a function that takes a server instance
 and returns a layer (`function(ask, next){}`).
 
-- `Camp.genericUnit` (for `handler()` and `removeHandler()`)
 - `Camp.ajaxUnit` (seen previously)
 - `Camp.socketUnit` (idem)
 - `Camp.wsUnit` (idem)
 - `Camp.eventSourceUnit` (idem)
 - `Camp.routeUnit` (idem)
-- `Camp.staticUnit` (idem)
+- `Camp.staticUnit` (idem, relies on `camp.documentRoot` which specifies the
+  location of the root of  your static web files. The default is "./web".
 - `Camp.notfoundUnit` (idem)
-- `camp.documentRoot`: this string specifies the location of the root of
-  your static web files.  The default is "./web".
-
-
 
 - - -
 
 Thaddee Tyl, author of ScoutCamp.
-
