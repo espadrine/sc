@@ -343,6 +343,7 @@ with the following fields:
   which defaults to [Fleau](https://github.com/espadrine/fleau).
 - `string`: a quickhand to send the string content of the template you want to
   send instead of specifying a file. It overrides `template`.
+  You can also send a string instead of the template object.
 
 By default, the following will be executed:
 
