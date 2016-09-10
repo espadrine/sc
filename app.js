@@ -12,12 +12,7 @@ var camp = require('./lib/camp.js').start({
 console.log('http://[::1]:' + port);
 
 // Templating demo
-camp.route('/template.html', function(data, match, end) {
-  end({    // Try http://localhost/template.html?title=Hello&info=[Redacted].
-    title: data.title || 'Success'
-  , info: data.info || 'This document has been templated!'
-  })
-})
+camp.path('template.html');
 
 // Templating demo with multiple templates
 camp.route('/html.template', function(data, match, end) {
