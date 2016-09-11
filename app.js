@@ -14,15 +14,12 @@ console.log('http://[::1]:' + port);
 // Templating demo
 camp.path('template.html');
 
-// Templating demo with multiple templates
-camp.route('/html.template', function(data, match, end) {
-  end({
-    title: data.title || 'Success'
-  , info: data.info || 'This document has been templated!'
-  }, {
-    template: ['template.html', 'flip.html']
-  })
-})
+// Templating demo with multiple templates and path parameter.
+// /html.template/Hello/World
+let flip = camp.template(['template.html', 'flip.html'])
+camp.path('html.template', function(req, res) {
+  res.template(req.data, flip);
+});
 
 // Doctor demo
 var replies = ['Ok.', 'Oh⁉', 'Is that so?', 'How interesting!'
