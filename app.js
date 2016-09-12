@@ -42,13 +42,13 @@ camp.notfound(/.*\.lol$/, function(data, match, end) {
 })
 
 // Basic authentication demo.
-camp.route(/^\/secret$/, function(data, match, end, ask) {
-  if (ask.username === 'Caesar' && ask.password === '1234') {
-    end(null, {template: streamFromString('Congrats, you found it!')})
+camp.path('secret', function(req, res) {
+  if (req.username === 'Caesar' && req.password === '1234') {
+    res.end('Congrats, you found it!');
   } else {
-    ask.res.statusCode = 401;
-    ask.res.setHeader('WWW-Authenticate', 'Basic')
-    end(null, {template: streamFromString('Nothing to hide here!')})
+    res.statusCode = 401;
+    res.setHeader('WWW-Authenticate', 'Basic');
+    res.end('Nothing to hide here!');
   }
 })
 
