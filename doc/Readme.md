@@ -14,13 +14,13 @@ Scout.js
 
 ### XHR
 
-Browsers' built-in Ajax libraries are usually poor.  They are not cross-browser
-(because of Internet Explorer) and they can quickly become a hassle.  Scout.js
+Browsers' built-in Ajax libraries are usually poor. They are not cross-browser
+(because of Internet Explorer) and they can quickly become a hassle. Scout.js
 is a javascript library to remove that hassle.
 
 With Scout.js, one can easily target a specific element in the page which
-must trigger an XHR(XML Http Request) when a specific event is fired.  This is
-what you do, most of the time, anyway.  Otherwise, it is also easy to attach an
+must trigger an XHR(XML Http Request) when a specific event is fired. This is
+what you do, most of the time, anyway. Otherwise, it is also easy to attach an
 XHR upon a "setTimeout", and so on.
 
 ```js
@@ -41,10 +41,10 @@ setTimeout ( Scout.send ( function ( params, xhr ) { … } ), 1000 );
 ```
 
 One thing that can bite is the fact that each Scout object only has one XHR
-object inside.  If you do two Ajax roundtrips at the same time, with the same
+object inside. If you do two Ajax roundtrips at the same time, with the same
 Scout object, one will cancel the other.
 
-This behavior is very easy to spot.  On the Web Inspector of your navigator, in
+This behavior is very easy to spot. On the Web Inspector of your navigator, in
 the "Network" tab, if a `$action` POST request is red (or cancelled), it means
 that it was killed by another XHR call.
 
@@ -54,11 +54,11 @@ The cure is to create another Scout object through the
 ### Server-Sent Events
 
 All modern browsers support a mechanism for receiving a continuous,
-event-driven flow of information from the server.  This technology is called
+event-driven flow of information from the server. This technology is called
 *Server-Sent Events*.
 
-The bad news about it is that it is a hassle to set up server-side.  The good
-news is that you are using ScoutCamp, which makes it a breeze.  Additionally,
+The bad news about it is that it is a hassle to set up server-side. The good
+news is that you are using ScoutCamp, which makes it a breeze. Additionally,
 ScoutCamp makes it work even in IE7.
 
 ```js
@@ -112,8 +112,8 @@ Camp.log.unpipe ( 'warn', 'stderr' );
 ### Ajax
 
 The Camp.js engine targets ease of use of both serving plain html files and ajax
-calls.  By default, when given a request, it looks for files in the `./web/`
-directory.  However, it also has the concept of Ajax actions.
+calls. By default, when given a request, it looks for files in the `./web/`
+directory. However, it also has the concept of Ajax actions.
 
 ```js
 camp.ajax.on ( 'getinfo', function (json, end, ask) {
@@ -130,7 +130,7 @@ In the example given, it merely sends back whatever information the client
 gives, which is a very contrived example.
 
 The purpose of this distinction between normally served html pages and ajax
-actions is to treat servers more like applications.  You first serve the
+actions is to treat servers more like applications. You first serve the
 graphical interface, in html and css, and then, you let the user interact with
 the server's data seemlessly through ajax calls.
 
@@ -156,8 +156,8 @@ instance, using `ask.form.on('progress', function(bytesReceived, bytesExpected) 
 
 ### EventSource
 
-I promised earlier that Server-Sent Events were a breeze in ScoutCamp.  They
-are.  Let's build a channel named `channel`.  When we receive an Ajax call on
+I promised earlier that Server-Sent Events were a breeze in ScoutCamp. They
+are. Let's build a channel named `channel`.  When we receive an Ajax call on
 the `talk` event, we send the data it gives us to the EventSource channel.
 
 ```js
@@ -169,9 +169,9 @@ camp.ajax.on ('talk', function(data, end) { chat.send(data); end(); });
 This EventSource object we get has two methods:
 
 - The `send` method takes a JSON object and emits the `message` event to the
-  client.  It is meant to be used with `es.onrevc`.
+  client. It is meant to be used with `es.onrevc`.
 - The `emit` method takes an event name and a textual message and emits this
-  event with that message to the client.  It is meant to be used with
+  event with that message to the client. It is meant to be used with
   `es.on(event, callback)`.
 
 ### WebSocket
@@ -282,34 +282,35 @@ Templates
 ---------
 
 An associated possibility, very much linked to the normal use of Camp.js, is to
-handle templates.  Those are server-side preprocessed files.
+handle templates. Those are server-side preprocessed files.
 
 ### Basic Usage
 
-Mostly, you first decide where to put your template file.  Let's say we have
+Mostly, you first decide where to put your template file. Let's say we have
 such a file at `/first/post.html` (from the root of the web/ or publish/
 directory).
 
 ```js
 var posts = ['This is the f1rst p0st!'];
 
-camp.route ( /\/first\/post.html/, function ( query, match, end ) {
-  end ({
+camp.path ( 'first/post.html', function ( req, res ) {
+  res.template ({
     text: posts[0],
     comments: ['first comment!', 'second comment…']
   });
 });
 ```
 
-In this `camp.route` function, `query` is the object literal associated to the
-query string sent in the URL.  For instance, `/first/post.html?key=value` has an
-associated query of `{"key": "value"}`.
+`req` is an Augmented Request, and `res` an Augmented Response.
+Therefore, if the request is `/first/post.html?key=value`, then `req.data.key`
+will be "value".
 
-The `match`, on the other side, corresponds to the match object that comes from
-evaluating the regular expression against the path.
+`res.template(scope, templates)` responds to the request with a list of
+templates (produced with `camp.template()`), a single template, or no template:
+in the latter case, the URI's path will be treated as a template file on disk
+under `documentRoot`. This is the case here with "first/post.html".
 
-On the other side of the fence, the file `/web/first/post.html` might look like
-this:
+The file `/web/first/post.html` might look like this:
 
 ```html
 <!doctype html><title></title>
@@ -333,67 +334,45 @@ the following file:
 </ul>
 ```
 
-You can tweak how the router works using `end`'s second parameter, an object
-with the following fields:
-
-- `template`: the file (relative to the `web` directory) to read as the
-  template, or a readable stream (see
-  [the standard library](http://nodejs.org/api/stream.html)).
-- `reader`: the template engine to use. It defaults to `camp.templateReader`,
-  which defaults to [Fleau](https://github.com/espadrine/fleau).
-- `string`: a quickhand to send the string content of the template you want to
-  send instead of specifying a file. It overrides `template`.
-  You can also send a string instead of the template object.
-
-By default, the following will be executed:
+If you need to specify a different template, you can do so:
 
 ```js
-var posts = ['This is the f1rst p0st!'];
-
-camp.route ( /\/first\/post.html/, function ( query, match, end ) {
-  end ({
-    text: posts[0],
-    comments: ['first comment!', 'second comment...']
-  }, {
-    template: '/first/post.html',   // The file given as a regex.
-    reader: camp.templateReader
-  });
+var postsTemplate = camp.template ( './templates/posts.html' );
+camp.path ( 'posts', function ( req, res ) {
+  res.template({comments: comments}, postsTemplate);
 });
 ```
 
-If you pass `null` instead of an object in the first parameter of `end()`, it
-sends the file specified as `template` without the reader. The same goes if
-`reader` is `null`. Use `{}` if you want to pass no data to the template reader.
+`camp.template(paths, options)` takes an Array of String paths to templating
+files (or a single path to a templating file), and the following options:
+- reader: the template reader function in use, defaulting to
+  `camp.templateReader`, which defaults to
+  [Fleau](https://github.com/espadrine/fleau).
+- asString: boolean; use the string as a template, not as a file path.
+- callback: function taking a function(scope) → readableStream.
+  If you don't want the template creation to be synchronous, use this.
+  We return nothing from the function if `callback` is set.
 
-### Diving In
+This function returns a function(scope) → readableStream, unless `callback` is
+set.
 
-There are two main elements of interest here.  The easiest is the camp.js
-binding to the template system, the more documentation-heavy one is the actual
-grammar of the templating language.
-
-The camp.js binding is a very straightforward function; namely:
+So this is how to be explicit about the template. On the opposite extreme, you
+can be extra implicit: the URL path will them be used as the template path on
+disk, and `req.data` will be used as the template's scope.
 
 ```js
-camp.route ( /pattern/, function ( query = {}, path = [], end, ask ) {
-  end ({});
-});
+// Supports ?mobile=true
+camp.path ( 'blog.html' );
 ```
-
-This function registers a pattern (name it `paths`) as being redirected to a
-template file.  The template file is either the match corresponding to `paths`,
-or the path you affect `path[0]` to (indeed, `path` is the match object).
-Please note that the path is relative to the root of your static files.  
-The return value (strictly speaking, the value passed to the continuation here
-named `end`) is an object literal that will be fed to the template file.
-Finally, the `ask` parameter is an [Ask](#the-ask-class) instance (see later on
-for more information).
 
 
 ## Fall through
 
-There are three steps when treating URLs.  Once it has not matched any template,
-it is matched against the web/ folder on hard drive.  Finally, if nothing was
-found before, it returns a 404 message.  This can be overriden by the
+TODO: document the new notFound function.
+
+There are three steps when treating URLs. Once it has not matched any template,
+it is matched against the web/ folder on hard drive. Finally, if nothing was
+found before, it returns a 404 message. This can be overriden by the
 `camp.notfound` function, which is identical to the `camp.route` function.
 It does the same thing, too, but only after even searching in the file system
 failed to provide a result.
@@ -403,15 +382,15 @@ failed to provide a result.
 Camp In Depth
 -------------
 
-In Camp.js, there is a lot more than meets the eye.  Up until now, we have only
-discussed the default behaviour of ScoutCamp.  For most uses, this is actually
-more than enough.  Sometimes, however, you need to dig a little deeper.
+In Camp.js, there is a lot more than meets the eye. Up until now, we have only
+discussed the default behaviour of ScoutCamp. For most uses, this is actually
+more than enough. Sometimes, however, you need to dig a little deeper.
 
 ### The Camp Object
 
-`Camp.start` is the simple way to launch the server in a single line.  You may
+`Camp.start` is the simple way to launch the server in a single line. You may
 not know, however, that it returns an `http.Server` (or an `https.Server`)
-subclass instance.  As a result, you can use all node.js' HTTP and HTTPS
+subclass instance. As a result, you can use all node.js' HTTP and HTTPS
 methods.
 
 You may provide the `start` function with a JSON object which defaults to this:
@@ -433,7 +412,7 @@ If you provide the relevant HTTPS files and set the `secure` option to true, the
 server will be secure.
 
 `Camp.createServer` creates a Camp instance directly, and
-`Camp.createSecureCamp` creates an HTTPS Camp instance.  The latter takes the
+`Camp.createSecureCamp` creates an HTTPS Camp instance. The latter takes the
 same parameters as `https.Server`.
 
 `Camp.Camp` and `Camp.SecureCamp` are the class constructors.
@@ -441,15 +420,15 @@ same parameters as `https.Server`.
 
 ### The stack
 
-Camp is stack-based.  When we receive a request, it goes through all the layers
-of the stack until it hits the bottom.  It should never hit the bottom: each
+Camp is stack-based. When we receive a request, it goes through all the layers
+of the stack until it hits the bottom. It should never hit the bottom: each
 layer can either pass it on to the next, or end the request (by sending a
 response).
 
 The default stack is defined this way:
 
 ```js
-campInstance.stack = [wsLayer, ajaxLayer, eventSourceLayer,
+campInstance.stack = [wsLayer, ajaxLayer, eventSourceLayer, pathLayer
                       routeLayer, staticLayer, notfoundLayer];
 ```
 
@@ -458,7 +437,7 @@ Each element of the stack `function(req, res, next){}` takes two parameters:
 - augmented [IncomingMessage][] (`req`) and [ServerResponse][] (`res`)
   (more on that below),
 - a `next` function, which the layer may call if it will not send an HTTP
-  response itself.  The layer that does catch the request and responds fully to
+  response itself. The layer that does catch the request and responds fully to
   it will not call `next()`, the others will call `next()`.
 
 [IncomingMessage]: https://nodejs.org/api/http.html#http_class_http_incomingmessage
@@ -479,7 +458,7 @@ handlers. Its insertion point is at `camp.stackInsertion` (an integer).
 ### Ask and Augmented Request
 
 The **Ask class** is a way to provide a lot of useful elements associated with
-a request.  It contains the following fields:
+a request. It contains the following fields:
 
 - server: the Camp instance,
 - req: the [http.IncomingMessage](http://nodejs.org/api/http.html#http_http_incomingmessage) object.
@@ -507,7 +486,14 @@ and as a parameter in each function of the server's stack
 
 An **Augmented Request** is an [IncomingMessage][] which has several additional
 fields which you can also find in `Ask`: `server`, `uri`, `form`, `path`,
-`query`, `username`, `password`, `cookies`.
+`data` (which is the same as `query`), `username`, `password`, `cookies`.
+
+An **Augmented Response** is a [ServerResponse][] which also has:
+
+- `template(scope, templates)`: responds to the request with a list of templates
+  (produced with `camp.template()`), a single template, or no template (in which
+  case, the URI's path will be treated as a template file on disk under
+  `documentRoot`). The `scope` is a JS object used to fill in the template.
 
 Additionally, you can set the mime type of the response with
 `req.mime('png')`, for instance.
@@ -522,6 +508,7 @@ and returns a layer (`function(ask, next){}`).
 - `Camp.socketUnit` (idem)
 - `Camp.wsUnit` (idem)
 - `Camp.eventSourceUnit` (idem)
+- `Camp.pathUnit` (idem)
 - `Camp.routeUnit` (idem)
 - `Camp.staticUnit` (idem, relies on `camp.documentRoot` which specifies the
   location of the root of  your static web files. The default is "./web".
