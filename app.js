@@ -37,8 +37,8 @@ ajax.on('talk', function(data, end) {chat.send(data); end()})
 camp.wsBroadcast('chat', function(data, end) {end(data)})
 
 // Not found demo
-camp.notfound(/.*\.lol$/, function(data, match, end) {
-  end(null, { template: '/404.html' })
+camp.notfound(/.*\.lol$/, function(data, match, end, ask) {
+  ask.res.file('/404.html')
 })
 
 // Basic authentication demo.
