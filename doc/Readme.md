@@ -368,14 +368,18 @@ camp.path ( 'blog.html' );
 
 ## Fall through
 
-TODO: document the new notFound function.
+```js
+camp.notFound ( 'blog/*', function ( req, res ) {
+  res.file ( '/templates/404.html' );
+});
+```
 
-There are three steps when treating URLs. Once it has not matched any template,
-it is matched against the web/ folder on hard drive. Finally, if nothing was
-found before, it returns a 404 message. This can be overriden by the
-`camp.notfound` function, which is identical to the `camp.route` function.
-It does the same thing, too, but only after even searching in the file system
-failed to provide a result.
+The `camp.notFound()` function works in exactly the same way as the
+`camp.path()` function, with two important differences:
+
+1. It only gets used when nothing else matches the path, including paths and
+   static files on disk under `documentRoot`,
+2. It responds with a 404 (Not Found) status code.
 
 
 
@@ -494,6 +498,8 @@ An **Augmented Response** is a [ServerResponse][] which also has:
   (produced with `camp.template()`), a single template, or no template (in which
   case, the URI's path will be treated as a template file on disk under
   `documentRoot`). The `scope` is a JS object used to fill in the template.
+- `file(path)`: responds to the request with the contents of the file at `path`,
+  on disk under `documentRoot`.
 
 Additionally, you can set the mime type of the response with
 `req.mime('png')`, for instance.
