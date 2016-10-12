@@ -502,6 +502,16 @@ An **Augmented Response** is a [ServerResponse][] which also has:
 - `file(path)`: responds to the request with the contents of the file at `path`,
   on disk under `documentRoot`.
 
+Note: `file(path)` leverages browser caching by comparing `If-Modified-Since`
+request headers against actual file timestamps, and saves time and bandwidth by
+replying "304 Not Modified" with no content to requests where the browser
+already knows the latest version of a file. However, this header is limited to
+second-level precision by specification, so any file changes happening within
+the same second, or within a 2-second window in the case of leap seconds, cause
+a small risk of browsers fetching and caching a stale version of the file in
+between these changes. Such a cached version would remain stale until the next
+file change and subsequent browser request updating the cache.
+
 Additionally, you can set the mime type of the response with
 `req.mime('png')`, for instance.
 
