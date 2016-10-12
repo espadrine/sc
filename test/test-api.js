@@ -1,14 +1,17 @@
 var camp = require('../lib/camp');
 var fleau = require('fleau');
 var http = require('http');
-var stream = require('stream');
 var Test = require('./test');
 var t = new Test();
+
+var get = function (path, callback) {
+  http.get('http://localhost:' + portNumber + path, callback);
+}
 
 var launchTests = function() {
   t.seq([
     function t0(next) {
-      http.get('http://localhost:' + portNumber, function(res) {
+      get('', function (res) {
         t.eq(res.httpVersion, '1.1', "Server must be HTTP 1.1.");
         t.eq(res.headers['transfer-encoding'], 'chunked',
           "Connection should be chunked by default.");
@@ -36,7 +39,7 @@ var launchTests = function() {
       });
 
       // Test that now.
-      http.get('http://localhost:' + portNumber + '/blog', function(res) {
+      get('/blog', function (res) {
         var content = '';
         res.on('data', function(chunk) {
           content += '' + chunk;
@@ -47,6 +50,43 @@ var launchTests = function() {
           next();
         });
       });
+    },
+
+    function t2(next) {
+      // Using `sc.path` with/out named non-slash placeholders (i.e. ':foo').
+      server.path('foo', function (req, res) {
+        res.end('foo');
+      });
+
+      server.path('foo/:bar', function (req, res) {
+        res.end('bar=' + req.data.bar);
+      });
+
+      server.path('foo/:bar/baz', function (req, res) {
+        res.end('baz');
+      });
+
+      get('/foo', function(res) {
+        res.on('data', function(content) {
+          t.eq(String(content), 'foo',
+            'Basic sc.path should work.');
+
+          get('/foo/quux', function(res) {
+            res.on('data', function(content) {
+              t.eq(String(content), 'bar=quux',
+                'Named sc.path placeholder should work.');
+
+              get('/foo/quux/baz', function(res) {
+                res.on('data', function(content) {
+                  t.eq(String(content), 'baz',
+                    'Named sc.path placeholder should not pre-empt sub-paths.');
+                  next();
+                });
+              });
+            });
+          });
+        });
+      }); // Mmmh… I love spaghetti!
     }
   ], function end() {
     t.tldr();
