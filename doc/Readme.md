@@ -397,7 +397,8 @@ not know, however, that it returns an `http.Server` (or an `https.Server`)
 subclass instance. As a result, you can use all node.js' HTTP and HTTPS
 methods.
 
-You may provide the `start` function with a JSON object which defaults to this:
+You may provide the `start` function with a JSON object defining the server's
+settings. It defaults to this:
 
 ```js
 {
@@ -415,9 +416,9 @@ You may provide the `start` function with a JSON object which defaults to this:
 If you provide the relevant HTTPS files and set the `secure` option to true, the
 server will be secure.
 
-`Camp.createServer` creates a Camp instance directly, and
-`Camp.createSecureCamp` creates an HTTPS Camp instance. The latter takes the
-same parameters as `https.Server`.
+`Camp.createServer()` creates a Camp instance directly, and
+`Camp.createSecureServer(settings)` creates an HTTPS Camp instance. The latter
+takes the same parameters as `https.Server`.
 
 `Camp.Camp` and `Camp.SecureCamp` are the class constructors.
 
