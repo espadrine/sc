@@ -406,9 +406,9 @@ settings. It defaults to this:
   hostname: '::', // The hostname to use as a server
   security: {
     secure: true,
-    key: 'https.key',
-    cert: 'https.crt',
-    ca: 'https.ca'
+    key: 'https.key',  // Either the name of a file on disk,
+    cert: 'https.crt', // or the content as a String.
+    ca: ['https.ca']
   }
 }
 ```

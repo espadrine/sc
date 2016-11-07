@@ -21,7 +21,7 @@
     "ws": "~0.4.29",
     "multilog": "~14.11.22",
     "formidable": "~1.0.14",
-    "fleau": "~16.0.0",
+    "fleau": "~16.1.0",
     "cookies": "~0.5.0"
   },
   "devDependencies": {},
