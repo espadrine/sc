@@ -306,7 +306,8 @@ Therefore, if the request is `/first/post.html?key=value`, then `req.data.key`
 will be "value".
 
 `res.template(scope, templates)` responds to the request with a list of
-templates (produced with `camp.template()`), a single template, or no template:
+templates (produced with `Camp.template()` or `camp.template()`), a single
+template, or no template:
 in the latter case, the URI's path will be treated as a template file on disk
 under `documentRoot`. This is the case here with "first/post.html".
 
@@ -337,13 +338,13 @@ the following file:
 If you need to specify a different template, you can do so:
 
 ```js
-var postsTemplate = camp.template ( './templates/posts.html' );
+var postsTemplate = Camp.template ( './templates/posts.html' );
 camp.path ( 'posts', function ( req, res ) {
   res.template({comments: comments}, postsTemplate);
 });
 ```
 
-`camp.template(paths, options)` takes an Array of String paths to templating
+`Camp.template(paths, options)` takes an Array of String paths to templating
 files (or a single path to a templating file), and the following options:
 - reader: the template reader function in use, defaulting to
   `camp.templateReader`, which defaults to
@@ -496,9 +497,10 @@ fields which you can also find in `Ask`: `server`, `uri`, `form`, `path`,
 An **Augmented Response** is a [ServerResponse][] which also has:
 
 - `template(scope, templates)`: responds to the request with a list of templates
-  (produced with `camp.template()`), a single template, or no template (in which
-  case, the URI's path will be treated as a template file on disk under
-  `documentRoot`). The `scope` is a JS object used to fill in the template.
+  (produced with `Camp.template()` or `camp.template()`), a single template, or
+  no template (in which case, the URI's path will be treated as a template file
+  on disk under `documentRoot`). The `scope` is a JS object used to fill in the
+  template.
 - `file(path)`: responds to the request with the contents of the file at `path`,
   on disk under `documentRoot`.
 
