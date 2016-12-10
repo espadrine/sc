@@ -78,8 +78,9 @@ hr {
 /* Heads */
 
 span.ipa { font-style: auto; font-family: sans-serif; margin-right: 7px; }
+.right { text-align: right; }
 .awesome { font-size: 1.2em; width: 50%; margin: 1cm auto; }
-.speech { font-style: italic; font-family: "Linux Libertine O",serif; }
+.speech { font-style: italic; font-size: 1.4em; font-family: "Linux Libertine O",serif; }
 .entry {
   font-size: x-large;
   font-weight: bold;

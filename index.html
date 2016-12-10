@@ -3,16 +3,15 @@
 <link rel=stylesheet type=text/css href=./doc/screen.css>
 <title>ScoutCamp</title>
 
-<code class="entry glow">Scout<span class=purple>Camp</span></code>
-<span class=ipa>/skoutkamp/</span> Web apps done right.
-
 <h1 class=glow>Scout<span class=purple>Camp</span></h1>
+<div class=right>
+  <span class=ipa>/skoutkamp/</span> Web apps done right.
+</div>
 
 <p class=speech>
-  &quot;You want to write a website, but don't want any hassle.<br>
-  You want it to be cool, with ajax, server-side scripts, unicode and all.<br>
-  You don't want ugly php polluting your html files.<br>
-  Look no further. We have what you need. For free.&quot;
+  &quot;Hassle-free Node.js server framework.<br>
+  Arbitrary routers. Cookies. Forms. Auth.<br>
+  Compiled templates. Fetch. WebSockets. Server-Side Events.&quot;
 </p>
 
 <table class=downloads>
@@ -25,16 +24,6 @@
       class="browse">SOURCES</a>
 </table>
 
-<pre>
-    Scout ( '#id-of-element' ).on ( 'click', function (params) {
-      params.action = 'add message';
-      params.data = { ready: true, data: Scout('#data').textContent };
-      params.resp = function ( resp ) {
-        if (resp.err)  console.log ( 'The server refused.' );
-      };
-    });
-</pre>
-
 <h2>Instructions</h2>
 
 <pre>
@@ -45,10 +34,11 @@ $ npm install camp
 Start with the
 <a href=http://github.com/espadrine/sc/blob/master/README.md>readme</a>.
 <br>
+Look at an
+<a href="https://github.com/espadrine/sc/blob/master/app.js">example</a>.
+<br>
 Read the
 <a href=http://github.com/espadrine/sc/blob/master/doc/Readme.md>reference</a>.
-<br>
-Don't forget the <a href=./doc/manual.html>manual</a>.
 </p>
 
 <script>  /* WEB FONTS */
