@@ -107,7 +107,7 @@ var launchTests = function () {
 
       server.path('json', function (req, res) {
         res.statusCode = 418; // I'm a teapot (see RFC 2324).
-        res.json(data);
+        res.json(data, null, 2);
       });
 
       get('/json', function (res) {
@@ -121,7 +121,7 @@ var launchTests = function () {
         });
         res.on('end', function () {
           t.eq(String(body).trim(), JSON.stringify(data, null, 2),
-            '`res.json(data)` should return human-readable JSON.');
+            '`res.json(data, null, 2)` should return human-readable JSON.');
           next();
         });
       });
