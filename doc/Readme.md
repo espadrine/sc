@@ -451,6 +451,8 @@ An **Augmented Response** is a [ServerResponse][] which also has:
   template.
 - `file(path)`: responds to the request with the contents of the file at `path`,
   on disk under `documentRoot`.
+- `compressed()`: returns a writable stream. All data sent to that stream gets
+  compressed and sent as a response.
 
 Note: `file(path)` leverages browser caching by comparing `If-Modified-Since`
 request headers against actual file timestamps, and saves time and bandwidth by
