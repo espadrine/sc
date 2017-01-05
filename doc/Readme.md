@@ -9,78 +9,13 @@ distinction between:
   * powering applications.
 
 
-Scout.js
---------
-
-### XHR
-
-Browsers' built-in Ajax libraries are usually poor. They are not cross-browser
-(because of Internet Explorer) and they can quickly become a hassle. Scout.js
-is a javascript library to remove that hassle.
-
-With Scout.js, one can easily target a specific element in the page which
-must trigger an XHR(XML Http Request) when a specific event is fired. This is
-what you do, most of the time, anyway. Otherwise, it is also easy to attach an
-XHR upon a "setTimeout", and so on.
-
-```js
-Scout ( '#id-of-element' ).on ( 'click', function (params, evt, xhr) {
-  params.action = 'getinfo';
-  var sent = this.parentNode.textContent;
-  params.data = { ready: true, data: sent };
-  params.resp = function ( resp, xhr ) {
-    if (resp.data === sent) {
-      console.log ('Got exactly what we sent.');
-    }
-  };
-});
-
-// or...
-
-setTimeout ( Scout.send ( function ( params, xhr ) { … } ), 1000 );
-```
-
-One thing that can bite is the fact that each Scout object only has one XHR
-object inside. If you do two Ajax roundtrips at the same time, with the same
-Scout object, one will cancel the other.
-
-This behavior is very easy to spot. On the Web Inspector of your navigator, in
-the "Network" tab, if a `$action` POST request is red (or cancelled), it means
-that it was killed by another XHR call.
-
-The cure is to create another Scout object through the
-`var newScout = Scout.maker()` call.
-
-### Server-Sent Events
-
-All modern browsers support a mechanism for receiving a continuous,
-event-driven flow of information from the server. This technology is called
-*Server-Sent Events*.
-
-The bad news about it is that it is a hassle to set up server-side. The good
-news is that you are using ScoutCamp, which makes it a breeze. Additionally,
-ScoutCamp makes it work even in IE7.
-
-```js
-var es = Scout.eventSource('channel');
-
-es.on('eventName', function (data) {
-  // `data` is a string.
-});
-
-es.onrecv(function (json) {
-  // `json` is a JSON object.
-});
-```
-
-
 Camp.js
 -------
 
 We start the web server.
 
 ```js
-var camp = require ( 'camp' ).start ( );
+var camp = require('camp').start();
 ```
 
 The `start()` function has the following properties:
@@ -98,13 +33,13 @@ The `start()` function has the following properties:
   run as the almighty root user. However, executing this requires to be root (so
   you will need to use `sudo` or the like to run the server).
 
-The result of `require ( 'camp' )` can also be useful, for instance, to log
+The result of `require('camp')` can also be useful, for instance, to log
 warnings from the server. The logging system uses
 [multilog](https://www.npmjs.org/package/multilog).
 
 ```js
-var Camp = require ( 'camp' );
-Camp.log.unpipe ( 'warn', 'stderr' );
+var Camp = require('camp');
+Camp.log.unpipe('warn', 'stderr');
 // There are three streams: warn, error, and all.
 // warn and error are individually piped to stderr by default.
 ```
@@ -116,10 +51,10 @@ calls. By default, when given a request, it looks for files in the `./web/`
 directory. However, it also has the concept of Ajax actions.
 
 ```js
-camp.ajax.on ( 'getinfo', function (json, end, ask) {
-  console.log (json);
-  end (json);   // Send that back to the client.
-} );
+camp.ajax.on('getinfo', function(json, end, ask) {
+  console.log(json);
+  end(json);   // Send that back to the client.
+});
 ```
 
 An action maps a string to the path request `/$<string>`.  When a client asks
@@ -163,7 +98,7 @@ the `talk` event, we send the data it gives us to the EventSource channel.
 ```js
 // This is actually a full-fledged chat.
 var chat = camp.eventSource ( 'all' );
-camp.ajax.on ('talk', function(data, end) { chat.send(data); end(); });
+camp.ajax.on('talk', function(data, end) { chat.send(data); end(); });
 ```
 
 This EventSource object we get has two methods:
@@ -180,7 +115,7 @@ We also include the raw duplex communication system provided by the WebSocket
 protocol.
 
 ```js
-camp.ws('channel', function (socket));
+camp.ws('channel', function(socket));
 ```
 
 Every time a WebSocket connection is initiated (say, by a Web browser), the
@@ -293,8 +228,8 @@ directory).
 ```js
 var posts = ['This is the f1rst p0st!'];
 
-camp.path ( 'first/post.html', function ( req, res ) {
-  res.template ({
+camp.path( 'first/post.html', function(req, res) {
+  res.template({
     text: posts[0],
     comments: ['first comment!', 'second comment…']
   });
@@ -338,8 +273,8 @@ the following file:
 If you need to specify a different template, you can do so:
 
 ```js
-var postsTemplate = Camp.template ( './templates/posts.html' );
-camp.path ( 'posts', function ( req, res ) {
+var postsTemplate = Camp.template( './templates/posts.html' );
+camp.path('posts', function(req, res) {
   res.template({comments: comments}, postsTemplate);
 });
 ```
@@ -363,15 +298,15 @@ disk, and `req.data` will be used as the template's scope.
 
 ```js
 // Supports ?mobile=true
-camp.path ( 'blog.html' );
+camp.path('blog.html');
 ```
 
 
 ## Fall through
 
 ```js
-camp.notFound ( 'blog/*', function ( req, res ) {
-  res.file ( '/templates/404.html' );
+camp.notFound( 'blog/*', function(req, res) {
+  res.file('/templates/404.html');
 });
 ```
 
@@ -484,15 +419,28 @@ a request. It contains the following fields:
   those fields.
 
 An `Ask` instance is provided as an extra parameter to
-`camp.route ( pattern, function ( query, path, end, ask ) )`
+`camp.route(pattern, function(query, path, end, ask))`
 (see the start of section "Diving In"),
 and as a parameter in each function of the server's stack
-`function ( ask, next )`
+`function(ask, next)`
 (see the start of section "The stack").
 
 An **Augmented Request** is an [IncomingMessage][] which has several additional
 fields which you can also find in `Ask`: `server`, `uri`, `form`, `path`,
 `data` (which is the same as `query`), `username`, `password`, `cookies`.
+
+It also contains form information for `multipart/form-data` requests in the
+following fields:
+- form: a `formidable.IncomingForm` object as specified by
+  the [formidable](https://github.com/felixge/node-formidable)
+  library API. Noteworthy are `form.uploadDir` (where the files are uploaded)
+  and `form.on('progress', function(bytesReceived, bytesExpected) {})`.
+- fields: a map from the field name (eg, `fieldname` for
+  `<input name=fieldname>`) to the corresponding form values.
+- files: a map from the fiel name (eg, `fieldname` for
+  `<input name=content type=file>`) to a list of files, each with properties:
+  - path: the location on disk where the the file resides
+  - name: the name of the file, as asserted by the uploader.
 
 An **Augmented Response** is a [ServerResponse][] which also has:
 
@@ -533,6 +481,69 @@ and returns a layer (`function(ask, next){}`).
   location of the root of  your static web files. The default is "./web".
 - `Camp.notfoundUnit` (idem)
 
+Scout.js
+--------
+
+### XHR
+
+Browsers' built-in Ajax libraries are usually poor. They are not cross-browser
+(because of Internet Explorer) and they can quickly become a hassle. Scout.js
+is a javascript library to remove that hassle.
+
+With Scout.js, one can easily target a specific element in the page which
+must trigger an XHR(XML Http Request) when a specific event is fired. This is
+what you do, most of the time, anyway. Otherwise, it is also easy to attach an
+XHR upon a "setTimeout", and so on.
+
+```js
+Scout ( '#id-of-element' ).on ( 'click', function (params, evt, xhr) {
+  params.action = 'getinfo';
+  var sent = this.parentNode.textContent;
+  params.data = { ready: true, data: sent };
+  params.resp = function ( resp, xhr ) {
+    if (resp.data === sent) {
+      console.log ('Got exactly what we sent.');
+    }
+  };
+});
+
+// or...
+
+setTimeout ( Scout.send ( function ( params, xhr ) { … } ), 1000 );
+```
+
+One thing that can bite is the fact that each Scout object only has one XHR
+object inside. If you do two Ajax roundtrips at the same time, with the same
+Scout object, one will cancel the other.
+
+This behavior is very easy to spot. On the Web Inspector of your navigator, in
+the "Network" tab, if a `$action` POST request is red (or cancelled), it means
+that it was killed by another XHR call.
+
+The cure is to create another Scout object through the
+`var newScout = Scout.maker()` call.
+
+### Server-Sent Events
+
+All modern browsers support a mechanism for receiving a continuous,
+event-driven flow of information from the server. This technology is called
+*Server-Sent Events*.
+
+The bad news about it is that it is a hassle to set up server-side. The good
+news is that you are using ScoutCamp, which makes it a breeze. Additionally,
+ScoutCamp makes it work even in IE7.
+
+```js
+var es = Scout.eventSource('channel');
+
+es.on('eventName', function (data) {
+  // `data` is a string.
+});
+
+es.onrecv(function (json) {
+  // `json` is a JSON object.
+});
+```
 - - -
 
 Thaddee Tyl, author of ScoutCamp.
