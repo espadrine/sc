@@ -104,7 +104,7 @@ var launchTests = function() {
         t.eq(res.headers['content-type'], mime.json,
           'Served content type should always be "' + mime.json + '".')
         res.on('data', function (body) {
-          t.eq(String(body).trim(), JSON.stringify(data, null, 2),
+          t.eq(String(body).trim(), JSON.stringify(data),
             '`res.json(data)` should return human-readable JSON.');
           next();
         });
