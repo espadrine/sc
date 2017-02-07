@@ -16,7 +16,7 @@ camp.path('template.html');
 
 // Templating demo with multiple templates and path parameter.
 // /html.template/Hello/World
-let flip = camp.template(['template.html', 'flip.html'])
+let flip = camp.template(['web/template.html', 'web/flip.html'])
 camp.path('html.template/:title/:info', function(req, res) {
   res.template(req.data, flip);
 });
