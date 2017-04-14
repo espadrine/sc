@@ -32,6 +32,13 @@ The `start()` function has the following properties:
   something else. This is particularly useful if you don't want the server to
   run as the almighty root user. However, executing this requires to be root (so
   you will need to use `sudo` or the like to run the server).
+- `saveRequestChunks`: some requests will have their data processed by Camp
+  before reaching your handlers, in order to fill the Augmented Request's
+  `req.data` dictionary, but this means that you won't receive any of the
+  processed chunks by doing `req.on('data',function(chunk){})` in your handler.
+  If you need to access these raw chunks (e.g. to pipe complete requests to a
+  different server), you'll find them in `req.chunks` when `saveRequestChunks`
+  is set to `true`.
 
 The result of `require('camp')` can also be useful, for instance, to log
 warnings from the server. The logging system uses
@@ -437,7 +444,7 @@ following fields:
   and `form.on('progress', function(bytesReceived, bytesExpected) {})`.
 - fields: a map from the field name (eg, `fieldname` for
   `<input name=fieldname>`) to the corresponding form values.
-- files: a map from the fiel name (eg, `fieldname` for
+- files: a map from the field name (eg, `fieldname` for
   `<input name=content type=file>`) to a list of files, each with properties:
   - path: the location on disk where the the file resides
   - name: the name of the file, as asserted by the uploader.

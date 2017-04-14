@@ -173,6 +173,38 @@ var launchTests = function () {
           });
         });
       });
+    },
+
+    function t5 (next) {
+      var name = 'Robert\'); DROP TABLE Students;--';
+      var data = encodeURI('Name="' + name + '"');
+      var urlencoded = 'application\/x-www-form-urlencoded';
+
+      server.path('/Students.php', function (req, res) {
+        t.eq(req.query.Name, name, 'POST data should be processed.');
+        if (server.saveRequestChunks) {
+          t.eq(req.savedChunks && req.savedChunks.toString(), data,
+            'Processed chunks should be saved in the request when required.');
+        } else {
+          t.eq(req.savedChunks, undefined,
+            'Processed chunks should not be saved when it isn\'t required.');
+        }
+
+        res.statusCode = 500; // Internal Server Error (not really)
+        res.end('mysql> Query OK, 1337 rows affected (0.03 sec)\n');
+      });
+
+      server.saveRequestChunks = false;
+      post('/Students.php', data, urlencoded, function (res) {
+        t.eq(res.statusCode, 500,
+          'Response status should be 500, not ' + res.statusCode + '.');
+        server.saveRequestChunks = true;
+        post('/Students.php', data, urlencoded, function (res) {
+          t.eq(res.statusCode, 500,
+            'Response status should be 500, not ' + res.statusCode + '.');
+          next();
+        });
+      });
     }
   ], function end () {
     t.tldr();
