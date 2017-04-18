@@ -451,6 +451,10 @@ An **Augmented Response** is a [ServerResponse][] which also has:
   template.
 - `file(path)`: responds to the request with the contents of the file at `path`,
   on disk under `documentRoot`.
+- `json(data, replacer, space)`: responds to the request with stringified JSON
+  data. Arguments are passed to `JSON.stringify()`, so you can use either
+  `res.json({a: 42})` (minified) or `res.json({a: 42}, null, 2)`
+  (human-readable).
 - `compressed()`: returns a writable stream. All data sent to that stream gets
   compressed and sent as a response.
 
