@@ -98,20 +98,19 @@ instance, using `ask.form.on('progress', function(bytesReceived, bytesExpected) 
 
 ### EventSource
 
-I promised earlier that Server-Sent Events were a breeze in ScoutCamp. They
-are. Let's build a channel named `channel`.  When we receive an Ajax call on
-the `talk` event, we send the data it gives us to the EventSource channel.
+Let's build a path named `/path`. When we receive a call on `/talk`, we send
+the data it gives us to the EventSource path.
 
 ```js
 // This is actually a full-fledged chat.
-var chat = camp.eventSource ( 'all' );
-camp.ajax.on('talk', function(data, end) { chat.send(data); end(); });
+var chat = camp.eventSource ( '/all' );
+camp.post('/talk', function(req, res) { chat.send(req.data); res.end(); });
 ```
 
 This EventSource object we get has two methods:
 
 - The `send` method takes a JSON object and emits the `message` event to the
-  client. It is meant to be used with `es.onrevc`.
+  client. It is meant to be used with `es.onrecv`.
 - The `emit` method takes an event name and a textual message and emits this
   event with that message to the client. It is meant to be used with
   `es.on(event, callback)`.
@@ -122,7 +121,7 @@ We also include the raw duplex communication system provided by the WebSocket
 protocol.
 
 ```js
-camp.ws('channel', function(socket));
+camp.ws('/path', function(socket));
 ```
 
 Every time a WebSocket connection is initiated (say, by a Web browser), the
@@ -133,38 +132,37 @@ and `socket.send(data)`.
 
 This function returns an instance of a [WebSocket server]
 (https://github.com/einaros/ws/blob/master/doc/ws.md#class-wsserver)
-for that channel.
-Most notably, it has a `wsServer.clients` list of opened sockets on a channel.
+for that path.
+Most notably, it has a `wsServer.clients` list of opened sockets on a path.
 
-A map from channel names to WebSocket servers is available at:
+A map from paths to WebSocket servers is available at:
 
 ```js
-camp.wsChannels[channel];
+camp.wsChannels[path];
 ```
 
 For the purpose of broadcasting (ie, sending messages to every connected socket
-on the channel), we provide the following function.
+on the path), we provide the following function.
 
 ```js
-camp.wsBroadcast('channel', function recv(data, function end(data)))
+camp.wsBroadcast('/path', function recv(req, res))
 ```
 
 The `recv` function is run once every time a client sends data.
-The `end` function sends some data, the same data, to each socket on the
-channel.
+
+- Its `req` parameter provides `req.data` (the data that a client sent), and
+  `req.flags` (`req.flags.binary` is true if binary data is received;
+  `req.flags.masked` if the data was masked).
+- Its `res` parameter provides `res.send(data)`, which sends the same data to each socket on the path.
 
 Client-side, obviously, your browser needs to have a
-[WebSocket API](http://dev.w3.org/html5/websockets/#websocket).
-Check that it does provide that. For each browser, Chrome 14, Firefox 11,
-IE10, Safari 6 and Blackberry Browser 7, all onwards, support WebSocket,
-even on mobile phones.
-The `scout.js` API follows.
+[WebSocket API](http://caniuse.com/#feat=websockets).
+The client-side code may look like this.
 
 ```js
 // `socket` is a genuine WebSocket instance.
-var socket = var Scout.webSocket('channel');
-// It has an additional field.
-socket.sendjson({ some: "data" });  // (Gets sent as a JSON string.)
+var socket = new WebSocket('/path');
+socket.send(JSON.stringify({ some: "data" }));
 ```
 
 ### Socket.io
@@ -547,7 +545,7 @@ news is that you are using ScoutCamp, which makes it a breeze. Additionally,
 ScoutCamp makes it work even in IE7.
 
 ```js
-var es = Scout.eventSource('channel');
+var es = Scout.eventSource('/path');
 
 es.on('eventName', function (data) {
   // `data` is a string.

@@ -2,7 +2,7 @@
   html { transform: scaleX(-1) }
 </style>
 <script>
-  var form = document.forms[0];
+  const form = document.forms[0];
   form.onsubmit = function(event) {
     form.action = '/html.template/' + form.title.value + '/' + form.info.value;
   };

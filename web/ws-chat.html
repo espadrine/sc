@@ -18,26 +18,26 @@
   #nick { position:fixed; top:5px; right:5px; text-align: right; }
 </style>
 
-<script src=/js/scout.js>/* Ajax library. */</script>
 <script>
-(function(){
-  var d = document; d.id = d.getElementById;
-  var box = d.id('in'), wall = d.id('log'), nick = d.id('nick');
-  var socket = Scout.webSocket('chat');
+{
+  const d = document; d.id = d.getElementById;
+  const box = d.id('in'), wall = d.id('log'), nick = d.id('nick');
+  const socket = new WebSocket(
+    'ws' + window.location.protocol.slice(4) + '//' +
+    window.location.host + '/chat');
 
-  d.id('sofa').onsubmit = function (e) {
-    socket.sendjson({ nick: nick.value, message: box.value });
+  d.id('sofa').onsubmit = event => {
+    socket.send(JSON.stringify({ nick: nick.value, message: box.value }));
     box.value = '';
-    e.preventDefault();
-    e.returnValue = false;
+    return false;
   };
 
-  socket.onmessage = function (e) {
-    var data = JSON.parse(e.data);
-    var p = d.createElement('p');
+  socket.onmessage = event => {
+    const data = JSON.parse(event.data);
+    const p = d.createElement('p');
     wall.appendChild(p).textContent = data.nick + ': ' + data.message;
     box.focus();
     p.scrollIntoView();
   };
-}());
+}
 </script>

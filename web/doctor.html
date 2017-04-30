@@ -10,31 +10,29 @@
   <input type=submit value=go>
 </form>
 
-<script src=/js/scout.js></script>
-
 <script>
+{
+  const id = document.getElementById.bind(document);
+  const box = id('in'), wall = id('log');
 
-  var box = Scout('#in'),
-      wall = Scout('#log');
-
-  function log(message) {
+  const log = message => {
     wall.appendChild(document.createElement('p')).textContent = message;
     box.focus();
     box.scrollIntoView();
-  }
+  };
 
-  Scout('#sofa').on('submit', function (query) {
-
-    var message = box.value;
+  id('sofa').onsubmit = event => {
+    const message = box.value;
     box.value = '';
     log(message);
 
-    query.action = 'doctor';
-    query.data = { text: message };
-    query.resp = function (data) {
-      log(data.reply);
-    };
-  });
-
+    const form = new FormData();
+    form.append('text', message);
+    fetch('/doctor', {method: 'POST', body: form})
+    .then(resp => resp.json())
+    .then(data => log(data.reply))
+    .catch(console.error);
+    return false;
+  };
+}
 </script>
-

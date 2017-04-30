@@ -21,25 +21,29 @@
   #nick { position:fixed; top:5px; right:5px; text-align: right; }
 </style>
 
-<script src=/js/scout.js>/* Ajax library. */</script>
 <script>
-(function(){
-  var d = document; d.id = d.getElementById;
-  var box = d.id('in'), wall = d.id('log'), nick = d.id('nick');
+{
+  const d = document; d.id = d.getElementById;
+  const box = d.id('in'), wall = d.id('log'), nick = d.id('nick');
 
-  Scout('#sofa').on('submit', function (query) {
-    query.action = 'talk';
-    query.data = {nick: nick.value, message: box.value};
+  d.id('sofa').onsubmit = event => {
+    const form = new FormData();
+    form.append('nick', nick.value);
+    form.append('message', box.value);
+    fetch('/talk', {method: 'POST', body: form})
+    .catch(console.error);
     box.value = '';
-  });
+    return false;
+  };
 
-  Scout.eventSource('all').onrecv(function (data) {
-    var p = d.createElement('p');
+  const source = new EventSource('/all');
+  source.onmessage = event => {
+    const data = JSON.parse(event.data);
+    const p = d.createElement('p');
     wall.appendChild(p).textContent = data.nick + ': ' + data.message;
     box.focus();
     p.scrollIntoView();
-  });
-
-}());
+  };
+}
 </script>
 
