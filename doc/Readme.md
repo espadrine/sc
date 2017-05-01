@@ -462,6 +462,8 @@ An **Augmented Response** is a [ServerResponse][] which also has:
   (human-readable).
 - `compressed()`: returns a writable stream. All data sent to that stream gets
   compressed and sent as a response.
+- `redirect(path)`: responds to the request with a 303 redirection to a path
+  or URL.
 
 Note: `file(path)` leverages browser caching by comparing `If-Modified-Since`
 request headers against actual file timestamps, and saves time and bandwidth by

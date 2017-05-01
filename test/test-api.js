@@ -205,7 +205,19 @@ var launchTests = function () {
           next();
         });
       });
-    }
+    },
+
+    function t6 (next) {
+      server.path('/redirection', function (req, res) {
+        res.redirect('/other/path');
+      });
+      get('/redirection', function(res) {
+        t.eq(res.statusCode, 303, 'Redirection should be a 303');
+        t.eq(res.headers['location'], '/other/path',
+          'Redirection should send the right location header');
+        next();
+      });
+    },
   ], function end () {
     t.tldr();
     process.exit(0);
