@@ -218,9 +218,35 @@ var launchTests = function () {
         next();
       });
     },
+
+    function t7 (next) {
+      server.path('/forward%2Fslash', function (req, res) {
+        res.end('/forward%2Fslash');
+      });
+      server.path('/forward/slash', function (req, res) {
+        res.end('/forward/slash');
+      });
+
+      get('/forward%2Fslash', function(res) {
+        var body = '';
+        res.on('data', function (chunk) { body += String(chunk); });
+        res.on('end', function () {
+          t.eq(body, '/forward%2Fslash', 'Should not unescape forward slash');
+
+          get('/forward/slash', function(res) {
+            body = '';
+            res.on('data', function (chunk) { body += String(chunk); });
+            res.on('end', function () {
+              t.eq(body, '/forward/slash', 'Should not escape forward slash');
+              next();
+            });
+          });
+        });
+      });
+    },
   ], function end () {
     t.tldr();
-    process.exit(0);
+    t.exit();
   });
 };
 
