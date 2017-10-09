@@ -246,7 +246,7 @@ var launchTests = function () {
     },
   ], function end () {
     t.tldr();
-    process.exit(0);
+    t.exit();
   });
 };
 
