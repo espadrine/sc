@@ -17,12 +17,12 @@
     "test": "make test"
   },
   "dependencies": {
-    "socket.io": "~1.7.1",
-    "ws": "~2.2.2",
-    "multilog": "~14.11.22",
-    "formidable": "~1.0.14",
+    "cookies": "~0.5.0",
     "fleau": "~16.2.0",
-    "cookies": "~0.5.0"
+    "formidable": "~1.0.14",
+    "multilog": "~14.11.22",
+    "socket.io": "^1.7.4",
+    "ws": "^2.3.1"
   },
   "devDependencies": {},
   "optionalDependencies": {},
