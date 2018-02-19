@@ -1,5 +1,7 @@
 # ScoutCamp [![Build Status](https://img.shields.io/travis/espadrine/sc.svg)](https://travis-ci.org/espadrine/sc)
 
+[![Greenkeeper badge](https://badges.greenkeeper.io/espadrine/sc.svg)](https://greenkeeper.io/)
+
 *WebApps Framework*
 
 [Documentation](https://github.com/espadrine/sc/tree/master/doc/Readme.md).
