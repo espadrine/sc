@@ -4,6 +4,7 @@ var http = require('http');
 var mime = require('../lib/mime.json');
 var Test = require('./test');
 var t = new Test();
+var WebSocket = require('ws');
 
 var get = function (path, callback) {
   http.get('http://localhost:' + portNumber + path, callback);
@@ -215,6 +216,25 @@ var launchTests = function () {
         t.eq(res.statusCode, 303, 'Redirection should be a 303');
         t.eq(res.headers['location'], '/other/path',
           'Redirection should send the right location header');
+        next();
+      });
+    },
+
+    function t7 (next) {
+      server.ws('/chat', function (socket) {
+        socket.on('message', function (data) {
+          var replaced = String(data).replace(/hunter2/g, '*******');
+          socket.send(replaced);
+        });
+      });
+
+      var socket = new WebSocket('ws://localhost:' + portNumber + '/chat');
+      socket.on('open', function () {
+        socket.send('you can go hunter2 my hunter2-ing hunter2');
+      });
+      socket.on('message', function (data) {
+        t.eq(String(data), 'you can go ******* my *******-ing *******',
+          'No matter how many times you type hunter2, WebSocket chat should show *******');
         next();
       });
     },
