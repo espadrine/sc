@@ -31,6 +31,11 @@ sc.post('/talk', (req, res) => {chat.send(req.data); res.end()})
 // WebSocket chat demo
 sc.wsBroadcast('/chat', (req, res) => res.send(req.data))
 
+// Socket.io chat demo
+const ioChat = sc.io.of('/chat');
+ioChat.on('connection', socket =>
+  socket.on('message', msg => ioChat.send(msg)));
+
 // Not found demo
 sc.notFound('/*.lol', (req, res) => res.file('/404.html'))
 
