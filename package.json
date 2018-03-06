@@ -22,7 +22,7 @@
     "formidable": "~1.1.1",
     "multilog": "~14.11.22",
     "socket.io": "^2.0.4",
-    "ws": "^4.0.0"
+    "ws": "^5.0.0"
   },
   "devDependencies": {},
   "optionalDependencies": {},
