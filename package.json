@@ -19,7 +19,7 @@
   "dependencies": {
     "cookies": "~0.7.1",
     "fleau": "~16.2.0",
-    "formidable": "~1.1.1",
+    "formidable": "~1.2.0",
     "multilog": "~14.11.22",
     "socket.io": "^2.0.4",
     "spdy": "^3.4.7",
