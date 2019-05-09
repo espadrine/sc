@@ -1,11 +1,12 @@
-WHAT SHOULD WE DO?
-==================
+# Plans
 
-Add HTTP digest access authentification.
-
-Add cache via the Expires header.
-
-Make the logging system configurable. A single server should be able to log
-warnings and errors in a configurable way. We can achieve that by allowing to
-set a function that takes a string. By default, that function is console.error.
-
+- CORS support with automatic Access-Control-Allow-Methods and
+  Access-Control-Allow-Headers.
+- Read JSON body.
+- Add cache via the Expires header.
+- Server settings management.
+- Generic interface for SQL database (with query builder).
+- Generic interface for object store (S3-like; defaults to disk).
+- Generic interface for per-server key-value storage (LevelDB-like).
+- Generic interface for global key-value store (FoundationDB-like).
+- Multi-master synchronization primitives.
