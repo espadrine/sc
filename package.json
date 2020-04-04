@@ -22,7 +22,7 @@
     "formidable": "~1.2.0",
     "multilog": "~14.11.22",
     "socket.io": "^2.0.4",
-    "spdy": "^3.4.7",
+    "spdy": "^4.0.2",
     "ws": "^6.1.0"
   },
   "devDependencies": {},
