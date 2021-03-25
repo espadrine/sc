@@ -23,6 +23,7 @@ var post = function (path, postData, contentType, callback) {
 };
 
 var launchTests = function () {
+  portNumber = server.address().port;
   t.seq([
     function t0 (next) {
       get('', function (res) {
@@ -244,21 +245,11 @@ var launchTests = function () {
   });
 };
 
-// FIXME: is there a good way to make a server get a port for testing?
 var server;
-var portNumber = 8000;
 var startServer = function () {
-  server = camp.start({port:portNumber, documentRoot:'./test/web'});
+  server = camp.start({port: 0, documentRoot: './test/web'});
   server.on('listening', launchTests);
 };
 var serverStartDomain = require('domain').create();
-serverStartDomain.on('error', function (err) {
-  if (err.code === 'EADDRINUSE') {
-    portNumber++;
-    serverStartDomain.run(startServer);
-  } else {
-    throw err;
-  }
-});
 serverStartDomain.run(startServer);
 
